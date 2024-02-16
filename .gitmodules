@@ -1,0 +1,13 @@
+[submodule "projects/orwynn"]
+	path = projects/orwynn
+	url = git@github.com:slimebones/orwynn.git
+	branch = v2
+[submodule "projects/pykit"]
+	path = projects/pykit
+	url = git@github.com:slimebones/pykit.git
+[submodule "projects/pyrxcat"]
+	path = projects/pyrxcat
+	url = git@github.com:slimebones/pyrxcat.git
+[submodule "projects/pyfcode"]
+	path = projects/pyfcode
+	url = git@github.com:slimebones/pyfcode.git
