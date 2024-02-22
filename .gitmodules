@@ -11,3 +11,9 @@
 [submodule "projects/pyfcode"]
 	path = projects/pyfcode
 	url = git@github.com:slimebones/pyfcode.git
+[submodule "projects/uvicorn"]
+	path = projects/uvicorn
+	url = git@github.com:slimebones/uvicorn.git
+[submodule "projects/ngx-kit"]
+	path = projects/ngx-kit
+	url = git@github.com:almazrpe/ngx-kit.git
