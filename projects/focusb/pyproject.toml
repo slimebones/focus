@@ -3,11 +3,28 @@ name = "focusb"
 version = "0.1.0"
 description = ""
 authors = ["ryzhovalex <thed4rkof@gmail.com>"]
-readme = "README.md"
+readme = "readme.md"
+packages = [
+    { include = "src" }
+]
+classifiers = [
+    "Private :: Do Not Upload"
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+orwynn = { path = "../orwynn", develop = true }
+pdf2image = "^1.17.0"
+transliterate = "^1.10.2"
+pandas = "^2.2.0"
+pyarrow = "^15.0.0"
 
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.15"
+coverage = "^6.5.0"
+pytest = "^7.2.0"
+pytest-asyncio = "^0.21.0"
+pytest-aiohttp = "^1.0.5"
 
 [build-system]
 requires = ["poetry-core"]
