@@ -11,7 +11,7 @@ test:
 check: lint test
 
 run:
-	cd ../../ && ng s --port $(port)
+	cd ../../ && ng s focusf --port $(port)
 
 g:
 	cd ../../ && ng g $(a)
