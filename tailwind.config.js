@@ -4,18 +4,26 @@ const colors = require("tailwindcss/colors");
 
 module.exports = {
   content: [
-    "projects/hqf/src/**/*.{html,ts}",
+    "projects/focusf/src/**/*.{html,ts}",
   ],
   theme: {
     extend: {
+      // fg => foreground
+      // bg => background
       colors: {
-        "c60": "#f4dcda",
-        "c30": "#f3be98",
-        "c10": "#e67d24",
-        "c10-active": "#ec9756",
-        "c10-text": "#ffffff",
-        "c-text": "#0c0c0c",
-        "c-disabled": colors.gray["300"]
+        "c60-bg": "#070F2B",
+
+        "c30-bg": "#1B1A55",
+        "c30-fg": "#FFFFFF",
+
+        "c10-fg": "#FFFFFF",
+        "c10-bg": "#535C91",
+
+        "c10-bg-active": "#9290C3",
+        "c10-fg-active": "#FFFFFF",
+
+        "c-fg-disabled": "#FFFFFF",
+        "c-bg-disabled": colors.gray["300"]
       },
       animation: {
         "spin-slow": "spin 3s linear infinite",

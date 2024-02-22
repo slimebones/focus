@@ -5,7 +5,9 @@
   "projects": {
     "focusf": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "inlineStyle": true
+      },
       "root": "projects/focusf",
       "sourceRoot": "projects/focusf/src",
       "prefix": "app",

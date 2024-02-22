@@ -1,9 +1,9 @@
 export t=.
-export args
+export a
 export port=3000
 
 lint:
-	cd ../../ && npx eslint --fix $(args) projects/hqf/src/$(t)
+	cd ../../ && npx eslint --fix $(a) projects/hqf/src/$(t)
 
 test:
 	ng test
@@ -12,3 +12,6 @@ check: lint test
 
 run:
 	cd ../../ && ng s --port $(port)
+
+g:
+	cd ../../ && ng g $(a)
