@@ -7,8 +7,14 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
+    // Disabled by:
+    // https://stackoverflow.com/questions/70106472/property-fname-comes-from-an-index-signature-so-it-must-be-accessed-with-fn
+    "noPropertyAccessFromIndexSignature": false,
+    // Disable strict initialization rule
+    // https://stackoverflow.com/a/66237784/14748231
+    "noImplicitReturns": false,
+    "strictPropertyInitialization": false,
+    //
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
@@ -16,12 +22,13 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2020",
-    "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ]
+    "target": "es2022",
+    "module": "es2022",
+    "lib": ["es2022", "dom"],
+    "paths": {
+      "ngx-kit": ["projects/ngx-kit/src/lib"],
+      "ngx-kit/*": ["projects/ngx-kit/src/lib/*"]
+    },
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -30,3 +37,4 @@
     "strictTemplates": true
   }
 }
+
