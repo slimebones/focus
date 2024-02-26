@@ -8,3 +8,6 @@ commitlint.config.js*
 *_auto_*
 codes.ts
 translations.ts
+svelte.config.js
+tailwind.config.js
+.eslintrc.cjs
