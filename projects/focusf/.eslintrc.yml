@@ -1,13 +1,11 @@
 root: true
 extends:
-  - eslint:recommended
-  - plugin:@typescript-eslint/recommended
-parser: "@typescript-eslint/parser"
+  - plugin:svelte/recommended
+parser: "@svelte/parser"
 parserOptions:
   project:
     - "./tsconfig.json"
 plugins:
-  - "@typescript-eslint"
   - "unused-imports"
 rules:
   "@typescript-eslint/object-curly-spacing":
