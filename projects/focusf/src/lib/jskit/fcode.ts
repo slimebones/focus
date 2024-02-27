@@ -1,3 +1,5 @@
+import { log } from "./log";
+
 export interface AnyConstructor
 {
   new (...args: any[]): any;
@@ -76,7 +78,8 @@ export class FcodeCore
 
     if (code in this.activeCodeToConstructor)
     {
-      throw new Error(code);
+      log.warn(code + " is already registered => skip");
+      return;
     }
 
     const legacyCodesToAdd: string[] = [];

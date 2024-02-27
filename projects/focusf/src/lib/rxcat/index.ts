@@ -152,7 +152,7 @@ export abstract class MsgUtils
       throw new Error("no constructor for any of mcodes " + allMcodes);
     }
 
-    const fdata: any = { ...rawmsg }; 
+    const fdata: any = { ...rawmsg };
     if ("errcodeid" in fdata)
     {
       const allErrcodes = indexedErrcodes[fdata["errcodeid"]];
@@ -255,7 +255,7 @@ export class ClientBus
       + serverPort
       + "/rx"
     );
-    
+
     this.serverConn.addEventListener(
       "open",
       (_) =>

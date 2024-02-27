@@ -1,5 +1,4 @@
 <script lang="ts">
-    import Counter from "./Counter.svelte";
 </script>
 
 <svelte:head>
@@ -9,6 +8,4 @@
 
 <section>
     <div class="text-3xl font-bold underline text-c30-fg">WOW</div>
-
-	<Counter />
 </section>

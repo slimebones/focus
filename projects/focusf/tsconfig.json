@@ -9,11 +9,9 @@
         "noImplicitReturns": false,
         "strictPropertyInitialization": false,
         "noFallthroughCasesInSwitch": true,
-        "sourceMap": true,
         "declaration": false,
         "downlevelIteration": true,
         "experimentalDecorators": true,
-        "moduleResolution": "node",
         "importHelpers": true,
 		"allowJs": true,
 		"checkJs": true,
@@ -21,7 +19,6 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
-		"strict": true,
 		"moduleResolution": "bundler"
 	}
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias

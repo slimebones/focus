@@ -2,7 +2,7 @@ export t
 export args
 
 run: 
-	yarn run dev --port 3000
+	yarn run dev --port 9050
 
 lint:
 	npx eslint --fix $(args) src/$(t)
