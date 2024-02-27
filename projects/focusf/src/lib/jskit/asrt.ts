@@ -1,4 +1,4 @@
-import { Err } from "./err";
+import { Err } from "../jskit/err";
 
 // todo: remove call to asrt (to not even compute condition) from the final
 //       prod build using webpack or something.
@@ -8,7 +8,7 @@ class AsrtErr extends Err
   public constructor(msg?: string)
   {
     super(msg);
-    console.warn("assert err encountered");
+    console.warn("asrt err encountered");
   }
 }
 

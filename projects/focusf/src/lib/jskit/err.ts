@@ -1,11 +1,7 @@
 import { code } from "./fcode";
 
-export abstract class Err extends Error
-{
-}
-
 @code("not-found-err")
-export class NotFoundErr extends Err
+export class NotFoundErr extends Error
 {
   public constructor(s: any)
   {
@@ -14,7 +10,7 @@ export class NotFoundErr extends Err
 }
 
 @code("already-processed-err")
-export class AlreadyProcessedErr extends Err
+export class AlreadyProcessedErr extends Error
 {
   public constructor(s: any)
   {
@@ -23,7 +19,7 @@ export class AlreadyProcessedErr extends Err
 }
 
 @code("unsupported-err")
-export class UnsupportedErr extends Err
+export class UnsupportedErr extends Error
 {
   public constructor(s: any)
   {
@@ -32,7 +28,7 @@ export class UnsupportedErr extends Err
 }
 
 @code("inp-err")
-export class InpErr extends Err
+export class InpErr extends Error
 {
   public constructor(s: any)
   {
@@ -44,7 +40,7 @@ export class InpErr extends Err
   * Some obj is locked to do read/write on it.
   */
 @code("lock-err")
-export class LockErr extends Err
+export class LockErr extends Error
 {
   public constructor(s: any)
   {
