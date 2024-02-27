@@ -267,7 +267,8 @@ export class ClientBus
       "message",
       (evt) =>
       {
-        this.receiveConnRawmsg.call(this, evt.data);
+        const data = JSON.parse(evt.data);
+        this.receiveConnRawmsg.call(this, data);
       }
     );
     this.serverConn.addEventListener(
