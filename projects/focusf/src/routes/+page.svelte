@@ -1,7 +1,7 @@
 <script lang="ts">
     import Counter from "./Counter.svelte";
-    import welcome from "$lib/svelte-welcome.webp";
-    import welcome_fallback from "$lib/svelte-welcome.png";
+    import welcome from "$lib/assets/svelte-welcome.webp";
+    import welcome_fallback from "$lib/assets/svelte-welcome.png";
 </script>
 
 <svelte:head>
