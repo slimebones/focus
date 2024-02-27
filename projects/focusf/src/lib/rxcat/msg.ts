@@ -28,7 +28,7 @@ export class OkEvt extends Evt
 export class GetDocsReq extends Req
 {
   public collection: string;
-  public searchQuery: string;
+  public searchQuery: Query;
 
   public constructor(
     args: any

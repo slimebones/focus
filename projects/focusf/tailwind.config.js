@@ -12,7 +12,7 @@ module.exports = {
       // bg => background
       colors: {
         "c60-bg": "#070F2B",
-        "c30-fg": "#FFFFFF",
+        "c60-fg": "#FFFFFF",
 
         "c30-bg": "#1B1A55",
         "c30-fg": "#FFFFFF",

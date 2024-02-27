@@ -348,7 +348,11 @@ export class ClientBus
       st.set(rae);
     };
 
-    this.pub(req as Msg, pubfn as PubAction, opts);
+    this.pub(
+      req as Msg,
+      ((req: TReq, evt: TEvt) => pubfn(req, evt)) as PubAction,
+      opts
+    );
     return st;
   }
 
@@ -540,6 +544,6 @@ export class ClientBus
 
   private receiveConnComplete(): void
   {
-    log.info("client bus conn completed");
+    log.info("client bus conn closed");
   }
 }

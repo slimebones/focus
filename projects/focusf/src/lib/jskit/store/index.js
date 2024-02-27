@@ -67,13 +67,15 @@ export function writable(value, start = noop)
 			value = new_value;
 			if (stop)
       {
-				// store is ready
-				const run_queue = subscriber_queue.length !== 0;
 				for (const subscriber of subscribers)
         {
 					subscriber[1]();
 					subscriber_queue.push(subscriber, value);
 				}
+        // (ryzhovalex): i've put it here! but in svelte this is above
+        //               subs loop. Have no idea why, since we push after the
+        //               check...
+				const run_queue = subscriber_queue.length !== 0;
 				if (run_queue)
         {
 					for (let i = 0; i < subscriber_queue.length; i += 2)
