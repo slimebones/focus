@@ -5,25 +5,11 @@ from orwynn.mongo import MongoCfg
 from orwynn.preload import PreloadCfg, handle_preload
 from orwynn.rbac import PermissionModel, RbacCfg
 
-from src.auto import AutoUtils
-from src.share import handle_share, handle_share_page
-from src.user import UserUtils
-
 default = {
     "__default__": [
         BootCfg(
             std_verbosity=2,
             route_specs=[
-                RouteSpec(
-                    method="get",
-                    route="/share/{filename}",
-                    handler=handle_share
-                ),
-                RouteSpec(
-                    method="get",
-                    route="/share/{filename}/{page}",
-                    handler=handle_share_page
-                ),
                 RouteSpec(
                     method="post",
                     route="/preload",
@@ -35,11 +21,11 @@ default = {
                     handler=handle_get_indexed_codes
                 ),
             ],
-            bootscripts={
-                "post-sys-enable": [
-                    AutoUtils.run
-                ]
-            }
+            # bootscripts={
+            #     "post-sys-enable": [
+            #         AutoUtils.run
+            #     ]
+            # }
         ),
         RbacCfg(
             permissions=[
@@ -66,12 +52,12 @@ default = {
             ]
         ),
         AuthCfg(
-            check_user_func= \
-                UserUtils.req_check_user,
-            try_login_user= \
-                UserUtils.try_req_login_user,
-            try_logout_user= \
-                UserUtils.try_req_logout_user,
+            # check_user_func= \
+            #     UserUtils.req_check_user,
+            # try_login_user= \
+            #     UserUtils.try_req_login_user,
+            # try_logout_user= \
+            #     UserUtils.try_req_logout_user,
             auth_token_secret="hello",  # noqa: S106
             auth_token_algo="HS256",  # noqa: S106
             auth_token_exp_time=2592000
@@ -80,7 +66,7 @@ default = {
     "test": [
         MongoCfg(
             url="mongodb://localhost:9006",
-            database_name="cpasbTestDb",
+            database_name="focusbTestDb",
             must_clean_db_on_destroy=True
         ),
         PreloadCfg(
@@ -90,20 +76,20 @@ default = {
     "dev": [
         MongoCfg(
             url="mongodb://localhost:9006",
-            database_name="cpasbDevDb",
+            database_name="focusbDevDb",
             must_clean_db_on_destroy=True
         )
     ],
     "prod": [
         MongoCfg(
             url="mongodb://mongo:27017",
-            database_name="cpasbProdDb"
+            database_name="focusbProdDb"
         )
     ],
     "local-prod": [
         MongoCfg(
             url="mongodb://mongo:5031",
-            database_name="cpasbLocalProdDb"
+            database_name="focusbLocalProdDb"
         )
     ]
 }
