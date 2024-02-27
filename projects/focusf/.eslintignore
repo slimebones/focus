@@ -1,3 +1,5 @@
+src/lib/jskit/internal
+src/lib/jskit/store
 *package.json
 package-lock.json
 dist
