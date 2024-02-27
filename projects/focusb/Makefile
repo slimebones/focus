@@ -5,7 +5,7 @@ export t
 export m
 export args
 export host=localhost
-export port=5110
+export port=9051
 
 export ORWYNN_DEBUG=1
 export ORWYNN_ALLOW_CLEAN=1

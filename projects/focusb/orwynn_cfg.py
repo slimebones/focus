@@ -1,41 +1,77 @@
-import aiohttp.web
 from orwynn.admin import handle_get_indexed_codes
 from orwynn.auth import AuthCfg
-from orwynn.boot import BootCfg
+from orwynn.boot import BootCfg, RouteSpec
 from orwynn.mongo import MongoCfg
 from orwynn.preload import PreloadCfg, handle_preload
 from orwynn.rbac import PermissionModel, RbacCfg
+
+from src.auto import AutoUtils
+from src.share import handle_share, handle_share_page
+from src.user import UserUtils
 
 default = {
     "__default__": [
         BootCfg(
             std_verbosity=2,
-            routedef_funcs=[
-                lambda: aiohttp.web.post("/preload", handle_preload),
-                lambda: aiohttp.web.get(
-                    "/admin/codes",
-                    handle_get_indexed_codes
-                )
+            route_specs=[
+                RouteSpec(
+                    method="get",
+                    route="/share/{filename}",
+                    handler=handle_share
+                ),
+                RouteSpec(
+                    method="get",
+                    route="/share/{filename}/{page}",
+                    handler=handle_share_page
+                ),
+                RouteSpec(
+                    method="post",
+                    route="/preload",
+                    handler=handle_preload
+                ),
+                RouteSpec(
+                    method="get",
+                    route="/admin/codes",
+                    handler=handle_get_indexed_codes
+                ),
             ],
             bootscripts={
+                "post-sys-enable": [
+                    AutoUtils.run
+                ]
             }
         ),
         RbacCfg(
             permissions=[
                 PermissionModel(
-                    code="test-permission",
-                    name="",
+                    code="start-operation-permission",
+                    name="Начать выполнение операции",
+                    dscr="Возможность брать операции в работу."
+                ),
+                PermissionModel(
+                    code="create-objective-permission",
+                    name="Создать задачу",
+                    dscr="Возможность создавать задачи."
+                ),
+                PermissionModel(
+                    code="create-tprocess-permission",
+                    name="Создать тех. процесс",
+                    dscr="Возможность создавать тех. процессы."
+                ),
+                PermissionModel(
+                    code="del-report-permission",
+                    name="Удалить отчет",
                     dscr=""
                 ),
             ]
         ),
         AuthCfg(
-            # check_user_func= \
-            #     UserUtils.req_check_user,
-            # try_login_user= \
-            #     UserUtils.try_req_login_user,
-            # try_logout_user= \
-            #     UserUtils.try_req_logout_user,
+            check_user_func= \
+                UserUtils.req_check_user,
+            try_login_user= \
+                UserUtils.try_req_login_user,
+            try_logout_user= \
+                UserUtils.try_req_logout_user,
             auth_token_secret="hello",  # noqa: S106
             auth_token_algo="HS256",  # noqa: S106
             auth_token_exp_time=2592000
@@ -44,7 +80,7 @@ default = {
     "test": [
         MongoCfg(
             url="mongodb://localhost:9006",
-            database_name="focusbTestDb",
+            database_name="cpasbTestDb",
             must_clean_db_on_destroy=True
         ),
         PreloadCfg(
@@ -54,14 +90,20 @@ default = {
     "dev": [
         MongoCfg(
             url="mongodb://localhost:9006",
-            database_name="focusbDevDb",
+            database_name="cpasbDevDb",
             must_clean_db_on_destroy=True
         )
     ],
     "prod": [
         MongoCfg(
             url="mongodb://mongo:27017",
-            database_name="focusbProdDb"
+            database_name="cpasbProdDb"
+        )
+    ],
+    "local-prod": [
+        MongoCfg(
+            url="mongodb://mongo:5031",
+            database_name="cpasbLocalProdDb"
         )
     ]
 }
