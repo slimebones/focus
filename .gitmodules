@@ -1,7 +1,7 @@
 [submodule "projects/orwynn"]
 	path = projects/orwynn
 	url = git@github.com:slimebones/orwynn.git
-	branch = v2
+	branch = master
 [submodule "projects/pykit"]
 	path = projects/pykit
 	url = git@github.com:slimebones/pykit.git
