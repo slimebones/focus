@@ -1,15 +1,14 @@
-from orwynn.dto import Fdto, Udto
+from orwynn.dto import Udto
 from orwynn.mongo import (
     CreateDocReq,
     DelDocReq,
     Doc,
     GetDocsReq,
-    GotDocUdtoEvt,
     UpdDocReq,
     filter_collection_factory,
 )
 from orwynn.sys import Sys
-from rxcat import OkEvt, ServerBus
+from rxcat import OkEvt
 
 
 class ProjectUdto(Udto):

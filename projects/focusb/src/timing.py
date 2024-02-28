@@ -1,16 +1,16 @@
 from typing import Literal
-from orwynn.dto import Fdto, Udto
+
+from orwynn.dto import Udto
 from orwynn.mongo import (
     CreateDocReq,
     DelDocReq,
     Doc,
     GetDocsReq,
-    GotDocUdtoEvt,
     UpdDocReq,
     filter_collection_factory,
 )
 from orwynn.sys import Sys
-from rxcat import OkEvt, ServerBus
+from rxcat import OkEvt
 
 TimerPurpose = Literal["work", "rest", "play"]
 TimerStatus = Literal["wait", "tick", "paused", "finished"]
@@ -25,7 +25,7 @@ class TimerDoc(Doc):
     purpose: TimerPurpose
     duration: float
 
-    finishSoundAssetSid: str | None = None 
+    finishSoundAssetSid: str | None = None
     status: TimerStatus = "wait"
 
     def to_udto(self) -> TimerUdto:
