@@ -181,6 +181,8 @@ class TimingSys(Sys):
 
     async def _on_create_doc(self, req: CreateDocReq):
         q = req.createQuery.copy().disallow(
+            "currentDuration",
+            "launchedLastTickTimestamp"
             "status",
             raise_mod="warn"
         )
@@ -190,6 +192,7 @@ class TimingSys(Sys):
     async def _on_upd_doc(self, req: UpdDocReq):
         updq = req.updQuery.copy().disallow(
             "currentDuration",
+            "launchedLastTickTimestamp",
             "status",
             raise_mod="warn"
         )
