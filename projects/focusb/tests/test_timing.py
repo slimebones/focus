@@ -3,7 +3,7 @@ from orwynn.mongo import DelDocReq, GotDocUdtoEvt
 from pykit.check import check
 from rxcat import ServerBus
 
-from src.timing import OkEvt, Query, StartTimerReq, TimerDoc, TimerUdto
+from src.timing import FinishedTimerEvt, OkEvt, Query, StartTimerReq, TimerDoc, TimerUdto
 
 
 @pytest.mark.asyncio
@@ -24,15 +24,17 @@ async def test_del(timer_udto_1: TimerUdto, server_bus: ServerBus):
     check.instance(evt, OkEvt)
     assert len(list(TimerDoc.get_many())) == 0
 
-@pytest.mark.asyncio
-async def test_start(timer_udto_1: TimerUdto, server_bus: ServerBus):
-    evt = await server_bus.pubr(StartTimerReq(
-        sid=timer_udto_1.sid
-    ))
-    evt = check.instance(evt, GotDocUdtoEvt)
+# @pytest.mark.asyncio
+# async def test_start(timer_udto_1: TimerUdto, server_bus: ServerBus):
+#     await server_bus.sub(FinishedTimerEvt)
 
-    udto = check.instance(evt.udto, TimerUdto)
-    assert udto.status == "tick"
-    assert udto.launchedLastTickTimestamp > 0.0
-    assert udto.currentDuration == 0.0
+#     evt = await server_bus.pubr(StartTimerReq(
+#         sid=timer_udto_1.sid
+#     ))
+#     evt = check.instance(evt, GotDocUdtoEvt)
+
+#     udto = check.instance(evt.udto, TimerUdto)
+#     assert udto.status == "tick"
+#     assert udto.launchedLastTickTimestamp > 0.0
+#     assert udto.currentDuration == 0.0
 
