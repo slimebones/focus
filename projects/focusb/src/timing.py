@@ -85,14 +85,15 @@ class TimingSys(Sys):
         await self._sub(StartTimerReq, self._on_start_timer)
         await self._sub(StopTimerReq, self._on_stop_timer)
 
-    def _create_tick_task_for_timer(self, timer_doc: TimerDoc):
+    def _create_tick_task_for_timer(self, timer_doc: TimerDoc, orig_req: Req):
         if timer_doc.sid in self._timer_sid_to_tick_task:
             raise AlreadyProcessedErr(f"tick task for timer {timer_doc}")
         self._timer_sid_to_tick_task[timer_doc.sid] = asyncio.create_task(
             self._tick_timer(
                 timer_doc.sid,
                 timer_doc.currentDuration,
-                timer_doc.totalDuration
+                timer_doc.totalDuration,
+                orig_req
             )
         )
 
@@ -103,35 +104,43 @@ class TimingSys(Sys):
         task.cancel()
         return True
 
-    def _stop_all_timers(self):
+    async def _stop_all_timers(self):
         for sid, task in self._timer_sid_to_tick_task.items():
             task.cancel()
-            self._finish_timer(sid)
+            await self._finish_timer(sid, None)
 
-    def _finish_timer(self, sid: str):
+    async def _finish_timer(self, sid: str, orig_req: Req | None):
         timer_doc = TimerDoc.get(Query({"sid": sid}))
         if timer_doc.status != "tick":
             raise ValErr(
                 f"timer status must be \"tick\", got {timer_doc.status}"
             )
 
-        timer_doc.upd(Query.as_upd(
+        timer_doc = timer_doc.upd(Query.as_upd(
             set={
                 "status": "finished",
                 "currentDuration": 0.0
             }
         ))
+        finished_evt = FinishedTimerEvt(
+            rsid="",
+            udto=timer_doc.to_udto()
+        )
+        if orig_req:
+            finished_evt = finished_evt.as_res_from_req(orig_req)
+        await self._pub(finished_evt)
 
     async def _tick_timer(
         self,
         sid: str,
         current_duration: float,
-        total_duration: float
+        total_duration: float,
+        orig_req: Req
     ):
         delta_duration = total_duration - current_duration
         if delta_duration > 0:
             await asyncio.sleep(delta_duration)
-        self._finish_timer(sid)
+        await self._finish_timer(sid, orig_req)
 
     async def _on_start_timer(self, req: StartTimerReq):
         timer_doc = TimerDoc.get(Query({"sid": req.sid}))
@@ -147,7 +156,7 @@ class TimingSys(Sys):
 
         # it's ok here to pass not upded yet timer doc, an err may happen here,
         # so we don't want to upd the mongo doc before this point
-        self._create_tick_task_for_timer(timer_doc)
+        self._create_tick_task_for_timer(timer_doc, req)
         setq["launchedLastTickTimestamp"] = DtUtils.get_utc_timestamp()
 
         timer_doc = timer_doc.upd(Query.as_upd(set=setq))
