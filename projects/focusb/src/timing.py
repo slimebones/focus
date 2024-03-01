@@ -1,41 +1,65 @@
-from typing import Literal
+from typing import Any, Literal
+from fcode import code
 
 from orwynn.dto import Udto
+from pykit.dt import DtUtils
 from orwynn.mongo import (
     CreateDocReq,
     DelDocReq,
     Doc,
     GetDocsReq,
+    Query,
     UpdDocReq,
     filter_collection_factory,
 )
 from orwynn.sys import Sys
-from rxcat import OkEvt
+from pykit.err import AlreadyProcessedErr, InpErr
+from pykit.history import History
+from rxcat import Evt, OkEvt, Req
 
 TimerPurpose = Literal["work", "rest", "play"]
-TimerStatus = Literal["wait", "tick", "paused", "finished"]
+TimerStatus = Literal["tick", "paused", "finished"]
 
 class TimerUdto(Udto):
     purpose: TimerPurpose
-    duration: float
+    currentDuration: float
+    totalDuration: float
     finishSoundAssetSid: str | None
     status: TimerStatus
 
 class TimerDoc(Doc):
     purpose: TimerPurpose
-    duration: float
+    currentDuration: float = 0.0
+    """
+    This is written only on status change. Clients should calc it themselves
+    and verify on timer changes.
+    """
+    totalDuration: float
+    status: TimerStatus = "paused"
 
     finishSoundAssetSid: str | None = None
-    status: TimerStatus = "wait"
 
     def to_udto(self) -> TimerUdto:
         return TimerUdto(
             sid=self.sid,
             purpose=self.purpose,
-            duration=self.duration,
+            currentDuration=self.currentDuration,
+            totalDuration=self.totalDuration,
             finishSoundAssetSid=self.finishSoundAssetSid,
             status=self.status
         )
+
+@code("start-timer-req")
+class StartTimerReq(Req):
+    sid: str
+
+@code("stop-timer-req")
+class StopTimerReq(Req):
+    sid: str
+
+@code("finished-timer-evt")
+class FinishedTimerEvt(Evt):
+    udto: TimerUdto
 
 class TimingSys(Sys):
     CommonSubMsgFilters = [
@@ -47,6 +71,42 @@ class TimingSys(Sys):
         await self._sub(CreateDocReq, self._on_create_doc)
         await self._sub(UpdDocReq, self._on_upd_doc)
         await self._sub(DelDocReq, self._on_del_doc)
+        await self._sub(StartTimerReq, self._on_start_timer)
+        await self._sub(StopTimerReq, self._on_stop_timer)
+
+    async def _tick_timer(
+        self,
+        current_duration: float,
+        total_duration: float
+    ):
+        pass
+
+    async def _on_start_timer(self, req: StartTimerReq):
+        timer_doc = TimerDoc.get(Query({"sid": req.sid}))
+        if timer_doc.status == "tick":
+            raise AlreadyProcessedErr(f"timer {timer_doc} start")
+
+        setq: dict[str, Any] = {
+            "status": "tick"
+        }
+        # restart ticked duration upon starting a finished timer again
+        if timer_doc.status == "finished":
+            setq["tickedDuration"] = 0.0
+        timer_doc = timer_doc.upd(Query.as_upd(set=setq))
+        await self._pub(timer_doc.to_got_doc_udto_evt(req))
+
+    async def _on_stop_timer(self, req: StopTimerReq):
+        timer_doc = TimerDoc.get(Query({"sid": req.sid}))
+        if timer_doc.status != "tick":
+            raise InpErr(
+                f"on timer with status {timer_doc.status}, an attempt to stop"
+            )
+
+        setq: dict[str, Any] = {
+            "status": "paused"
+        }
+        timer_doc = timer_doc.upd(Query.as_upd(set=setq))
+        await self._pub(timer_doc.to_got_doc_udto_evt(req))
 
     async def _on_get_docs(self, req: GetDocsReq):
         docs = list(TimerDoc.get_many(req.searchQuery))
