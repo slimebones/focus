@@ -1,3 +1,4 @@
+import asyncio
 from typing import Any, Literal
 from fcode import code
 
@@ -13,7 +14,7 @@ from orwynn.mongo import (
     filter_collection_factory,
 )
 from orwynn.sys import Sys
-from pykit.err import AlreadyProcessedErr, InpErr
+from pykit.err import AlreadyProcessedErr, InpErr, LockErr
 from pykit.history import History
 from rxcat import Evt, OkEvt, Req
 
@@ -67,6 +68,8 @@ class TimingSys(Sys):
     ]
 
     async def enable(self):
+        self._timer_sid_to_tick_task: dict[str, asyncio.Task] = {}
+
         await self._sub(GetDocsReq, self._on_get_docs)
         await self._sub(CreateDocReq, self._on_create_doc)
         await self._sub(UpdDocReq, self._on_upd_doc)
@@ -74,12 +77,52 @@ class TimingSys(Sys):
         await self._sub(StartTimerReq, self._on_start_timer)
         await self._sub(StopTimerReq, self._on_stop_timer)
 
+    def _create_tick_task_for_timer(self, timer_doc: TimerDoc):
+        if timer_doc.sid in self._timer_sid_to_tick_task:
+            raise AlreadyProcessedErr(f"tick task for timer {timer_doc}")
+        self._timer_sid_to_tick_task[timer_doc.sid] = asyncio.create_task(
+            self._tick_timer(
+                timer_doc.sid,
+                timer_doc.currentDuration,
+                timer_doc.totalDuration
+            )
+        )
+
+    def _try_stop_tick_task_for_timer(self, sid: str) -> bool:
+        task = self._timer_sid_to_tick_task.get(sid, None)
+        if not task:
+            return False
+        task.cancel()
+        return True
+
+    def _stop_all_timers(self):
+        for sid, task in self._timer_sid_to_tick_task.items():
+            task.cancel()
+            self._finish_timer_tick(sid)
+
+    def _finish_timer_tick(self, sid: str):
+        timer_doc = TimerDoc.get(Query({"sid": sid}))
+        assert \
+            timer_doc.status == "tick", \
+            f"timer status must be \"tick\", got {timer_doc.status}"
+
+        timer_doc.upd(Query.as_upd(
+            set={
+                "status": "finished",
+                "currentDuration": 0.0
+            }
+        ))
+
     async def _tick_timer(
         self,
+        sid: str,
         current_duration: float,
         total_duration: float
     ):
-        pass
+        delta_duration = total_duration - current_duration
+        if delta_duration > 0:
+            await asyncio.sleep(delta_duration)
+        self._finish_timer_tick(sid)
 
     async def _on_start_timer(self, req: StartTimerReq):
         timer_doc = TimerDoc.get(Query({"sid": req.sid}))
@@ -92,6 +135,11 @@ class TimingSys(Sys):
         # restart ticked duration upon starting a finished timer again
         if timer_doc.status == "finished":
             setq["tickedDuration"] = 0.0
+
+        # it's ok here to pass not upded yet timer doc, an err may happen here,
+        # so we don't want to upd the mongo doc before this point
+        self._create_tick_task_for_timer(timer_doc)
+
         timer_doc = timer_doc.upd(Query.as_upd(set=setq))
         await self._pub(timer_doc.to_got_doc_udto_evt(req))
 
@@ -101,6 +149,7 @@ class TimingSys(Sys):
             raise InpErr(
                 f"on timer with status {timer_doc.status}, an attempt to stop"
             )
+        self._try_stop_tick_task_for_timer(timer_doc.sid)
 
         setq: dict[str, Any] = {
             "status": "paused"
@@ -121,10 +170,21 @@ class TimingSys(Sys):
         await self._pub(doc.to_got_doc_udto_evt(req))
 
     async def _on_upd_doc(self, req: UpdDocReq):
-        doc = TimerDoc.get_and_upd(req.searchQuery, req.updQuery)
+        updq = req.updQuery.copy().disallow(
+            "currentDuration",
+            "status",
+            raise_mod="warn"
+        )
+        doc = TimerDoc.get(req.searchQuery)
+        if doc.status == "tick":
+            raise LockErr(f"cannot do any changes on ticking timer {doc}")
+        doc = doc.upd(updq)
         await self._pub(doc.to_got_doc_udto_evt(req))
 
     async def _on_del_doc(self, req: DelDocReq):
-        TimerDoc.get_and_del(req.searchQuery)
+        doc = TimerDoc.get(req.searchQuery)
+        if doc.status == "tick":
+            raise LockErr(f"cannot do any changes on ticking timer {doc}")
+        doc = doc.delete()
         await self._pub(OkEvt(rsid="").as_res_from_req(req))
 
