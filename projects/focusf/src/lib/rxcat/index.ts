@@ -6,7 +6,7 @@ import { log } from "../jskit/log";
 import { AnyConstructor, code, FcodeCore } from "../jskit/fcode";
 import { Queue } from "queue-typescript";
 import { AlreadyProcessedErr, InpErr, NotFoundErr } from "../jskit/err";
-import { Writable } from "$lib/jskit/store/public";
+import { Readable } from "$lib/jskit/store/public";
 
 interface ReqAndRaction
 {
@@ -329,33 +329,25 @@ export class ClientBus
     return true;
   }
 
-  public pubstField<T = any>(
+  public pubstf<T = any>(
     field: string,
     req: Req,
     opts: PubOpts = {} as PubOpts
-  ): Writable<T | undefined>
+  ): Readable<any | undefined>
   {
-    const orig = this.pubst<T>(req, opts);
-    const dReadable = derived(
-      orig,
+    return derived(
+      this.pubst<T>(req, opts),
       ($evt) =>
         $evt === undefined
-          ? undefined
-          : ($evt as { [key: string]: any })[field]
+        ? undefined
+        : ($evt as { [key: string]: any })[field]
     );
-    const dWritable: Writable<T | undefined> =
-    {
-      subscribe: dReadable.subscribe,
-      set: orig.set,
-      update: orig.update
-    };
-    return dWritable;
   }
 
   public pubst<TEvt = Evt>(
     req: Req,
     opts: PubOpts = {} as PubOpts
-  ): Writable<TEvt | undefined>
+  ): Readable<TEvt | undefined>
   {
     const st = writable<TEvt | undefined>(undefined);
 
