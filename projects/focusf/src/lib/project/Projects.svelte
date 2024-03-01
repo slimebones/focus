@@ -1,35 +1,40 @@
 <script lang="ts">
   import { ClientBus } from "$lib/rxcat";
   import {
-      CreateDocReq, GetDocsReq, GotDocUdtoEvt, GotDocUdtosEvt
+      CreateDocReq, GetDocsReq
   } from "$lib/rxcat/msg";
-  import { type Readable, derived } from "svelte/store";
+  import { derived, type Readable } from "svelte/store";
   import { type ProjectUdto } from "$lib/project/models";
 
-  const projects: Readable<ProjectUdto[]> = ClientBus.ie.pubstField(
-      "udtos",
-      new GetDocsReq({
-          collection: "projectDoc",
-          searchQuery: {}
-      })
+  const projects = ClientBus.ie.pubstField<ProjectUdto[]>(
+    "udtos",
+    new GetDocsReq({
+        collection: "projectDoc",
+        searchQuery: {}
+    })
   );
 
-  function createProject(createq: any): Readable<ProjectUdto>
+  function createProject(createq: any): Readable<ProjectUdto | undefined>
   {
-      return derived(
-        ClientBus.ie.pubstField<ProjectUdto>(
-          "udto",
-          new CreateDocReq({
-              collection: "projectDoc",
-              createQuery: createq
-          })
-        ),
-        ($udto) =>
+    return derived(
+      ClientBus.ie.pubstField<ProjectUdto>(
+        "udto",
+        new CreateDocReq({
+            collection: "projectDoc",
+            createQuery: createq
+        })
+      ),
+      ($udto) =>
+      {
+        if ($udto !== undefined)
         {
-          projects
-          return $udto;
+          projects.update(
+            val => val === undefined ? [$udto] : [...val, $udto]
+          );
         }
-      );
+        return $udto;
+      }
+    );
   }
 </script>
 
@@ -39,7 +44,7 @@
 </svelte:head>
 
 <div class="flex flex-row gap-4 justify-start items-center">
-  {#if $projects !== null}
+  {#if $projects !== undefined}
     {#each $projects as project}
       {project.name}
     {/each}
@@ -49,6 +54,6 @@
     class="bg-c10-bg rounded p-2 hover:bg-c10-bg-active"
     on:click={() => createProject({ name: "hello" })}
   >
-    New Project 
+    New Project
   </button>
 </div>
