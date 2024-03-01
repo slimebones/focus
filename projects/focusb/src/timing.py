@@ -14,7 +14,7 @@ from orwynn.mongo import (
     filter_collection_factory,
 )
 from orwynn.sys import Sys
-from pykit.err import AlreadyProcessedErr, InpErr, LockErr
+from pykit.err import AlreadyProcessedErr, InpErr, LockErr, ValErr
 from pykit.history import History
 from rxcat import Evt, OkEvt, Req
 
@@ -25,6 +25,7 @@ class TimerUdto(Udto):
     purpose: TimerPurpose
     currentDuration: float
     totalDuration: float
+    launchedLastTickTimestamp: float
     finishSoundAssetSid: str | None
     status: TimerStatus
 
@@ -34,6 +35,13 @@ class TimerDoc(Doc):
     """
     This is written only on status change. Clients should calc it themselves
     and verify on timer changes.
+    """
+    launchedLastTickTimestamp: float = 0.0
+    """
+    When last tick status was assigned to a timer.
+
+    It's helpful to measure how long from the currentDuration the timer is
+    ticking.
     """
     totalDuration: float
     status: TimerStatus = "paused"
@@ -46,6 +54,7 @@ class TimerDoc(Doc):
             purpose=self.purpose,
             currentDuration=self.currentDuration,
             totalDuration=self.totalDuration,
+            launchedLastTickTimestamp=self.launchedLastTickTimestamp,
             finishSoundAssetSid=self.finishSoundAssetSid,
             status=self.status
         )
@@ -98,13 +107,14 @@ class TimingSys(Sys):
     def _stop_all_timers(self):
         for sid, task in self._timer_sid_to_tick_task.items():
             task.cancel()
-            self._finish_timer_tick(sid)
+            self._finish_timer(sid)
 
-    def _finish_timer_tick(self, sid: str):
+    def _finish_timer(self, sid: str):
         timer_doc = TimerDoc.get(Query({"sid": sid}))
-        assert \
-            timer_doc.status == "tick", \
-            f"timer status must be \"tick\", got {timer_doc.status}"
+        if timer_doc.status != "tick":
+            raise ValErr(
+                f"timer status must be \"tick\", got {timer_doc.status}"
+            )
 
         timer_doc.upd(Query.as_upd(
             set={
@@ -122,7 +132,7 @@ class TimingSys(Sys):
         delta_duration = total_duration - current_duration
         if delta_duration > 0:
             await asyncio.sleep(delta_duration)
-        self._finish_timer_tick(sid)
+        self._finish_timer(sid)
 
     async def _on_start_timer(self, req: StartTimerReq):
         timer_doc = TimerDoc.get(Query({"sid": req.sid}))
@@ -139,6 +149,7 @@ class TimingSys(Sys):
         # it's ok here to pass not upded yet timer doc, an err may happen here,
         # so we don't want to upd the mongo doc before this point
         self._create_tick_task_for_timer(timer_doc)
+        setq["launchedLastTickTimestamp"] = DtUtils.get_utc_timestamp()
 
         timer_doc = timer_doc.upd(Query.as_upd(set=setq))
         await self._pub(timer_doc.to_got_doc_udto_evt(req))
@@ -151,8 +162,15 @@ class TimingSys(Sys):
             )
         self._try_stop_tick_task_for_timer(timer_doc.sid)
 
+        now_timestamp = DtUtils.get_utc_timestamp()
+        assert timer_doc.launchedLastTickTimestamp > 0.0
+        passed_delta = now_timestamp - timer_doc.launchedLastTickTimestamp
+        new_current_duration = timer_doc.currentDuration + passed_delta
+        assert new_current_duration < timer_doc.totalDuration
+
         setq: dict[str, Any] = {
-            "status": "paused"
+            "status": "paused",
+            "currentDuration": new_current_duration
         }
         timer_doc = timer_doc.upd(Query.as_upd(set=setq))
         await self._pub(timer_doc.to_got_doc_udto_evt(req))
