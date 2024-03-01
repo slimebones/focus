@@ -205,6 +205,6 @@ class TimingSys(Sys):
         doc = TimerDoc.get(req.searchQuery)
         if doc.status == "tick":
             raise LockErr(f"cannot do any changes on ticking timer {doc}")
-        doc = doc.delete()
+        doc.delete()
         await self._pub(OkEvt(rsid="").as_res_from_req(req))
 
