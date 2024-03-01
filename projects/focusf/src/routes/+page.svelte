@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Projects from "$lib/project/Projects.svelte";
+
 </script>
 
 <svelte:head>
@@ -6,6 +8,6 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section>
-    <div class="text-3xl font-bold underline text-c30-fg">WOW</div>
-</section>
+<div class="text-2xl text-c30-fg container bg-c30-bg p-4">
+  <Projects />
+</div>

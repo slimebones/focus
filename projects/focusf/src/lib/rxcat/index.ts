@@ -1,3 +1,4 @@
+import { derived } from "svelte/store";
 import { writable } from "../jskit/store";
 import { v4 as uuid } from "uuid";
 import { asrt } from "../jskit/asrt";
@@ -328,14 +329,26 @@ export class ClientBus
     return true;
   }
 
-  public st_pub<TReq = Req, TEvt = Evt>(
-    req: TReq,
+  public pubstField<T = any>(
+    field: string,
+    req: Req,
     opts: PubOpts = {} as PubOpts
-  ): Readable<ReqAndEvt<TReq, TEvt> | null>
+  ): Readable<any | null>
   {
-    const st = writable<ReqAndEvt<TReq, TEvt> | null>(null);
+    return derived(
+      this.pubst<T>(req, opts),
+      ($evt) => $evt === null ? null : $evt[field]
+    );
+  }
 
-    const pubfn = (req: TReq, evt: TEvt) =>
+  public pubst<TEvt = Evt>(
+    req: Req,
+    opts: PubOpts = {} as PubOpts
+  ): Readable<TEvt | null>
+  {
+    const st = writable<TEvt | null>(null);
+
+    const pubfn = (req: Req, evt: TEvt) =>
     {
       const rae = { req: req, evt: evt };
 
@@ -345,12 +358,12 @@ export class ClientBus
         throw evt.internal_err;
       }
 
-      st.set(rae);
+      st.set(rae.evt);
     };
 
     this.pub(
       req as Msg,
-      ((req: TReq, evt: TEvt) => pubfn(req, evt)) as PubAction,
+      ((req: Req, evt: TEvt) => pubfn(req, evt)) as PubAction,
       opts
     );
     return st;
