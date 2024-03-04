@@ -8,6 +8,6 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<div class="text-2xl text-c30-fg container bg-c30-bg p-4">
+<div class="text-2xl text-c30-fg container bg-c30-bg p-4 flex flex-col">
   <Projects />
 </div>
