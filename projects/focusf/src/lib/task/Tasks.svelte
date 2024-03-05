@@ -2,15 +2,32 @@
 	import { onDestroy } from "svelte";
   import { MongoUtils } from "$lib/mongo/utils";
   import { type TaskUdto } from "./models";
+  import { ProjectUdto } from "$lib/project/models";
+  import { selectedProjectSid } from "$lib/project/stores";
 
   const unsubs: (() => void)[] = [];
   const Collection: string = "taskDoc";
   let tasks: TaskUdto[] = [];
   let nameInp: string = "";
 
-  MongoUtils.getMany<TaskUdto>(Collection, {}, unsubs, val =>
-    tasks = [...tasks, ...val]
-  );
+  unsubs.push(selectedProjectSid.subscribe(val_selectedProjectSid =>
+  {
+    MongoUtils.get<ProjectUdto>(
+      "projectDoc",
+      {sid: val_selectedProjectSid},
+      unsubs,
+      val_project => MongoUtils.getMany<TaskUdto>(
+        Collection,
+        {
+          sid: {
+            "$in": val_project.taskSids
+          }
+        },
+        unsubs,
+        val_tasks => tasks = [...tasks, ...val_tasks]
+      )
+    );
+  }));
 
   onDestroy(() => unsubs.map(fn => fn()));
 </script>
