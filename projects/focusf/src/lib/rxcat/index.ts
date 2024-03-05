@@ -333,7 +333,7 @@ export class ClientBus
     field: string,
     req: Req,
     opts: PubOpts = {} as PubOpts
-  ): Readable<any | undefined>
+  ): Readable<T | undefined>
   {
     return derived(
       this.pubst<T>(req, opts),

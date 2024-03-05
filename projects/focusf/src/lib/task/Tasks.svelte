@@ -67,30 +67,4 @@
   onDestroy(() => unsubs.map(fn => fn()));
 </script>
 
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
-</svelte:head>
 
-<div class="flex flex-row gap-4 justify-start items-center">
-  {#if projects.length > 0}
-    {#each projects as project}
-      <div>
-        {project.name}
-      </div>
-    {/each}
-  {/if}
-
-  <button
-    class="bg-green-500 rounded p-2 hover:bg-green-300"
-    on:click={(() => create({ name: "hello" }))}
-  >
-    New Project
-  </button>
-  <button
-    class="bg-red-500 rounded p-2 hover:bg-red-300"
-    on:click={(() => delLast())}
-  >
-    Delete Project
-  </button>
-</div>

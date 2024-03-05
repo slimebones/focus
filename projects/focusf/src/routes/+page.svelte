@@ -5,11 +5,10 @@
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>focus</title>
 </svelte:head>
 
-<div class="text-2xl flex flex-row">
+<div class="text-2xl flex flex-row gap-4">
   <Projects />
   <Tasks />
 </div>

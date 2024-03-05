@@ -87,11 +87,6 @@
   onDestroy(() => unsubs.map(fn => fn()));
 </script>
 
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
-</svelte:head>
-
 <div
   class="
     flex flex-col gap-4 justify-center items-center text-c30-fg

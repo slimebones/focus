@@ -24,8 +24,7 @@ module.exports = {
   ],
   rules: {
     "@typescript-eslint/object-curly-spacing": [
-      "error",
-      "always"
+      "off"
     ],
     "@typescript-eslint/strict-boolean-expressions": [
       "error",
