@@ -6,15 +6,22 @@
   } from "$lib/rxcat/msg";
   import { type ProjectUdto } from "$lib/project/models";
   import { onDestroy } from "svelte";
+  import { MongoUtils } from "$lib/mongo/utils";
 
   const unsubs: (() => void)[] = [];
+  const Collection: string = "projectDoc";
+  let projects: ProjectUdto[] = [];
   let nameInp: string = "";
 
-  let projects: ProjectUdto[] = [];
+  MongoUtils.getMany<ProjectUdto>(Collection, {}, unsubs, val =>
+  {
+    projects = [...projects, ...val];
+  });
+
   unsubs.push(ClientBus.ie.pubstf<ProjectUdto[]>(
     "udtos",
     new GetDocsReq({
-        collection: "projectDoc",
+        collection: Collection,
         searchQuery: {}
     })
   ).subscribe(udtos =>
