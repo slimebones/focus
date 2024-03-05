@@ -7,7 +7,8 @@
   import { type ProjectUdto } from "$lib/project/models";
   import { onDestroy } from "svelte";
 
-const unsubs: (() => void)[] = [];
+  const unsubs: (() => void)[] = [];
+  let nameInp: string = "";
 
   let projects: ProjectUdto[] = [];
   unsubs.push(ClientBus.ie.pubstf<ProjectUdto[]>(
@@ -24,7 +25,7 @@ const unsubs: (() => void)[] = [];
     }
   }));
 
-  function createProject(createq: any)
+  function create(createq: any)
   {
     unsubs.push(
       ClientBus.ie.pubstf<ProjectUdto>(
@@ -43,7 +44,26 @@ const unsubs: (() => void)[] = [];
     );
   }
 
-  function delLastProject()
+  function del(sid: string)
+  {
+    const unsub = ClientBus.ie.pubst<OkEvt>(
+      new DelDocReq({
+        collection: "projectDoc",
+        searchQuery: {
+          sid: sid
+        }
+      })
+    ).subscribe(ok =>
+    {
+      if (ok !== undefined)
+      {
+        projects.splice(projects.findIndex(project => project.sid == sid), 1);
+        projects = projects;
+      }
+    });
+  }
+
+  function delLast()
   {
     const lastProjectSid = projects[projects.length - 1].sid;
     unsubs.push(
@@ -72,25 +92,33 @@ const unsubs: (() => void)[] = [];
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<div class="flex flex-row gap-4 justify-start items-center">
+<div
+  class="
+    flex flex-col gap-4 justify-center items-center text-c30-fg
+    bg-c30-bg p-4 rounded
+  "
+>
   {#if projects.length > 0}
     {#each projects as project}
-      <div>
-        {project.name}
+      <div class="flex flex-row justify-center items-center gap-4">
+        <span>{project.name}</span>
+        <button
+          class="bg-red-500 rounded p-1 hover:bg-red-300 text-sm"
+          on:click={() => del(project.sid)}
+        >
+          <span>X</span>
+        </button>
       </div>
     {/each}
   {/if}
 
-  <button
-    class="bg-green-500 rounded p-2 hover:bg-green-300"
-    on:click={(() => createProject({ name: "hello" }))}
-  >
-    New Project
-  </button>
-  <button
-    class="bg-red-500 rounded p-2 hover:bg-red-300"
-    on:click={(() => delLastProject())}
-  >
-    Delete Project
-  </button>
+  <div class="flex flex-row items-center justify-center gap-2">
+    <input class="text-black" bind:value={nameInp}/>
+    <button
+      class="bg-green-500 rounded p-2 hover:bg-green-300 text-xl"
+      on:click={(() => create({ name: nameInp }))}
+    >
+      new
+    </button>
+  </div>
 </div>

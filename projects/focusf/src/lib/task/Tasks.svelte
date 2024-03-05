@@ -24,7 +24,7 @@
     }
   }));
 
-  function createProject(createq: any)
+  function create(createq: any)
   {
     unsubs.push(
       ClientBus.ie.pubstf<ProjectUdto>(
@@ -43,7 +43,7 @@
     );
   }
 
-  function delLastProject()
+  function delLast()
   {
     const lastProjectSid = projects[projects.length - 1].sid;
     unsubs.push(
@@ -83,13 +83,13 @@
 
   <button
     class="bg-green-500 rounded p-2 hover:bg-green-300"
-    on:click={(() => createProject({ name: "hello" }))}
+    on:click={(() => create({ name: "hello" }))}
   >
     New Project
   </button>
   <button
     class="bg-red-500 rounded p-2 hover:bg-red-300"
-    on:click={(() => delLastProject())}
+    on:click={(() => delLast())}
   >
     Delete Project
   </button>
