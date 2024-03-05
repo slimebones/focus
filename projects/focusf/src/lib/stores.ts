@@ -1,3 +1,4 @@
+import { browser } from "$app/environment";
 import { StartStopNotifier, Writable, writable } from "svelte/store";
 
 export function localStorageWritable(
@@ -6,11 +7,18 @@ export function localStorageWritable(
   start: StartStopNotifier<string> | undefined = undefined
 ): Writable<string>
 {
-  if (val === null)
+  if (browser)
   {
-    val = localStorage.getItem(storageKey) ?? "";
+    if (val === null)
+    {
+      val = localStorage.getItem(storageKey) ?? "";
+    }
+    localStorage.setItem(storageKey, val);
   }
-  localStorage.setItem(storageKey, val);
+  else
+  {
+    val = val === null ? "" : val;
+  }
 
   const orig = writable<string>(val);
 

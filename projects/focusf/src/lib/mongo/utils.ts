@@ -64,7 +64,7 @@ export abstract class MongoUtils
     collection: string,
     createq: Query,
     unsubs: (() => void)[],
-    onval: (val: T) => void
+    onval?: (val: T) => void
   )
   {
     unsubs.push(
@@ -76,7 +76,7 @@ export abstract class MongoUtils
         })
       ).subscribe(val =>
         {
-          if (val !== undefined)
+          if (val !== undefined && onval !== undefined)
           {
             onval(val);
           }
@@ -89,7 +89,7 @@ export abstract class MongoUtils
     searchq: Query,
     updq: Query,
     unsubs: (() => void)[],
-    onval: (val: T) => void
+    onval?: (val: T) => void
   )
   {
     unsubs.push(ClientBus.ie.pubst<T>(
@@ -100,7 +100,7 @@ export abstract class MongoUtils
       })
     ).subscribe(val =>
     {
-      if (val !== undefined)
+      if (val !== undefined && onval !== undefined)
       {
         onval(val);
       }
@@ -112,7 +112,7 @@ export abstract class MongoUtils
     sid: string,
     updq: Query,
     unsubs: (() => void)[],
-    onval: (val: T) => void
+    onval?: (val: T) => void
   )
   {
     this.upd(collection, {sid: sid}, updq, unsubs, onval);
@@ -122,7 +122,7 @@ export abstract class MongoUtils
     collection: string,
     searchq: Query,
     unsubs: (() => void)[],
-    onval: () => void
+    onval?: () => void
   )
   {
     unsubs.push(ClientBus.ie.pubst<OkEvt>(
@@ -130,9 +130,9 @@ export abstract class MongoUtils
         collection: collection,
         searchQuery: searchq
       })
-    ).subscribe(ok =>
+    ).subscribe(val =>
     {
-      if (ok !== undefined)
+      if (val !== undefined && onval !== undefined)
       {
         onval();
       }
@@ -143,7 +143,7 @@ export abstract class MongoUtils
     collection: string,
     sid: string,
     unsubs: (() => void)[],
-    onval: () => void
+    onval?: () => void
   )
   {
     this.del(collection, {sid: sid}, unsubs, onval);

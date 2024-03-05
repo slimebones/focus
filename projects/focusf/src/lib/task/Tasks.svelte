@@ -2,8 +2,9 @@
 	import { onDestroy } from "svelte";
   import { MongoUtils } from "$lib/mongo/utils";
   import { type TaskUdto } from "./models";
-  import { ProjectUdto } from "$lib/project/models";
+  import { type ProjectUdto } from "$lib/project/models";
   import { selectedProjectSid } from "$lib/project/stores";
+  import { TaskSys } from "./sys";
 
   const unsubs: (() => void)[] = [];
   const Collection: string = "taskDoc";
@@ -65,9 +66,9 @@
     <input class="text-black" bind:value={nameInp}/>
     <button
       class="bg-green-500 rounded p-2 hover:bg-green-300 text-xl"
-      on:click={(() => MongoUtils.create(
-        Collection,
-        { name: nameInp },
+      on:click={(() => TaskSys.create(
+        { text: nameInp },
+        $selectedProjectSid,
         unsubs,
         val => tasks = [...tasks, val]
       ))}
