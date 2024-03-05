@@ -1,11 +1,7 @@
 <script lang="ts">
-	import { ClientBus } from "$lib/rxcat";
-  import {
-      CreateDocReq, DelDocReq, GetDocsReq, OkEvt
-
-  } from "$lib/rxcat/msg";
-  import { type ProjectUdto } from "$lib/project/models";
+	import { type ProjectUdto } from "$lib/project/models";
   import { onDestroy } from "svelte";
+  import { selectedProjectSid } from "./stores";
   import { MongoUtils } from "$lib/mongo/utils";
 
   const unsubs: (() => void)[] = [];
@@ -14,82 +10,8 @@
   let nameInp: string = "";
 
   MongoUtils.getMany<ProjectUdto>(Collection, {}, unsubs, val =>
-  {
-    projects = [...projects, ...val];
-  });
-
-  unsubs.push(ClientBus.ie.pubstf<ProjectUdto[]>(
-    "udtos",
-    new GetDocsReq({
-        collection: Collection,
-        searchQuery: {}
-    })
-  ).subscribe(udtos =>
-  {
-    if (udtos !== undefined)
-    {
-      projects = [...projects, ...udtos];
-    }
-  }));
-
-  function create(createq: any)
-  {
-    unsubs.push(
-      ClientBus.ie.pubstf<ProjectUdto>(
-        "udto",
-        new CreateDocReq({
-            collection: "projectDoc",
-            createQuery: createq
-        })
-      ).subscribe(udto =>
-      {
-          if (udto !== undefined)
-          {
-            projects = [...projects, udto];
-          }
-      })
-    );
-  }
-
-  function del(sid: string)
-  {
-    const unsub = ClientBus.ie.pubst<OkEvt>(
-      new DelDocReq({
-        collection: "projectDoc",
-        searchQuery: {
-          sid: sid
-        }
-      })
-    ).subscribe(ok =>
-    {
-      if (ok !== undefined)
-      {
-        projects.splice(projects.findIndex(project => project.sid == sid), 1);
-        projects = projects;
-      }
-    });
-  }
-
-  function delLast()
-  {
-    const lastProjectSid = projects[projects.length - 1].sid;
-    unsubs.push(
-      ClientBus.ie.pubst<OkEvt>(
-        new DelDocReq({
-          collection: "projectDoc",
-          searchQuery: {
-            sid: lastProjectSid
-          }
-        })
-      ).subscribe(ok =>
-      {
-        if (ok !== undefined)
-        {
-          projects = projects.slice(0, projects.length - 1);
-        }
-      })
-    );
-  }
+    projects = [...projects, ...val]
+  );
 
   onDestroy(() => unsubs.map(fn => fn()));
 </script>
@@ -103,10 +25,29 @@
   {#if projects.length > 0}
     {#each projects as project}
       <div class="flex flex-row justify-center items-center gap-4">
-        <span>{project.name}</span>
+        <button on:click={() => selectedProjectSid.set(project.sid)}>
+          <span
+            class={
+              $selectedProjectSid === project.sid
+              ? "underline"
+              : "hover:underline"
+            }
+          >
+            {project.name}
+          </span>
+        </button>
         <button
-          class="bg-red-500 rounded p-1 hover:bg-red-300 text-sm"
-          on:click={() => del(project.sid)}
+          class="bg-red-500 rounded p-2 hover:bg-red-300 text-sm"
+          on:click={() => MongoUtils.delBySid(
+            Collection, project.sid, unsubs, () =>
+            {
+              projects.splice(
+                projects.findIndex(v => v.sid == project.sid),
+                1
+              );
+              projects = projects;
+            }
+          )}
         >
           <span>X</span>
         </button>
@@ -118,7 +59,15 @@
     <input class="text-black" bind:value={nameInp}/>
     <button
       class="bg-green-500 rounded p-2 hover:bg-green-300 text-xl"
-      on:click={(() => create({ name: nameInp }))}
+      on:click={(() => nameInp.trim() !== ""
+        ? MongoUtils.create(
+          Collection,
+          { name: nameInp },
+          unsubs,
+          val => projects = [...projects, val]
+        )
+        : undefined
+      )}
     >
       new
     </button>

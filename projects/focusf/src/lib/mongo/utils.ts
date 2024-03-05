@@ -1,4 +1,3 @@
-import { Udto } from "$lib/jskit/dto";
 import { log } from "$lib/jskit/log";
 import { Query } from "$lib/jskit/mongo";
 import { ClientBus } from "$lib/rxcat";
@@ -8,7 +7,7 @@ import {
 
 export abstract class MongoUtils
 {
-  public static get<T = Udto>(
+  public static get<T = any>(
     collection: string,
     searchq: Query,
     unsubs: (() => void)[],
@@ -39,7 +38,7 @@ export abstract class MongoUtils
     }));
   }
 
-  public static getMany<T = Udto>(
+  public static getMany<T = any>(
     collection: string,
     searchq: Query,
     unsubs: (() => void)[],
@@ -61,7 +60,7 @@ export abstract class MongoUtils
     }));
   }
 
-  public static create<T = Udto>(
+  public static create<T = any>(
     collection: string,
     createq: Query,
     unsubs: (() => void)[],
@@ -85,7 +84,7 @@ export abstract class MongoUtils
     );
   }
 
-  public static upd<T = Udto>(
+  public static upd<T = any>(
     collection: string,
     searchq: Query,
     updq: Query,
@@ -108,7 +107,7 @@ export abstract class MongoUtils
     }));
   }
 
-  public static updBySid<T = Udto>(
+  public static updBySid<T = any>(
     collection: string,
     sid: string,
     updq: Query,
