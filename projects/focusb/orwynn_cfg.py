@@ -4,6 +4,7 @@ from orwynn.boot import BootCfg, RouteSpec
 from orwynn.mongo import MongoCfg
 from orwynn.preload import PreloadCfg, handle_preload
 from orwynn.rbac import PermissionModel, RbacCfg
+from src.share import handle_share
 
 default = {
     "__default__": [
@@ -20,6 +21,11 @@ default = {
                     route="/admin/codes",
                     handler=handle_get_indexed_codes
                 ),
+                RouteSpec(
+                    method="get",
+                    route="/share/{filename}",
+                    handler=handle_share
+                )
             ],
             # bootscripts={
             #     "post-sys-enable": [

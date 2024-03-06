@@ -62,7 +62,7 @@
       on:click={(() => nameInp.trim() !== ""
         ? MongoUtils.create(
           Collection,
-          { name: nameInp },
+          { name: nameInp.trim() },
           unsubs,
           val => projects = [...projects, val]
         )

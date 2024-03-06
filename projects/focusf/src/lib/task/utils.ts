@@ -1,5 +1,6 @@
 import { Query } from "$lib/jskit/mongo";
 import { MongoUtils } from "$lib/mongo/utils";
+import { ServerShareUrl } from "$lib/url";
 import { TaskUdto } from "./models";
 
 const Collection: string = "taskDoc";
@@ -11,6 +12,11 @@ export function create(
   onval: (val: TaskUdto) => void
 )
 {
+  if (projectSid === "")
+  {
+    return;
+  }
+
   MongoUtils.create(
     Collection,
     createq,
@@ -34,5 +40,9 @@ export function complete(
   onval?: (val: TaskUdto) => void
 )
 {
-  MongoUtils.updBySid(Collection, sid, {isCompleted: true}, unsubs, onval);
+  MongoUtils.updBySid(
+    Collection, sid, {"$set": {isCompleted: true}}, unsubs, onval
+  );
+  const clickAudio = new Audio(ServerShareUrl + "/click.wav");
+  clickAudio.play();
 }

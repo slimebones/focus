@@ -1,3 +1,13 @@
 import env from "./env";
 
-export let ServerShareUrl = "http://" + env.serverHost + ":" + env.serverPort;
+export function constructHttp(host: string, port: number): string
+{
+  return "http://" + host + ":" + port;
+}
+
+export function constructEnvHttp(): string
+{
+  return constructHttp(env.serverHost, env.serverPort);
+}
+
+export let ServerShareUrl = constructEnvHttp() + "/share";

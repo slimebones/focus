@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { onDestroy, onMount } from "svelte";
+	import { onDestroy } from "svelte";
   import { MongoUtils } from "$lib/mongo/utils";
   import { type TaskUdto } from "./models";
   import { type ProjectUdto } from "$lib/project/models";
   import { selectedProjectSid } from "$lib/project/stores";
   import { complete, create } from "./utils";
   import circleImg from "$lib/assets/circle-outline.svg";
+  import { remove } from "$lib/jskit/arr";
 
 const unsubs: (() => void)[] = [];
   const Collection: string = "taskDoc";
@@ -40,11 +41,6 @@ const unsubs: (() => void)[] = [];
     );
   }));
 
-  onMount(() =>
-  {
-    let clickAudio = new Audio();
-  });
-
   onDestroy(() => unsubs.map(fn => fn()));
 </script>
 
@@ -59,7 +55,11 @@ const unsubs: (() => void)[] = [];
       <div class="flex flex-row justify-center items-center">
         <button
           class="mr-2"
-          on:click={() => complete(task.sid, unsubs)}
+          on:click={() => complete(
+            task.sid,
+            unsubs,
+            t => tasks = remove(val => val.sid === t.sid, tasks)
+          )}
         >
           <img
             class="h-6 filter-white"
@@ -91,12 +91,19 @@ const unsubs: (() => void)[] = [];
     <input class="text-black" bind:value={nameInp}/>
     <button
       class="bg-green-500 rounded p-2 hover:bg-green-300 text-xl"
-      on:click={(() => create(
-        { text: nameInp },
-        $selectedProjectSid,
-        unsubs,
-        val => tasks = [...tasks, val]
-      ))}
+      on:click={(() =>
+      {
+        if (nameInp.trim() === "")
+        {
+          return;
+        }
+        create(
+          { text: nameInp.trim() },
+          $selectedProjectSid,
+          unsubs,
+          val => tasks = [...tasks, val]
+        );
+      })}
     >
       +
     </button>

@@ -106,7 +106,8 @@ export abstract class MongoUtils
     onval?: (val: T) => void
   )
   {
-    unsubs.push(ClientBus.ie.pubst<T>(
+    unsubs.push(ClientBus.ie.pubstf<T>(
+      "udto",
       new UpdDocReq({
         collection: collection,
         searchQuery: searchq,
