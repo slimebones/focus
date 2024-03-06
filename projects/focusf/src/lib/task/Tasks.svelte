@@ -1,18 +1,23 @@
 <script lang="ts">
-	import { onDestroy } from "svelte";
+	import { onDestroy, onMount } from "svelte";
   import { MongoUtils } from "$lib/mongo/utils";
   import { type TaskUdto } from "./models";
   import { type ProjectUdto } from "$lib/project/models";
   import { selectedProjectSid } from "$lib/project/stores";
-  import { create } from "./utils";
+  import { complete, create } from "./utils";
+  import circleImg from "$lib/assets/circle-outline.svg";
 
-  const unsubs: (() => void)[] = [];
+const unsubs: (() => void)[] = [];
   const Collection: string = "taskDoc";
   let tasks: TaskUdto[] = [];
   let nameInp: string = "";
 
   unsubs.push(selectedProjectSid.subscribe(val_selectedProjectSid =>
   {
+    if (val_selectedProjectSid === "")
+    {
+      return;
+    }
     MongoUtils.get<ProjectUdto>(
       "projectDoc",
       {sid: val_selectedProjectSid},
@@ -25,10 +30,20 @@
           }
         },
         unsubs,
-        val_tasks => tasks = val_tasks
-      )
+        val_tasks => tasks = val_tasks.filter(t => !t.isCompleted)
+      ),
+      () =>
+      {
+        // no project found for the selected project sid => invalidate it
+        selectedProjectSid.set("");
+      }
     );
   }));
+
+  onMount(() =>
+  {
+    let clickAudio = new Audio();
+  });
 
   onDestroy(() => unsubs.map(fn => fn()));
 </script>
@@ -41,8 +56,18 @@
 >
   {#if tasks.length > 0}
     {#each tasks as task}
-      <div class="flex flex-row justify-center items-center gap-4">
-        <span>{task.text}</span>
+      <div class="flex flex-row justify-center items-center">
+        <button
+          class="mr-2"
+          on:click={() => complete(task.sid, unsubs)}
+        >
+          <img
+            class="h-6 filter-white"
+            src={circleImg}
+            alt="O"
+          />
+        </button>
+        <span class="mr-6">{task.text}</span>
         <button
           class="bg-red-500 rounded p-0.5 hover:bg-red-300 text-sm"
           on:click={() => MongoUtils.delBySid(

@@ -3,6 +3,7 @@
 	import "../tailwind.css";
     import { ClientBus } from "$lib/rxcat";
     import { onMount } from "svelte";
+  import env from "$lib/env";
 
     // clear console between HMR
     if (import.meta.hot)
@@ -16,8 +17,8 @@
     onMount(() =>
     {
         ClientBus.ie.init(
-            "localhost",
-            9051
+          env.serverHost,
+          env.serverPort
         );
     });
 </script>

@@ -11,7 +11,8 @@ export abstract class MongoUtils
     collection: string,
     searchq: Query,
     unsubs: (() => void)[],
-    onval: (val: T) => void
+    onval: (val: T) => void,
+    onempty?: () => void
   )
   {
     unsubs.push(ClientBus.ie.pubstf<T[]>(
@@ -24,6 +25,19 @@ export abstract class MongoUtils
     {
       if (val !== undefined)
       {
+        if (val.length === 0)
+        {
+          if (onempty === undefined)
+          {
+            log.err(
+              `no udtos on request to collection ${collection} with`
+              + ` searchq ${JSON.stringify(searchq)} => skip`
+            );
+            return;
+          }
+          onempty();
+          return;
+        }
         if (val.length > 1)
         {
           log.err(
