@@ -4,7 +4,7 @@
   import { type TaskUdto } from "./models";
   import { type ProjectUdto } from "$lib/project/models";
   import { selectedProjectSid } from "$lib/project/stores";
-  import { TaskSys } from "./sys";
+  import { create } from "./utils";
 
   const unsubs: (() => void)[] = [];
   const Collection: string = "taskDoc";
@@ -25,7 +25,7 @@
           }
         },
         unsubs,
-        val_tasks => tasks = [...tasks, ...val_tasks]
+        val_tasks => tasks = val_tasks
       )
     );
   }));
@@ -44,7 +44,7 @@
       <div class="flex flex-row justify-center items-center gap-4">
         <span>{task.text}</span>
         <button
-          class="bg-red-500 rounded p-2 hover:bg-red-300 text-sm"
+          class="bg-red-500 rounded p-0.5 hover:bg-red-300 text-sm"
           on:click={() => MongoUtils.delBySid(
             Collection, task.sid, unsubs, () =>
             {
@@ -66,7 +66,7 @@
     <input class="text-black" bind:value={nameInp}/>
     <button
       class="bg-green-500 rounded p-2 hover:bg-green-300 text-xl"
-      on:click={(() => TaskSys.create(
+      on:click={(() => create(
         { text: nameInp },
         $selectedProjectSid,
         unsubs,

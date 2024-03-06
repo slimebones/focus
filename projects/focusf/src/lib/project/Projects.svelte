@@ -37,7 +37,7 @@
           </span>
         </button>
         <button
-          class="bg-red-500 rounded p-2 hover:bg-red-300 text-sm"
+          class="bg-red-500 rounded p-0.5 hover:bg-red-300 text-sm"
           on:click={() => MongoUtils.delBySid(
             Collection, project.sid, unsubs, () =>
             {
