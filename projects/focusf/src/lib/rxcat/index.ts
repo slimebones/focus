@@ -190,7 +190,7 @@ export interface SubActionAndOpts
   action: SubAction;
   opts: SubOpts;
 }
-export type SubAction = (msg: Msg) => void;
+export type SubAction<T = any> = (msg: T) => void;
 export type PubAction = (req: Req, evt: Evt) => void;
 
 export interface SubOpts
@@ -283,11 +283,11 @@ export class ClientBus
     this.isInitd = true;
   }
 
-  public sub(
+  public sub<T>(
     constructor: AnyConstructor,
-    action: SubAction,
+    action: SubAction<T>,
     opts: SubOpts = {} as SubOpts
-  ): number
+  ): () => void
   {
     const mcode = FcodeCore.ie.tryGetActiveCodeForConstructor(constructor);
     if (mcode === undefined)
@@ -312,7 +312,7 @@ export class ClientBus
       }
     }
 
-    return subid;
+    return () => this.unsub(subid);
   }
 
   public unsub(subid: number): boolean
@@ -401,7 +401,7 @@ export class ClientBus
     const mcodeid = this.indexedMcodes.findIndex(
       (codes: string[]) => codes.includes(currentMcode)
     );
-    if (mcodeid < 0)
+    if (opts.isNetSendSkipped !== true && mcodeid < 0)
     {
       const err = Error(
         `mcode ${currentMcode} is found locally,`

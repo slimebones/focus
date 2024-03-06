@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { type ProjectUdto } from "$lib/project/models";
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { selectedProjectSid } from "./stores";
   import { MongoUtils } from "$lib/mongo/utils";
+  import { attachOnEnter } from "$lib/btn-tracker";
+  import { asrt } from "$lib/jskit/asrt";
 
-  const unsubs: (() => void)[] = [];
+const unsubs: (() => void)[] = [];
   const Collection: string = "projectDoc";
   let projects: ProjectUdto[] = [];
   let nameInp: string = "";
@@ -13,6 +15,16 @@
     projects = [...projects, ...val]
   );
 
+  let createProjectBtn: HTMLElement;
+  onMount(() =>
+  {
+    let raw = document.getElementById("createProject");
+    asrt(raw !== null);
+    if (raw !== null)
+    {
+      createProjectBtn = raw;
+    }
+  });
   onDestroy(() => unsubs.map(fn => fn()));
 </script>
 
@@ -56,8 +68,15 @@
   {/if}
 
   <div class="flex flex-row items-center justify-center gap-2">
-    <input class="text-black" bind:value={nameInp}/>
+    <input
+      class="text-black"
+      on:focus={() => attachOnEnter(
+        () => {createProjectBtn.click();}
+      )}
+      bind:value={nameInp}
+    />
     <button
+      id="createProject"
       class="bg-green-500 rounded p-2 hover:bg-green-300 text-xl"
       on:click={(() => nameInp.trim() !== ""
         ? MongoUtils.create(

@@ -1,27 +1,56 @@
 <script lang="ts">
+	import {EnterKeydownEvt} from "$lib/msg";
 	import "../main.css";
 	import "../tailwind.css";
-    import { ClientBus } from "$lib/rxcat";
-    import { onMount } from "svelte";
+  import { ClientBus } from "$lib/rxcat";
+  import { onDestroy, onMount } from "svelte";
   import env from "$lib/env";
+  import * as btnTracker from "$lib/btn-tracker";
 
-    // clear console between HMR
-    if (import.meta.hot)
-    {
-      import.meta.hot.on(
-        "vite:beforeUpdate",
-        () => console.clear()
-      );
-    }
+  // clear console between HMR
+  if (import.meta.hot)
+  {
+    import.meta.hot.on(
+      "vite:beforeUpdate",
+      () => console.clear()
+    );
+  }
 
-    onMount(() =>
+  function onkeydown(nativeEvt: any)
+  {
+    switch (nativeEvt.key)
     {
-        ClientBus.ie.init(
-          env.serverHost,
-          env.serverPort
+      case "Enter":
+        nativeEvt.preventDefault();
+        ClientBus.ie.pub(
+          new EnterKeydownEvt({ nativeEvt: nativeEvt }),
+          undefined,
+          {
+            isNetSendSkipped: true
+          }
         );
-    });
+        break;
+    }
+  }
+
+  onMount(() =>
+  {
+    ClientBus.ie.init(
+      env.serverHost,
+      env.serverPort
+    );
+    btnTracker.init();
+  });
+
+  onDestroy(() =>
+  {
+    btnTracker.destroy();
+  });
 </script>
+
+<svelte:window
+  on:keydown={onkeydown}
+/>
 
 <div class="bg-c60-bg h-screen w-screen text-c60-fg">
 	<main>
