@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy } from "svelte";
+	import { onDestroy, onMount } from "svelte";
   import { MongoUtils } from "$lib/mongo/utils";
   import { type TaskUdto } from "./models";
   import { type ProjectUdto } from "$lib/project/models";
@@ -7,6 +7,8 @@
   import { complete, create } from "./utils";
   import circleImg from "$lib/assets/circle-outline.svg";
   import { remove } from "$lib/jskit/arr";
+  import { attachOnEnter } from "$lib/btn-tracker";
+  import { asrt } from "$lib/jskit/asrt";
 
 const unsubs: (() => void)[] = [];
   const Collection: string = "taskDoc";
@@ -40,6 +42,17 @@ const unsubs: (() => void)[] = [];
       }
     );
   }));
+
+  let createBtn: HTMLElement;
+  onMount(() =>
+  {
+    let raw = document.getElementById("createTask");
+    asrt(raw !== null);
+    if (raw !== null)
+    {
+      createBtn = raw;
+    }
+  });
 
   onDestroy(() => unsubs.map(fn => fn()));
 </script>
@@ -88,8 +101,13 @@ const unsubs: (() => void)[] = [];
   {/if}
 
   <div class="flex flex-row items-center justify-center gap-2">
-    <input class="text-black" bind:value={nameInp}/>
+    <input
+      class="text-black"
+      bind:value={nameInp}
+      on:focus={() => attachOnEnter(() => {createBtn.click();})}
+    />
     <button
+      id="createTask"
       class="bg-green-500 rounded p-2 hover:bg-green-300 text-xl"
       on:click={(() =>
       {
