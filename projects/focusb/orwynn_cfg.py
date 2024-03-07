@@ -92,10 +92,4 @@ default = {
             database_name="focusbProdDb"
         )
     ],
-    "local-prod": [
-        MongoCfg(
-            url="mongodb://mongo:5031",
-            database_name="focusbLocalProdDb"
-        )
-    ]
 }
