@@ -11,7 +11,7 @@ services:
       - /var/docker/focusb:/solution/projects/focusb/var
     restart: unless-stopped
     ports:
-      - 9151:5010
+      - 9151:9151
 
   focusf:
     build:

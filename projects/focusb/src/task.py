@@ -8,22 +8,26 @@ from orwynn.mongo import (
     filter_collection_factory,
 )
 from orwynn.sys import Sys
+from pykit.dt import DtUtils
 from rxcat import OkEvt
 
 
 class TaskUdto(Udto):
     text: str
     isCompleted: bool
+    completionTimestamp: float
 
 class TaskDoc(Doc):
     text: str
     isCompleted: bool = False
+    completionTimestamp: float = 0.0
 
     def to_udto(self) -> TaskUdto:
         return TaskUdto(
             sid=self.sid,
             text=self.text,
-            isCompleted=self.isCompleted
+            isCompleted=self.isCompleted,
+            completionTimestamp=self.completionTimestamp
         )
 
 class TaskSys(Sys):
@@ -46,6 +50,9 @@ class TaskSys(Sys):
         await self._pub(doc.to_got_doc_udto_evt(req))
 
     async def _on_upd_doc(self, req: UpdDocReq):
+        if "$set" in req.updQuery and "isCompleted" in req.updQuery["$set"]:
+            req.updQuery["$set"]["completionTimestamp"] = \
+                DtUtils.get_utc_timestamp()
         doc = TaskDoc.get_and_upd(req.searchQuery, req.updQuery)
         await self._pub(doc.to_got_doc_udto_evt(req))
 

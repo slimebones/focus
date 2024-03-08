@@ -1,4 +1,5 @@
 import { browser, dev } from "$app/environment";
+import { log } from "$lib/jskit/log";
 
 const devHost = import.meta.env.VITE_SERVER_HOST_DEV ?? "localhost";
 const devPort = Number.parseInt(
@@ -37,5 +38,7 @@ if (browser)
     env.serverPort = Number.parseInt(altPort);
   }
 }
+
+log.info(`installed env: ${JSON.stringify(env)}`);
 
 export default env;

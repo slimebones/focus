@@ -1,9 +1,14 @@
 import pytest
-from orwynn.mongo import DelDocReq, GotDocUdtoEvt
+from orwynn.mongo import DelDocReq
 from pykit.check import check
 from rxcat import ServerBus
 
-from src.timing import FinishedTimerEvt, OkEvt, Query, StartTimerReq, TimerDoc, TimerUdto
+from src.timing import (
+    OkEvt,
+    Query,
+    TimerDoc,
+    TimerUdto,
+)
 
 
 @pytest.mark.asyncio

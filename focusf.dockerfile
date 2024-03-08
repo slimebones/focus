@@ -9,6 +9,7 @@ COPY projects/focusf/svelte.config.js ./
 COPY projects/focusf/tsconfig.json ./
 COPY projects/focusf/vite.config.ts ./
 COPY projects/focusf/Makefile ./
+COPY projects/focusf/.env ./
 
 RUN yarn install --network-timeout 30000000
 

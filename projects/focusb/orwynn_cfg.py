@@ -4,6 +4,7 @@ from orwynn.boot import BootCfg, RouteSpec
 from orwynn.mongo import MongoCfg
 from orwynn.preload import PreloadCfg, handle_preload
 from orwynn.rbac import PermissionModel, RbacCfg
+
 from src.share import handle_share
 
 default = {
