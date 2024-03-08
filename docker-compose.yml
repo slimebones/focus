@@ -8,7 +8,7 @@ services:
     depends_on:
       - mongo
     volumes:
-      - /var/docker/focusb:/solution/projects/focusb/var
+      - ./var/docker/focusb:/solution/projects/focusb/var
     restart: unless-stopped
     ports:
       - 9151:9151
@@ -29,7 +29,7 @@ services:
     container_name: focus-mongo
     restart: unless-stopped
     volumes:
-      - /var/docker/mongo:/data/db
+      - ./var/docker/mongo:/data/db
     ports:
       - 9152:27017
 
