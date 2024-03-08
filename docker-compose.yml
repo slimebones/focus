@@ -31,5 +31,5 @@ services:
     volumes:
       - /var/docker/mongo:/data/db
     ports:
-      - 5031:27017
+      - 9152:27017
 
