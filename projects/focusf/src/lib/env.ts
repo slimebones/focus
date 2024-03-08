@@ -1,12 +1,21 @@
 import { browser, dev } from "$app/environment";
 
+const devHost = import.meta.env.VITE_SERVER_HOST_DEV ?? "localhost";
+const devPort = Number.parseInt(
+  import.meta.env.VITE_SERVER_PORT_DEV ?? "9050"
+);
+const prodHost = import.meta.env.VITE_SERVER_HOST_PROD ?? "localhost";
+const prodPort = Number.parseInt(
+  import.meta.env.VITE_SERVER_PORT_PROD ?? "9050"
+);
+
 let devEnv: {[key: string]: any} = {
-  serverHost: "localhost",
-  serverPort: 9051,
+  serverHost: devHost,
+  serverPort: devPort,
 };
 let prodEnv: {[key: string]: any} = {
-  serverHost: "localhost",
-  serverPort: 9151,
+  serverHost: prodHost,
+  serverPort: prodPort,
 };
 
 let env: {[key: string]: any} = prodEnv;
@@ -14,31 +23,19 @@ if (dev)
 {
   env = devEnv;
 }
-if (!browser)
+
+if (browser)
 {
-  let host: string | undefined = process.env.HQ_EXTERNAL_HOST;
-
-  if (host === undefined || host === "") 
+  const altHost = localStorage.getItem("altHost");
+  const altPort = localStorage.getItem("altPort");
+  if (altHost !== null)
   {
-    throw Error("Define environ HQ_EXTERNAL_HOST");
+    env.serverHost = altHost;
   }
-
-  if (host[host.length - 1] === "/") 
+  if (altPort !== null)
   {
-    host = host.slice(0, host.length - 1);
+    env.serverPort = Number.parseInt(altPort);
   }
-
-  export const environment: any = {
-    production: true,
-    cpasbUrl: {
-      host: host,
-      port: "5010"
-    },
-    hqaUrl: {
-      host: host,
-      port: "5015"
-    }
-  };
 }
 
 export default env;
