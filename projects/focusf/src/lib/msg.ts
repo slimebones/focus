@@ -1,5 +1,5 @@
-import { code } from "./jskit/fcode";
-import { Evt } from "./rxcat";
+import { code } from "@slimebones/jskit";
+import { Evt } from "@slimebones/jsrxcat";
 
 @code("evt.keydown.enter")
 export class EnterKeydownEvt extends Evt

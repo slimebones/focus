@@ -1,6 +1,6 @@
-import { code } from "../jskit/fcode";
-import { Query } from "../jskit/mongo";
-import { Evt, Req } from "../rxcat";
+import { code } from "@slimebones/jskit";
+import { Query } from "@slimebones/jskit";
+import { Evt, Req } from "./index";
 
 @code("ok-evt")
 export class OkEvt extends Evt

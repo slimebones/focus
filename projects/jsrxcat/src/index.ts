@@ -1,12 +1,13 @@
-import { derived } from "svelte/store";
-import { writable } from "../jskit/store";
+import { derived } from "@slimebones/jskit/src/store";
+import { writable } from "@slimebones/jskit/src/store";
 import { v4 as uuid } from "uuid";
-import { asrt } from "../jskit/asrt";
-import { log } from "../jskit/log";
-import { AnyConstructor, code, FcodeCore } from "../jskit/fcode";
+import { asrt } from "@slimebones/jskit";
+import { log } from "@slimebones/jskit";
+import { AnyConstructor, code, FcodeCore } from "@slimebones/jskit";
 import { Queue } from "queue-typescript";
-import { AlreadyProcessedErr, InpErr, NotFoundErr } from "../jskit/err";
-import { Readable } from "$lib/jskit/store/public";
+import { AlreadyProcessedErr, InpErr, NotFoundErr } from "@slimebones/jskit";
+import { Readable } from "@slimebones/jskit/src/store/public";
+export * from "./msg";
 
 interface ReqAndRaction
 {

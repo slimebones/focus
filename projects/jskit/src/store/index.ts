@@ -1,4 +1,4 @@
-import { noop, run } from "../internal/common.js";
+import { noop, run } from "./common.js";
 import { subscribe_to_store } from "./utils.js";
 
 /**
@@ -249,7 +249,6 @@ export function derived(stores, fn, initial_value)
 export function readonly(store)
 {
 	return {
-		// @ts-expect-error TODO i suspect the bind is unnecessary
 		subscribe: store.subscribe.bind(store)
 	};
 }
@@ -267,7 +266,6 @@ export function get_store_value(store)
 {
 	let value;
 	subscribe_to_store(store, (_) => (value = _))();
-	// @ts-expect-error
 	return value;
 }
 

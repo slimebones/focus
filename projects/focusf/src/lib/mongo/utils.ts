@@ -1,9 +1,9 @@
-import { log } from "$lib/jskit/log";
-import { Query } from "$lib/jskit/mongo";
-import { ClientBus } from "$lib/rxcat";
+import { log } from "@slimebones/jskit";
+import { Query } from "@slimebones/jskit";
+import { ClientBus } from "@slimebones/jsrxcat";
 import {
   CreateDocReq, DelDocReq, GetDocsReq, OkEvt, UpdDocReq
-} from "$lib/rxcat/msg";
+} from "@slimebones/jsrxcat";
 
 export abstract class MongoUtils
 {

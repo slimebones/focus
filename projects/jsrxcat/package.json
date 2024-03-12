@@ -1,5 +1,5 @@
 {
-  "name": "@slimebones/jskit",
+  "name": "@slimebones/jsrxcat",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -10,6 +10,12 @@
     "./dist"
   ],
   "devDependencies": {
+    "@types/uuid": "^9.0.8",
     "typescript": "^5.4.2"
+  },
+  "dependencies": {
+    "@slimebones/jskit": "link:../jskit",
+    "queue-typescript": "^1.0.1",
+    "uuid": "^9.0.1"
   }
 }

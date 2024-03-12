@@ -2,10 +2,10 @@
 	import {EnterKeydownEvt} from "$lib/msg";
 	import "../main.css";
 	import "../tailwind.css";
-  import { ClientBus } from "$lib/rxcat";
   import { onDestroy, onMount } from "svelte";
   import env from "$lib/env";
   import * as btnTracker from "$lib/btn-tracker";
+  import { ClientBus } from "@slimebones/jsrxcat";
 
   // clear console between HMR
   if (import.meta.hot)

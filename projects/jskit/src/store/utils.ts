@@ -1,4 +1,4 @@
-import { noop } from "../internal/common.js";
+import { noop } from "./common.js";
 
 /**
  * @template T
@@ -9,10 +9,8 @@ import { noop } from "../internal/common.js";
  */
 export function subscribe_to_store(store, run, invalidate) {
 	if (store == null) {
-		// @ts-expect-error
 		run(undefined);
 
-		// @ts-expect-error
 		if (invalidate) invalidate(undefined);
 
 		return noop;
@@ -21,11 +19,9 @@ export function subscribe_to_store(store, run, invalidate) {
 	// Svelte store takes a private second argument
 	const unsub = store.subscribe(
 		run,
-		// @ts-expect-error
 		invalidate
 	);
 
 	// Also support RxJS
-	// @ts-expect-error TODO fix this in the types?
 	return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
 }

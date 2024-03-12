@@ -1,6 +1,5 @@
 export * from "./arr";
 export * from "./asrt";
-export * from "./store";
 export * from "./check";
 export * from "./dto";
 export * from "./err";
