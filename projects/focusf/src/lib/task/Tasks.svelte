@@ -67,7 +67,7 @@ const unsubs: (() => void)[] = [];
     {#each tasks as task}
       <div class="flex flex-row justify-center items-center">
         <button
-          class="mr-2"
+          class="mr-4 shrink-0"
           on:click={() => complete(
             task.sid,
             unsubs,
