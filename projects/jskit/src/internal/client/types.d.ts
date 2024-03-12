@@ -419,5 +419,6 @@ export interface ProxyMetadata<T = Record<string | symbol, any>> {
 }
 
 export type ProxyStateObject<T = Record<string | symbol, any>> = T & {
+	// @ts-ignore
 	[STATE_SYMBOL]: ProxyMetadata;
 };

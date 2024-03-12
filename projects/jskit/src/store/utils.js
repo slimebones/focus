@@ -2,7 +2,7 @@ import { noop } from "../internal/common.js";
 
 /**
  * @template T
- * @param {import('./public').Readable<T> | null | undefined} store
+ * @param {import('./public.js').Readable<T> | null | undefined} store
  * @param {(value: T) => void} run
  * @param {(value: T) => void} [invalidate]
  * @returns {() => void}
