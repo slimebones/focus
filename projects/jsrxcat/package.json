@@ -14,7 +14,7 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
-    "@slimebones/jskit": "link:../jskit",
+    "@slimebones/jskit": "../jskit",
     "queue-typescript": "^1.0.1",
     "uuid": "^9.0.1"
   }

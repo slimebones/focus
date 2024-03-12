@@ -1,5 +1,5 @@
 import { EnterKeydownEvt } from "./msg";
-import { ClientBus } from "./rxcat";
+import { ClientBus } from "@slimebones/jsrxcat";
 
 const unsubs: (() => void)[] = [];
 let attachedOnEnter: (evt: EnterKeydownEvt) => void = () => {};

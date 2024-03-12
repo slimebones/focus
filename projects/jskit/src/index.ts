@@ -6,3 +6,4 @@ export * from "./err";
 export * from "./fcode";
 export * from "./log";
 export * from "./mongo";
+export * from "./store";

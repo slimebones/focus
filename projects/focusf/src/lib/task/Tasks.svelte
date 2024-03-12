@@ -6,9 +6,8 @@
   import { selectedProjectSid } from "$lib/project/stores";
   import { complete, create } from "./utils";
   import circleImg from "$lib/assets/circle-outline.svg";
-  import { remove } from "$lib/jskit/arr";
+  import { remove, asrt } from "@slimebones/jskit";
   import { attachOnEnter } from "$lib/btn-tracker";
-  import { asrt } from "$lib/jskit/asrt";
 
 const unsubs: (() => void)[] = [];
   const Collection: string = "taskDoc";
