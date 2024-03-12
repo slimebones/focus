@@ -78,15 +78,18 @@ const unsubs: (() => void)[] = [];
     <button
       id="createProject"
       class="bg-green-500 rounded p-2 hover:bg-green-300 text-xl"
-      on:click={(() => nameInp.trim() !== ""
-        ? MongoUtils.create(
-          Collection,
-          { name: nameInp.trim() },
-          unsubs,
-          val => projects = [...projects, val]
-        )
-        : undefined
-      )}
+      on:click={(() =>
+      {
+        nameInp.trim() !== ""
+          ? MongoUtils.create(
+            Collection,
+            { name: nameInp.trim() },
+            unsubs,
+            val => projects = [...projects, val]
+          )
+          : undefined;
+        nameInp = "";
+      })}
     >
       new
     </button>

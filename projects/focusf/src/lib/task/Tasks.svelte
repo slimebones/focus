@@ -121,6 +121,7 @@ const unsubs: (() => void)[] = [];
           unsubs,
           val => tasks = [...tasks, val]
         );
+        nameInp = "";
       })}
     >
       +
