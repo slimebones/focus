@@ -1,4 +1,4 @@
-import { Udto } from "@slimebones/jskit";
+import { Udto } from "$lib/jskit/dto";
 
 export interface TaskUdto extends Udto
 {

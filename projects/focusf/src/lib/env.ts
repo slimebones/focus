@@ -1,5 +1,5 @@
 import { browser, dev } from "$app/environment";
-import { log } from "@slimebones/jskit";
+import { log } from "$lib/jskit/log";
 
 const devHost = import.meta.env.VITE_SERVER_HOST_DEV ?? "localhost";
 const devPort = Number.parseInt(

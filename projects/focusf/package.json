@@ -40,8 +40,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@slimebones/jskit": "../jskit",
-		"@slimebones/jsrxcat": "../jsrxcat",
+		"@slimebones/jskit": "link:../jskit",
+		"@slimebones/jsrxcat": "link:../jsrxcat",
 		"queue-typescript": "^1.0.1",
 		"uuid": "^9.0.1"
 	}

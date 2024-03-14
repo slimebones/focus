@@ -1,4 +1,3 @@
-import { code } from "../fcode.js";
 import { noop, run } from "./common.js";
 import { subscribe_to_store } from "./utils.js";
 
@@ -49,7 +48,7 @@ export function safe_not_equal(a, b)
  * @param {import("./public.js").StartStopNotifier<T>} [start]
  * @returns {import("./public.js").Writable<T>}
  */
-export function writable<T>(value: T, start = noop)
+export function writable(value, start = noop)
 {
 	/** @type {import("./public.js").Unsubscriber | null} */
 	let stop = null;
@@ -61,7 +60,7 @@ export function writable<T>(value: T, start = noop)
 	 * @param {T} new_value
 	 * @returns {void}
 	 */
-	function set(new_value: T)
+	function set(new_value)
   {
 		if (safe_not_equal(value, new_value))
     {
@@ -110,7 +109,6 @@ export function writable<T>(value: T, start = noop)
 		subscribers.add(subscriber);
 		if (subscribers.size === 1)
     {
-			// @ts-ignore
 			stop = start(set, update) || noop;
 		}
 		run(/** @type {T} */ (value));
@@ -170,7 +168,7 @@ function run_all(fns)
  * @param {T} [initial_value]
  * @returns {import("./public.js").Readable<T>}
  */
-export function derived(stores, fn, initial_value?)
+export function derived(stores, fn, initial_value)
 {
 	const single = !Array.isArray(stores);
 	/** @type {Array<import("./public.js").Readable<any>>} */
@@ -267,7 +265,6 @@ export function readonly(store)
 export function get_store_value(store)
 {
 	let value;
-	// @ts-ignore
 	subscribe_to_store(store, (_) => (value = _))();
 	return value;
 }

@@ -4,7 +4,7 @@
   import { selectedProjectSid } from "./stores";
   import { MongoUtils } from "$lib/mongo/utils";
   import { attachOnEnter } from "$lib/btn-tracker";
-  import { asrt } from "@slimebones/jskit";
+  import { asrt } from "$lib/jskit/asrt";
 
 const unsubs: (() => void)[] = [];
   const Collection: string = "projectDoc";

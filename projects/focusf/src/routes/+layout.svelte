@@ -6,9 +6,8 @@
   import env from "$lib/env";
   import * as btnTracker from "$lib/btn-tracker";
   import { ClientBus } from "@slimebones/jsrxcat";
-  import { log } from "@slimebones/jskit";
 
-// clear console between HMR
+  // clear console between HMR
   if (import.meta.hot)
   {
     import.meta.hot.on(
@@ -36,7 +35,6 @@
 
   onMount(() =>
   {
-    log.warn(0);
     ClientBus.ie.init(
       env.serverHost,
       env.serverPort

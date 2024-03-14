@@ -2,8 +2,9 @@
 # yarn lockfile v1
 
 
-"@slimebones/jskit@../jskit":
-  version "1.0.0"
+"@slimebones/jskit@link:../jskit":
+  version "0.0.0"
+  uid ""
 
 "@types/uuid@^9.0.8":
   version "9.0.8"
