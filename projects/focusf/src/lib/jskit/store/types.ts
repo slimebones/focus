@@ -1,4 +1,4 @@
 export interface IStore
 {
-  subscribe: any;
+  public subscribe 
 }

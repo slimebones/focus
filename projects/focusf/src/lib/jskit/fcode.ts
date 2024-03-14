@@ -108,7 +108,7 @@ export function code(
   legacyCodes?: string[]
 ): (constructor: AnyConstructor) => any
 {
-  return (constructor: AnyConstructor) =>
+  return (constructor: AnyConstructor) => 
   {
     FcodeCore.ie.defcode(code, constructor, legacyCodes);
   };
