@@ -364,14 +364,6 @@
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.8.tgz#6667fac16c436b5434a387a34dedb013198f6e6e"
   integrity sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==
 
-"@slimebones/jskit@link:../jskit":
-  version "0.0.0"
-  uid ""
-
-"@slimebones/jsrxcat@link:../jsrxcat":
-  version "0.0.0"
-  uid ""
-
 "@sveltejs/adapter-auto@^3.0.0":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@sveltejs/adapter-auto/-/adapter-auto-3.1.1.tgz#7857575ddccc6f0dbd6b44190da0db6631bbfcc9"
