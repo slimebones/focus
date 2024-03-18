@@ -17,10 +17,10 @@
   resolved "https://registry.yarnpkg.com/@alloc/quick-lru/-/quick-lru-5.2.0.tgz#7bf68b20c0a350f936915fcae06f58e32007ce30"
   integrity sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==
 
-"@almazrpe/ngx-kit@^1.0.0-a0":
-  version "1.0.0-a0"
-  resolved "https://registry.yarnpkg.com/@almazrpe/ngx-kit/-/ngx-kit-1.0.0-a0.tgz#f7f50ef7c7e55edd1d8607b00c0699db024df331"
-  integrity sha512-85ChgkLjMAUkWOcCT9mCbQxIbxYn461zgOiXUyOspPjASBx2ij7tJzCXBoab2nKQJRaNJUOwTAhCD7Ot9N2qJA==
+"@almazrpe/ngx-kit@^1.0.0-a1":
+  version "1.0.0-a1"
+  resolved "https://registry.yarnpkg.com/@almazrpe/ngx-kit/-/ngx-kit-1.0.0-a1.tgz#54decdad48cc3b93727002695ead70cc7a418242"
+  integrity sha512-Intz6QkN1RJW1Fn9/KJqY0GtGnje4jmOAVPt4zILXxpK7nXVxPqGCfaddZseLxfOytZRrp7RSzesAL8OIrWkoQ==
   dependencies:
     queue-typescript "^1.0.1"
     simple-keyboard "^3.7.12"
