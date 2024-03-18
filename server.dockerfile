@@ -13,9 +13,9 @@ COPY projects/pyfcode projects/pyfcode
 COPY projects/uvicorn projects/uvicorn
 COPY projects/pyrxcat projects/pyrxcat
 COPY projects/pykit projects/pykit
-COPY projects/focusb projects/focusb
+COPY projects/server projects/server
 
-WORKDIR /solution/projects/focusb
+WORKDIR /solution/projects/server
 
 RUN poetry config virtualenvs.create false
 RUN poetry install --without=dev --no-interaction --no-ansi --no-root

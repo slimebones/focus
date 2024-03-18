@@ -1,26 +1,26 @@
 version: "3"
 services:
-  focusb:
+  server:
     build:
       context: .
-      dockerfile: focusb.dockerfile
-    container_name: focusb
+      dockerfile: server.dockerfile
+    container_name: server
     depends_on:
       - mongo
     volumes:
-      - ./var/docker/focusb:/solution/projects/focusb/var
+      - ./var/docker/server:/solution/projects/server/var
     restart: unless-stopped
     ports:
       - 9151:9151
 
-  focusf:
+  client:
     build:
       context: .
-      dockerfile: focusf.dockerfile
-    container_name: focusf
+      dockerfile: client.dockerfile
+    container_name: client
     restart: unless-stopped
     depends_on:
-      - focusb
+      - server
     ports:
       - 9150:80
 

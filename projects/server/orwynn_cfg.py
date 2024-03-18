@@ -73,7 +73,7 @@ default = {
     "test": [
         MongoCfg(
             url="mongodb://localhost:9006",
-            database_name="focusbTestDb",
+            database_name="focusTestDb",
             must_clean_db_on_destroy=True
         ),
         PreloadCfg(
@@ -83,13 +83,14 @@ default = {
     "dev": [
         MongoCfg(
             url="mongodb://localhost:9006",
-            database_name="focusbDevDb",
+            database_name="focusDevDb",
             must_clean_db_on_destroy=True
         )
     ],
     "prod": [
         MongoCfg(
             url="mongodb://mongo:27017",
+            # legacy name
             database_name="focusbProdDb"
         )
     ],
