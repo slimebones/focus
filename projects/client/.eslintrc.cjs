@@ -1,7 +1,8 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
   extends: [
-    "plugin:svelte/recommended"
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   plugins: [
     "@typescript-eslint",
@@ -9,19 +10,7 @@ module.exports = {
   ],
   parserOptions: {
     project: "./tsconfig.json",
-    extraFileExtensions: [
-      ".svelte"
-    ]
   },
-  overrides: [
-    {
-      files: ["*.svelte"],
-      parser: "svelte-eslint-parser",
-      parserOptions: {
-        parser: '@typescript-eslint/parser'
-      }
-    }
-  ],
   rules: {
     "@typescript-eslint/object-curly-spacing": [
       "off"
