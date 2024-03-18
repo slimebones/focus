@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AlertService } from "@almazrpe/ngx-kit";
+import { AlertService, log } from "@almazrpe/ngx-kit";
 
 @Component({
   selector: "app-root",
@@ -19,5 +19,6 @@ export class AppComponent implements OnInit
   public ngOnInit()
   {
 
+    log.info("hello");
   }
 }
