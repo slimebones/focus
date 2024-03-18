@@ -1,0 +1,29 @@
+<div class="h-screen bg-c60 relative text-c-text text-base">
+  <!-- Main window -->
+  <div *ngIf="authSv.isLogged$ | async; else login" class="h-full">
+    <div class="h-full overflow-auto">
+      <!-- Header -->
+      <div
+        class=""
+        *ngIf="(headerService.isHeaderEnabled$ | async)"
+      >
+        <app-header></app-header>
+      </div>
+
+      <!-- Main -->
+      <div>
+        <router-outlet></router-outlet>
+      </div>
+
+      <!-- Footer -->
+      <!--
+        For now it's just a placeholder to margin main block on small
+        heights
+      -->
+      <div class="h-10" *ngIf="footerService.isFooterEnabled$ | async">
+        <app-footer></app-footer>
+      </div>
+    </div>
+  </div>
+</div>
+
