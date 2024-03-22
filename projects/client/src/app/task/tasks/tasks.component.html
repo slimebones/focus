@@ -1,0 +1,11 @@
+<div class="w-full p-4 h-screen flex flex-col justify-start items-start">
+  <div class="font-bold self-center">
+    Tasks
+  </div>
+
+  <div class="flex flex-col justify-start items-center">
+    <div *ngFor="let task of (tasks$ | async)">
+      {{task.text}}
+    </div>
+  </div>
+</div>
