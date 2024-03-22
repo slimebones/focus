@@ -14,8 +14,8 @@ from rxcat import OkEvt
 
 class TaskUdto(Udto):
     text: str
-    isCompleted: bool
-    completionTimestamp: float
+    is_completed: bool
+    completion_time: float
 
 class TaskDoc(Doc):
     text: str
@@ -26,8 +26,8 @@ class TaskDoc(Doc):
         return TaskUdto(
             sid=self.sid,
             text=self.text,
-            isCompleted=self.isCompleted,
-            completionTimestamp=self.completionTimestamp
+            is_completed=self.isCompleted,
+            completion_time=self.completionTimestamp
         )
 
 class TaskSys(Sys):
