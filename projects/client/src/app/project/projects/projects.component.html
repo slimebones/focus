@@ -1,4 +1,39 @@
 <div class="
     flex bg-c30-bg h-screen p-4 flex flex-col justify-start items-center">
-  <div class="font-bold">Projects</div>
+  <div class="font-bold mb-4">Projects</div>
+
+  <form
+      class="flex flex-row gap-4 justify-center items-center"
+      [formGroup]="projectCreateForm"
+      (ngSubmit)="onProjectCreateSubmit()">
+    <ngx-kit-mat-input
+        class="text-black"
+        [type]="InputType.Text"
+        (keydown.enter)="onKeydownEnter()"
+        formControlName="name" />
+    <ngx-kit-button
+        type="submit"
+        [extraCssClasses]="[
+          'bg-c10-bg', 'text-c10-fg', 'hover:bg-c10-bg-active',
+          'hover:text-c10-fg-active', 'rounded', 'h-8'
+        ]">
+      +
+    </ngx-kit-button>
+  </form>
+
+  <div
+      class="mt-8 flex flex-row justify-center items-center gap-4"
+      *ngFor="let project of projects">
+    <ngx-kit-button
+        class="text-2xl hover:underline"
+        [ngClass]="getProjectSelectors(project)"
+        (clickFunc)="selectProject(project)">
+      {{project.name}}
+    </ngx-kit-button>
+    <ngx-kit-button
+        [extraCssClasses]="['bg-red-500', 'hover:bg-red-400', 'h-8']"
+        (clickFunc)="delProject(project)">
+      X
+    </ngx-kit-button>
+  </div>
 </div>

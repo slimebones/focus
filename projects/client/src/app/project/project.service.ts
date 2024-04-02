@@ -13,7 +13,7 @@ export class ProjectService
 
   private readonly Collection = "projectDoc";
 
-  public getMany$(searchq: object): Observable<ProjectUdto[]>
+  public getMany$(searchq: object = {}): Observable<ProjectUdto[]>
   {
     return BusUtils.pubGetDocsReq$(new GetDocsReq({
       collection: this.Collection,
