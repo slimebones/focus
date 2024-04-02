@@ -13,7 +13,7 @@ from rxcat import OkEvt
 
 class ProjectUdto(Udto):
     name: str
-    taskSids: list[str] = []
+    task_sids: list[str] = []
 
 class ProjectDoc(Doc):
     name: str
@@ -23,7 +23,7 @@ class ProjectDoc(Doc):
         return ProjectUdto(
             sid=self.sid,
             name=self.name,
-            taskSids=self.taskSids
+            task_sids=self.taskSids
         )
 
 class ProjectSys(Sys):

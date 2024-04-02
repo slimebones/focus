@@ -2,7 +2,7 @@ import { Udto } from "@almazrpe/ngx-kit";
 
 export interface TaskCreate
 {
-  txt: string;
+  text: string;
 }
 
 export interface ProjectCreate

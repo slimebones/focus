@@ -25,7 +25,7 @@ export class TaskService
     return BusUtils.pubCreateDocReq$(new CreateDocReq({
       collection: this.Collection,
       createQuery: {
-        text: data.txt
+        text: data.text
       }
     }));
   }

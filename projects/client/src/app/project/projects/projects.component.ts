@@ -74,7 +74,7 @@ export class ProjectsComponent implements OnInit
     return [];
   }
 
-  public delProject(project: ProjectUdto): void
+  public del(project: ProjectUdto): void
   {
     this.projectSv.del$(project.sid).subscribe({
       next: _ =>

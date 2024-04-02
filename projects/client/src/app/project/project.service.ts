@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { ProjectCreate, ProjectUdto } from "../models";
+import { ProjectCreate, ProjectUdto, TaskUdto } from "../models";
 import {
-  BusUtils, CreateDocReq, DelDocReq, GetDocsReq } from "@almazrpe/ngx-kit";
+  BusUtils,
+  CreateDocReq, DelDocReq, GetDocsReq, UpdDocReq } from "@almazrpe/ngx-kit";
 import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable({
@@ -27,6 +28,22 @@ export class ProjectService
       collection: this.Collection,
       createQuery: {
         name: data.name
+      }
+    }));
+  }
+
+  public attachTask$(
+    project: ProjectUdto, task: TaskUdto): Observable<ProjectUdto>
+  {
+    return BusUtils.pubUpdDocReq$(new UpdDocReq({
+      collection: this.Collection,
+      searchQuery: {
+        sid: project.sid
+      },
+      updQuery: {
+        "$push": {
+          taskSids: task.sid
+        }
       }
     }));
   }

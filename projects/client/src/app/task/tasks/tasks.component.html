@@ -1,11 +1,49 @@
-<div class="w-full p-4 h-screen flex flex-col justify-start items-start">
-  <div class="font-bold self-center">
+<div
+    class="w-full p-4 h-screen flex flex-col justify-start items-start"
+    *ngIf="(projectSv.currentProject$ | async) !== null; else choose_project">
+  <div class="font-bold self-center mb-4">
     Tasks
   </div>
 
-  <div class="flex flex-col justify-start items-center">
-    <div *ngFor="let task of (tasks$ | async)">
+  <form
+      class="flex flex-row gap-4 justify-center items-center"
+      [formGroup]="createForm"
+      (ngSubmit)="onCreateSubmit()">
+    <ngx-kit-mat-input
+        class="text-black"
+        [type]="InputType.Text"
+        (keydown.enter)="onKeydownEnter()"
+        formControlName="text" />
+    <ngx-kit-button
+        type="submit"
+        [extraCssClasses]="[
+          'bg-c10-bg', 'text-c10-fg', 'hover:bg-c10-bg-active',
+          'hover:text-c10-fg-active', 'rounded', 'h-8'
+        ]">
+      +
+    </ngx-kit-button>
+  </form>
+
+  <div
+      class="mt-8 flex flex-row justify-center items-center gap-4"
+      *ngFor="let task of tasks">
+    <ngx-kit-button
+        class="text-2xl hover:underline">
       {{task.text}}
-    </div>
+    </ngx-kit-button>
+    <ngx-kit-button
+        [extraCssClasses]="['bg-red-500', 'hover:bg-red-400', 'h-8']"
+        (clickFunc)="del(task)">
+      X
+    </ngx-kit-button>
   </div>
 </div>
+
+<ng-template #choose_project>
+  <div
+      class="
+        flex justify-center items-center w-full h-full p-4 text-3xl opacity-50
+      ">
+    Please select a project
+  </div>
+</ng-template>
