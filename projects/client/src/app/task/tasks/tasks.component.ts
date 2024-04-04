@@ -100,15 +100,17 @@ export class TasksComponent implements OnInit, OnDestroy
       }});
   }
 
-  public complete$(sid: string): Observable<TaskUdto>
+  public complete(sid: string)
   {
     return this.taskSv.complete$(sid).pipe(
-      map(task =>
-        {
-          this.tasks.splice(this.tasks.indexOf(task), 1);
-          return task;
-        })
-    );
+        map(task =>
+          {
+            this.tasks.splice(this.tasks.indexOf(task), 1);
+            return task;
+          }))
+      .subscribe({
+        next: task => {}
+      });
   }
 
   public del(task: TaskUdto)

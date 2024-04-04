@@ -27,12 +27,15 @@
   <div
       class="mt-8 flex flex-row justify-center items-center gap-4"
       *ngFor="let task of tasks">
-    <ngx-kit-button
+    <ngx-kit-button>
+      <img class="h-6 filter-white" src="assets/circle-outline.svg" alt="0">
+    </ngx-kit-button>
+    <span
         class="text-2xl">
       {{task.text}}
-    </ngx-kit-button>
+    </span>
     <ngx-kit-button
-        [extraCssClasses]="['bg-red-500', 'hover:bg-red-400', 'h-8', 'p-2']"
+        [extraCssClasses]="['bg-gray-500', 'hover:bg-gray-400', 'h-8', 'p-1']"
         (clickFunc)="del(task)">
       X
     </ngx-kit-button>
