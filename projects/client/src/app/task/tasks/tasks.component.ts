@@ -3,7 +3,7 @@ import { Observable, Subscription, map, of, switchMap } from "rxjs";
 import { TaskUdto } from "src/app/models";
 import { TaskService } from "../task.service";
 import { FormControl, FormGroup } from "@angular/forms";
-import { InputType, StorageService, asrt, log } from "@almazrpe/ngx-kit";
+import { InputType, StorageService, asrt } from "@almazrpe/ngx-kit";
 import { ProjectService } from "src/app/project/project.service";
 
 @Component({
@@ -34,9 +34,7 @@ export class TasksComponent implements OnInit, OnDestroy
             {
               return of([]);
             }
-            log.warn(project);
-            return of([]);
-            // return this.taskSv.getMany$({sid: {"$in": project.task_sids}});
+            return this.taskSv.getMany$({sid: {"$in": project.task_sids}});
           }))
       .subscribe({
         next: tasks =>
@@ -91,13 +89,13 @@ export class TasksComponent implements OnInit, OnDestroy
       next: val =>
       {
         this.tasks.splice(0, 0, val);
-        const project = this.projectSv.getCurrentProject();
-        if (project === null)
+        const projectSid = this.projectSv.getCurrentProjectSid();
+        if (projectSid === null)
         {
           asrt.fail();
           throw new Error();
         }
-        this.projectSv.attachTask$(project, val);
+        this.projectSv.attachTask$(projectSid, val.sid);
         this.createForm.setValue({text: ""});
       }});
   }

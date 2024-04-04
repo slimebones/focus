@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core";
-import { ProjectCreate, ProjectUdto, TaskUdto } from "../models";
+import { ProjectCreate, ProjectUdto } from "../models";
 import {
   BusUtils,
   CreateDocReq,
   DelDocReq,
   GetDocsReq,
+  Query,
   StorageService,
-  UpdDocReq,
-  log } from "@almazrpe/ngx-kit";
-import { Observable, map } from "rxjs";
+  UpdDocReq } from "@almazrpe/ngx-kit";
+import { Observable, map, of, switchMap } from "rxjs";
 
 @Injectable({
   providedIn: "root"
@@ -28,30 +28,35 @@ export class ProjectService
   public init()
   {
     this.currentProject$ = this.storageSv.addItem$<string | null>(
-        "local", "current_project", null)
-      .pipe(map(projectStr => this.parseProjectStr(projectStr)));
+        "local", "current_project_sid", null)
+      .pipe(switchMap(sid => this.parseProject$(sid)));
   }
 
-  public getCurrentProject(): ProjectUdto | null
+  public getCurrentProjectSid(): string | null
   {
-    return this.parseProjectStr(this.storageSv.getItem(
-      "local", "current_project", null));
+    return this.storageSv.getItem(
+      "local", "current_project_sid", null);
   }
 
-  private parseProjectStr(projectStr: string | null): ProjectUdto | null
+  private parseProject$(
+    sid: string | null): Observable<ProjectUdto | null>
   {
-    if (projectStr == null)
+    if (sid == null)
     {
-      return null;
+      return of(null);
     }
-    return JSON.parse(projectStr) as ProjectUdto;
+    return this.get$({sid: sid});
+  }
+
+  public get$(searchq: Query = {}): Observable<ProjectUdto>
+  {
+    return this.getMany$(searchq).pipe(map(val => val[0]));
   }
 
   public setCurrentProject(project: ProjectUdto | null)
   {
-    log.warn("set current project");
     this.storageSv.setItemVal(
-      "local", "current_project", JSON.stringify(project));
+      "local", "current_project_sid", JSON.stringify(project));
   }
 
   public getMany$(searchq: object = {}): Observable<ProjectUdto[]>
@@ -73,16 +78,16 @@ export class ProjectService
   }
 
   public attachTask$(
-    project: ProjectUdto, task: TaskUdto): Observable<ProjectUdto>
+    projectSid: string, taskSid: string): Observable<ProjectUdto>
   {
     return BusUtils.pubUpdDocReq$(new UpdDocReq({
       collection: this.Collection,
       searchQuery: {
-        sid: project.sid
+        sid: projectSid
       },
       updQuery: {
         "$push": {
-          taskSids: task.sid
+          taskSids: taskSid
         }
       }
     }));

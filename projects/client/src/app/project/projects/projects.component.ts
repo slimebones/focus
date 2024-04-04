@@ -68,7 +68,7 @@ export class ProjectsComponent implements OnInit
 
   public getProjectSelectors(project: ProjectUdto): string[]
   {
-    if (this.projectSv.getCurrentProject()?.sid === project.sid)
+    if (this.projectSv.getCurrentProjectSid() === project.sid)
     {
       return ["underline"];
     }
@@ -81,7 +81,7 @@ export class ProjectsComponent implements OnInit
       next: _ =>
       {
         const deldProject = this.projects.indexOf(project);
-        if (this.projectSv.getCurrentProject()?.sid === project.sid)
+        if (this.projectSv.getCurrentProjectSid() === project.sid)
         {
           this.projectSv.setCurrentProject(null);
         }
