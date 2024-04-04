@@ -27,7 +27,7 @@
   <div
       class="mt-8 flex flex-row justify-center items-center gap-4"
       *ngFor="let task of tasks">
-    <ngx-kit-button>
+    <ngx-kit-button (clickFunc)="complete(task.sid)">
       <img class="h-6 filter-white" src="assets/circle-outline.svg" alt="0">
     </ngx-kit-button>
     <span

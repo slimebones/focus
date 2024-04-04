@@ -38,7 +38,7 @@ export class TaskService
         sid: sid
       },
       updQuery: {
-        set: {
+        "$set": {
           isCompleted: true
         }
       }

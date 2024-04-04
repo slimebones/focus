@@ -3,7 +3,8 @@ import { Observable, Subscription, map, of, switchMap } from "rxjs";
 import { TaskUdto } from "src/app/models";
 import { TaskService } from "../task.service";
 import { FormControl, FormGroup } from "@angular/forms";
-import { InputType, StorageService, asrt } from "@almazrpe/ngx-kit";
+import {
+  ConnService, InputType, StorageService, asrt } from "@almazrpe/ngx-kit";
 import { ProjectService } from "src/app/project/project.service";
 
 @Component({
@@ -22,7 +23,8 @@ export class TasksComponent implements OnInit, OnDestroy
   public constructor(
     public projectSv: ProjectService,
     private taskSv: TaskService,
-    private storageSv: StorageService
+    private storageSv: StorageService,
+    private connSv: ConnService
   ) {}
 
   public ngOnInit(): void
@@ -39,7 +41,7 @@ export class TasksComponent implements OnInit, OnDestroy
       .subscribe({
         next: tasks =>
         {
-          this.tasks = tasks;
+          this.tasks = tasks.filter(val => !val.is_completed);
         }
       });
     this.subs.push(sub);
@@ -106,6 +108,11 @@ export class TasksComponent implements OnInit, OnDestroy
         map(task =>
           {
             this.tasks.splice(this.tasks.indexOf(task), 1);
+            const clickAudio = new Audio(
+              "http://"
+              + this.storageSv.getItem("local", "conn_hostport")
+              + "/share/click.wav");
+            clickAudio.play();
             return task;
           }))
       .subscribe({

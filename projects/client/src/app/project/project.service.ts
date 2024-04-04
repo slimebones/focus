@@ -28,7 +28,7 @@ export class ProjectService
   public init()
   {
     this.currentProject$ = this.storageSv.addItem$<string | null>(
-        "local", "current_project_sid", null)
+        "local", "current_project_sid")
       .pipe(switchMap(sid => this.parseProject$(sid)));
   }
 
