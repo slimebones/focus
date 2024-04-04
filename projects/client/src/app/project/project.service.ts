@@ -34,8 +34,13 @@ export class ProjectService
 
   public getCurrentProjectSid(): string | null
   {
-    return this.storageSv.getItem(
+    let val = this.storageSv.getItem(
       "local", "current_project_sid", null);
+    if (val === "null" || val === "")
+    {
+      val = null;
+    }
+    return val;
   }
 
   private parseProject$(

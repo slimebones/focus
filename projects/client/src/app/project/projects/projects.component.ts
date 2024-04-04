@@ -25,7 +25,19 @@ export class ProjectsComponent implements OnInit
 
   public ngOnInit(): void
   {
-    this.projectSv.getMany$().subscribe({next: val => this.projects = val});
+    this.projectSv.getMany$().subscribe({next: val =>
+      {
+        this.projects = val;
+
+        // select first project if nothing selected - later might want to
+        // toggle this via the settings
+        if (
+          this.projects.length > 0
+          && this.projectSv.getCurrentProjectSid() === null)
+        {
+          this.selectProject(this.projects[0]);
+        }
+      }});
     this.projectCreateForm = new FormGroup({
       name: new FormControl("")
     });
