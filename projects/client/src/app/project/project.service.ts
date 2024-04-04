@@ -56,7 +56,7 @@ export class ProjectService
   public setCurrentProject(project: ProjectUdto | null)
   {
     this.storageSv.setItemVal(
-      "local", "current_project_sid", JSON.stringify(project));
+      "local", "current_project_sid", project?.sid);
   }
 
   public getMany$(searchq: object = {}): Observable<ProjectUdto[]>
