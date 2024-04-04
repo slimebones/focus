@@ -1,9 +1,9 @@
-import { Component, OnInit } from "@angular/core";
-import { Observable, map, switchMap } from "rxjs";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Observable, Subscription, map, of, switchMap } from "rxjs";
 import { TaskUdto } from "src/app/models";
 import { TaskService } from "../task.service";
 import { FormControl, FormGroup } from "@angular/forms";
-import { InputType, asrt } from "@almazrpe/ngx-kit";
+import { InputType, StorageService, asrt, log } from "@almazrpe/ngx-kit";
 import { ProjectService } from "src/app/project/project.service";
 
 @Component({
@@ -12,39 +12,50 @@ import { ProjectService } from "src/app/project/project.service";
   styles: [
   ]
 })
-export class TasksComponent implements OnInit
+export class TasksComponent implements OnInit, OnDestroy
 {
   public InputType = InputType;
   public tasks: TaskUdto[] = [];
   public createForm: FormGroup;
-  public unsubs: (() => void)[] = [];
+  public subs: Subscription[] = [];
 
   public constructor(
     public projectSv: ProjectService,
-    private taskSv: TaskService
+    private taskSv: TaskService,
+    private storageSv: StorageService
   ) {}
 
   public ngOnInit(): void
   {
-    this.projectSv.currentProject$.pipe(
+    const sub = this.projectSv.currentProject$.pipe(
         switchMap(project =>
           {
             if (project === null)
             {
-              return [];
+              return of([]);
             }
-            return this.taskSv.getMany$({sid: {"$in": project.task_sids}});
-          })
-      )
+            log.warn(project);
+            return of([]);
+            // return this.taskSv.getMany$({sid: {"$in": project.task_sids}});
+          }))
       .subscribe({
         next: tasks =>
         {
           this.tasks = tasks;
         }
       });
+    this.subs.push(sub);
     this.createForm = new FormGroup({
       text: new FormControl("")
     });
+  }
+
+  public ngOnDestroy(): void
+  {
+    for (let sub of this.subs)
+    {
+      sub.unsubscribe();
+    }
   }
 
   public create$(text: string): Observable<TaskUdto>
@@ -80,7 +91,7 @@ export class TasksComponent implements OnInit
       next: val =>
       {
         this.tasks.splice(0, 0, val);
-        const project = this.projectSv.currentProject$.value;
+        const project = this.projectSv.getCurrentProject();
         if (project === null)
         {
           asrt.fail();

@@ -12,6 +12,7 @@ module.exports = {
     project: "./tsconfig.json",
   },
   rules: {
+    "prefer-const": "off",
     "@typescript-eslint/object-curly-spacing": [
       "off"
     ],

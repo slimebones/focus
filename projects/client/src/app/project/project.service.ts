@@ -2,17 +2,57 @@ import { Injectable } from "@angular/core";
 import { ProjectCreate, ProjectUdto, TaskUdto } from "../models";
 import {
   BusUtils,
-  CreateDocReq, DelDocReq, GetDocsReq, UpdDocReq } from "@almazrpe/ngx-kit";
-import { BehaviorSubject, Observable } from "rxjs";
+  CreateDocReq,
+  DelDocReq,
+  GetDocsReq,
+  StorageService,
+  UpdDocReq,
+  log } from "@almazrpe/ngx-kit";
+import { Observable, map } from "rxjs";
 
 @Injectable({
   providedIn: "root"
 })
 export class ProjectService
 {
-  public currentProject$ = new BehaviorSubject<ProjectUdto | null>(null);
+  public currentProject$: Observable<ProjectUdto | null>;
 
   private readonly Collection = "projectDoc";
+
+  public constructor(
+    private storageSv: StorageService
+  )
+  {
+  }
+
+  public init()
+  {
+    this.currentProject$ = this.storageSv.addItem$<string | null>(
+        "local", "current_project", null)
+      .pipe(map(projectStr => this.parseProjectStr(projectStr)));
+  }
+
+  public getCurrentProject(): ProjectUdto | null
+  {
+    return this.parseProjectStr(this.storageSv.getItem(
+      "local", "current_project", null));
+  }
+
+  private parseProjectStr(projectStr: string | null): ProjectUdto | null
+  {
+    if (projectStr == null)
+    {
+      return null;
+    }
+    return JSON.parse(projectStr) as ProjectUdto;
+  }
+
+  public setCurrentProject(project: ProjectUdto | null)
+  {
+    log.warn("set current project");
+    this.storageSv.setItemVal(
+      "local", "current_project", JSON.stringify(project));
+  }
 
   public getMany$(searchq: object = {}): Observable<ProjectUdto[]>
   {

@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ProjectUdto } from "src/app/models";
 import { ProjectService } from "../project.service";
 import { FormControl, FormGroup } from "@angular/forms";
-import { InputType } from "@almazrpe/ngx-kit";
+import { InputType, StorageService } from "@almazrpe/ngx-kit";
 
 @Component({
   selector: "app-projects",
@@ -19,7 +19,8 @@ export class ProjectsComponent implements OnInit
   private unsubs: (() => void)[];
 
   public constructor(
-    private projectSv: ProjectService)
+    private projectSv: ProjectService,
+    private storageSv: StorageService)
   {}
 
   public ngOnInit(): void
@@ -62,12 +63,12 @@ export class ProjectsComponent implements OnInit
 
   public selectProject(project: ProjectUdto): void
   {
-    this.projectSv.currentProject$.next(project);
+    this.projectSv.setCurrentProject(project);
   }
 
   public getProjectSelectors(project: ProjectUdto): string[]
   {
-    if (this.projectSv.currentProject$.value?.sid === project.sid)
+    if (this.projectSv.getCurrentProject()?.sid === project.sid)
     {
       return ["underline"];
     }
@@ -80,9 +81,9 @@ export class ProjectsComponent implements OnInit
       next: _ =>
       {
         const deldProject = this.projects.indexOf(project);
-        if (this.projectSv.currentProject$.value?.sid === project.sid)
+        if (this.projectSv.getCurrentProject()?.sid === project.sid)
         {
-          this.projectSv.currentProject$.next(null);
+          this.projectSv.setCurrentProject(null);
         }
         this.projects.splice(deldProject, 1);
       }});

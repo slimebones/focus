@@ -28,11 +28,11 @@
       class="mt-8 flex flex-row justify-center items-center gap-4"
       *ngFor="let task of tasks">
     <ngx-kit-button
-        class="text-2xl hover:underline">
+        class="text-2xl">
       {{task.text}}
     </ngx-kit-button>
     <ngx-kit-button
-        [extraCssClasses]="['bg-red-500', 'hover:bg-red-400', 'h-8']"
+        [extraCssClasses]="['bg-red-500', 'hover:bg-red-400', 'h-8', 'p-2']"
         (clickFunc)="del(task)">
       X
     </ngx-kit-button>

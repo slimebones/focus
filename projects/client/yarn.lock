@@ -13,9 +13,9 @@
   integrity sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==
 
 "@almazrpe/ngx-kit@^1.0.0-a1":
-  version "1.0.0-a1"
-  resolved "https://registry.yarnpkg.com/@almazrpe/ngx-kit/-/ngx-kit-1.0.0-a1.tgz#54decdad48cc3b93727002695ead70cc7a418242"
-  integrity sha512-Intz6QkN1RJW1Fn9/KJqY0GtGnje4jmOAVPt4zILXxpK7nXVxPqGCfaddZseLxfOytZRrp7RSzesAL8OIrWkoQ==
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@almazrpe/ngx-kit/-/ngx-kit-1.0.0.tgz#0de1ff4afe1b82c6561b0e62c608f5a2c97f166e"
+  integrity sha512-jg0YkrP6sNiu3se7zNWoeWMF6/WfzNscYTY0/kThSZR4fIxWwQv8RkNm0eCeNGNInhDH0mX/VFa4YkDEGdaUuQ==
   dependencies:
     queue-typescript "^1.0.1"
     simple-keyboard "^3.7.12"
@@ -6938,14 +6938,14 @@ sigstore@^1.0.0:
     make-fetch-happen "^11.0.1"
 
 simple-keyboard-layouts@^3.3.16:
-  version "3.3.85"
-  resolved "https://registry.yarnpkg.com/simple-keyboard-layouts/-/simple-keyboard-layouts-3.3.85.tgz#baa163d2786ddeaf548fbd9cb5551ca6cbfce039"
-  integrity sha512-tiORiTzrwPy13r1pgQwA4D09EbuFXIfPAZmbPsNo9gi7SBUvIWBr/wJ2/73SWPp39KPkqn+3vsk2N652tqjNVA==
+  version "3.3.93"
+  resolved "https://registry.yarnpkg.com/simple-keyboard-layouts/-/simple-keyboard-layouts-3.3.93.tgz#b8dd8ad0aa258a291106cbdb75e89f6b1f7db25e"
+  integrity sha512-UJ5qf248bP3mAg8InysRzqMBasCDxUqRYGzV/UaVzArdBBnguaZSj2HRIJARPqElnfi/JooEn2bpWh4/IkweuQ==
 
 simple-keyboard@^3.7.12:
-  version "3.7.67"
-  resolved "https://registry.yarnpkg.com/simple-keyboard/-/simple-keyboard-3.7.67.tgz#8d1858e654420fd547af466820b81ef29bbce6b8"
-  integrity sha512-DeY2se8avhhYG80pgJn0e/9VMFhY0VCEYJH/k/3nKBzmWI7Y41b/spAvTRcGSeRbvm37yeBdisfBSKbKlnkkYg==
+  version "3.7.73"
+  resolved "https://registry.yarnpkg.com/simple-keyboard/-/simple-keyboard-3.7.73.tgz#66b9654d616c36c03b07e440a658670f80c93387"
+  integrity sha512-qaDSJ6IEliFNVkhI/1hW3EX+6ceJ6wVdHJUx8rKZf6eAeOEFU3QdKTfHdIuaTo36PAK22Sy9ujymc8hJdIRvvg==
 
 slash@^3.0.0:
   version "3.0.0"

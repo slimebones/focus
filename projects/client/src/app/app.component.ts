@@ -1,15 +1,22 @@
-import { Component, OnInit } from "@angular/core";
-import { AlertService, ClientBus, ConnService, log } from "@almazrpe/ngx-kit";
-import { Subscription, take } from "rxjs";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import {
+  AlertService,
+  ClientBus,
+  ConnService,
+  LocalStorage,
+  StorageService,
+  log } from "@almazrpe/ngx-kit";
+import { Subscription } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
 import { environment } from "src/environments/environment";
+import { ProjectService } from "./project/project.service";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"]
 })
-export class AppComponent implements OnInit
+export class AppComponent implements OnInit, OnDestroy
 {
   public title = "client";
   private subs: Subscription[] = [];
@@ -17,14 +24,22 @@ export class AppComponent implements OnInit
   public constructor(
     private alertSv: AlertService,
     private connSv: ConnService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private storageSv: StorageService,
+    private projectSv: ProjectService
   )
   {
   }
 
   public ngOnInit()
   {
-    this.redefineUrlsFromQuery();
+    this.storageSv.addStorage("local", new LocalStorage());
+    this.connSv.init(
+      "local",
+      undefined,
+      environment.serverHost + ":" + environment.serverPort);
+    this.projectSv.init();
+
     this.subs.push(this.connSv.serverHostPort$.subscribe({
       next: url =>
       {
@@ -42,28 +57,5 @@ export class AppComponent implements OnInit
     {
       sub.unsubscribe();
     }
-  }
-
-  public redefineUrlsFromQuery(): void
-  {
-    this.route.queryParams.pipe(take(2)).subscribe({
-      next: (params: any) =>
-      {
-        let host = environment.serverHost;
-        let port = environment.serverPort;
-
-        if (params.cpasbHost !== undefined)
-        {
-          host = params.cpasbHost;
-        }
-
-        if (params.cpasbPort !== undefined)
-        {
-          port = params.cpasbPort;
-        }
-
-        this.connSv.serverHostPort$.next(host + ":" + port);
-      }
-    });
   }
 }
