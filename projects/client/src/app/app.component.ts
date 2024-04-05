@@ -3,8 +3,6 @@ import {
   AlertService,
   ClientBus,
   ConnService,
-  FcodeCore,
-  GotDocUdtosEvt,
   LocalStorage,
   StorageService,
   log } from "@almazrpe/ngx-kit";
@@ -35,8 +33,6 @@ export class AppComponent implements OnInit, OnDestroy
 
   public ngOnInit()
   {
-    FcodeCore.ie.defcode("got-doc-udtos-evt", GotDocUdtosEvt);
-    log.warn(FcodeCore.ie.tryGetConstructorForAnyCodes(["got-doc-udtos-evt"]));
     this.storageSv.addStorage("local", new LocalStorage());
     this.connSv.init(
       "local",
