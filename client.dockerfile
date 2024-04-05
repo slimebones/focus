@@ -1,25 +1,18 @@
-# BUILD
-FROM node:20 AS build
-
+# https://github.com/DenysVuika/medium-angular-docker/blob/master/Dockerfile
+FROM node:21-alpine AS build
 WORKDIR /solution/projects/client
 
-COPY projects/client/package*.json ./
-COPY projects/client/tailwind.config.js ./
-COPY projects/client/svelte.config.js ./
-COPY projects/client/tsconfig.json ./
-COPY projects/client/vite.config.ts ./
-COPY projects/client/Makefile ./
-COPY projects/client/.env ./
+COPY projects/client/tsconfig.json .
+COPY projects/client/angular.json .
+COPY projects/client/package.json .
+COPY projects/client/yarn.lock .
+COPY projects/client/Makefile .
+COPY projects/client/tailwind.config.js .
+RUN yarn install
 
-RUN yarn install --network-timeout 30000000
-
-COPY projects/client/src ./src
-COPY projects/client/static ./static
-
+COPY projects/client .
 RUN yarn build
 
-# NGINX
-FROM nginx:1.19-alpine AS prod
-
-# Copy build folder from build stage to nginx
-COPY --from=build /solution/projects/client/build /usr/share/nginx/html
+FROM nginx:1.17.1-alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /solution/projects/client/dist/client /usr/share/nginx/html
