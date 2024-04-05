@@ -1,5 +1,7 @@
 <div
-    class="w-full p-4 h-screen flex flex-col justify-start items-start"
+    class="
+      w-full p-4 h-full flex flex-col justify-start items-start
+      overflow-y-scroll"
     *ngIf="(projectSv.currentProject$ | async) !== null; else choose_project">
   <div class="font-bold self-center mb-4">
     Tasks
@@ -26,7 +28,8 @@
   </form>
 
   <div
-      class="mt-8 flex flex-row justify-center items-center gap-4"
+      class="
+        mt-8 flex flex-row justify-center items-center gap-4"
       *ngFor="let task of tasks">
     <ngx-kit-button (clickFunc)="complete(task.sid)">
       <img class="h-6 filter-white" src="assets/circle-outline.svg" alt="0">
