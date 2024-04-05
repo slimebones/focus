@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import {
+  Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Observable, Subscription, map, of, switchMap } from "rxjs";
 import { TaskUdto } from "src/app/models";
 import { TaskService } from "../task.service";
@@ -15,6 +16,9 @@ import { ProjectService } from "src/app/project/project.service";
 })
 export class TasksComponent implements OnInit, OnDestroy
 {
+  @ViewChild("task_create_inp", { read: ElementRef })
+  private taskCreateInp: ElementRef;
+
   public InputType = InputType;
   public tasks: TaskUdto[] = [];
   public createForm: FormGroup;
@@ -70,9 +74,9 @@ export class TasksComponent implements OnInit, OnDestroy
     );
   }
 
-  public onKeydownEnter(): void
+  public onKeydownEnter(evt: Event): void
   {
-    this.onCreateSubmit();
+    this.onCreateSubmit(evt);
   }
 
   private getDistilledTextInput(): string
@@ -80,8 +84,9 @@ export class TasksComponent implements OnInit, OnDestroy
     return this.createForm.value.text.trim();
   }
 
-  public onCreateSubmit(): void
+  public onCreateSubmit(event: any): void
   {
+    this.taskCreateInp.nativeElement.querySelector("input").focus();
     const text = this.getDistilledTextInput();
     if (text === "")
     {

@@ -7,6 +7,7 @@
       [formGroup]="projectCreateForm"
       (ngSubmit)="onProjectCreateSubmit()">
     <ngx-kit-mat-input
+        #project_create_inp
         class="text-black"
         [type]="InputType.Text"
         (keydown.enter)="onKeydownEnter()"

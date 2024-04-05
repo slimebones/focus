@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { ProjectUdto } from "src/app/models";
 import { ProjectService } from "../project.service";
 import { FormControl, FormGroup } from "@angular/forms";
@@ -12,6 +12,9 @@ import { InputType, StorageService, asrt } from "@almazrpe/ngx-kit";
 })
 export class ProjectsComponent implements OnInit
 {
+  @ViewChild("project_create_inp", {read: ElementRef})
+  private projectCreateInp: ElementRef;
+
   public InputType = InputType;
 
   public projects: ProjectUdto[] = [];
@@ -63,6 +66,7 @@ export class ProjectsComponent implements OnInit
 
   public onProjectCreateSubmit(): void
   {
+    this.projectCreateInp.nativeElement.querySelector("input").focus();
     const name = this.getDistilledProjectNameInput();
     if (name === "")
     {
