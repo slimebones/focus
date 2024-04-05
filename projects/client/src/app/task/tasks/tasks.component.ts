@@ -32,7 +32,7 @@ export class TasksComponent implements OnInit, OnDestroy
     const sub = this.projectSv.currentProject$.pipe(
         switchMap(project =>
           {
-            if (project === null)
+            if (project === null || project === undefined)
             {
               return of([]);
             }

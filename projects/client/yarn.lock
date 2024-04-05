@@ -13,9 +13,9 @@
   integrity sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==
 
 "@almazrpe/ngx-kit@^1.0.0-a1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@almazrpe/ngx-kit/-/ngx-kit-1.0.1.tgz#bb0a9791a0387d74e4074981dedfb5e562740d98"
-  integrity sha512-sAZzdYjUgDhKLvMSvmoNq9kOJ0d4u5PeNpVMkPnmA7g8TcRaXgXCoGoS0W7YhoP6DXCPCdUoHUiXldqjvtfbfQ==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@almazrpe/ngx-kit/-/ngx-kit-1.0.2.tgz#3913ff6bfa0ec81c47fef476baf97e7089788b0c"
+  integrity sha512-HZygJwNiyWavGHob9NnckZbsLFwTI+0oDaBkq1zzAdUUIgFpqrlj/E/Udc/IPNVpJc/x3+MtFxwbCitoVleCUA==
   dependencies:
     queue-typescript "^1.0.1"
     simple-keyboard "^3.7.12"
