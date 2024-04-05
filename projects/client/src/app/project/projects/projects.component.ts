@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ProjectUdto } from "src/app/models";
 import { ProjectService } from "../project.service";
 import { FormControl, FormGroup } from "@angular/forms";
-import { InputType, StorageService } from "@almazrpe/ngx-kit";
+import { InputType, StorageService, asrt } from "@almazrpe/ngx-kit";
 
 @Component({
   selector: "app-projects",
@@ -92,12 +92,17 @@ export class ProjectsComponent implements OnInit
     this.projectSv.del$(project.sid).subscribe({
       next: _ =>
       {
-        const deldProject = this.projects.indexOf(project);
+        const deldIndex = this.projects.findIndex(v => v.sid == project.sid);
         if (this.projectSv.getCurrentProjectSid() === project.sid)
         {
           this.projectSv.setCurrentProject(null);
         }
-        this.projects.splice(deldProject, 1);
+        if (deldIndex === undefined)
+        {
+          asrt.fail();
+          throw new Error();
+        }
+        this.projects.splice(deldIndex, 1);
       }});
   }
 }

@@ -36,6 +36,7 @@ export class AppComponent implements OnInit, OnDestroy
 
   public ngOnInit()
   {
+    // maybe redundant: problem probably was with incorrect dockerfile setup
     FcodeCore.ie.secure({
       "got-doc-udtos-evt": GotDocUdtosEvt,
       "got-doc-udto-evt": GotDocUdtoEvt

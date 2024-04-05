@@ -107,7 +107,7 @@ export class TasksComponent implements OnInit, OnDestroy
     return this.taskSv.complete$(sid).pipe(
         map(task =>
           {
-            this.tasks.splice(this.tasks.indexOf(task), 1);
+            this.tasks.splice(this.tasks.findIndex(t => t.sid == task.sid), 1);
             const clickAudio = new Audio(
               "http://"
               + this.storageSv.getItem("local", "conn_hostport")
@@ -125,8 +125,13 @@ export class TasksComponent implements OnInit, OnDestroy
     this.taskSv.del$(task.sid).subscribe({
       next: _ =>
       {
-        const deldTask = this.tasks.indexOf(task);
-        this.tasks.splice(deldTask, 1);
+        const deldTaskIndex = this.tasks.findIndex(t => t.sid == task.sid);
+        if (deldTaskIndex === undefined)
+        {
+          asrt.fail();
+          throw new Error();
+        }
+        this.tasks.splice(deldTaskIndex, 1);
       }});
   }
 }
