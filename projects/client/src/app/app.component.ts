@@ -7,6 +7,7 @@ import {
   GotDocUdtoEvt,
   GotDocUdtosEvt,
   LocalStorage,
+  OkEvt,
   StorageService,
   log } from "@almazrpe/ngx-kit";
 import { Subscription } from "rxjs";
@@ -39,7 +40,8 @@ export class AppComponent implements OnInit, OnDestroy
     // maybe redundant: problem probably was with incorrect dockerfile setup
     FcodeCore.ie.secure({
       "got-doc-udtos-evt": GotDocUdtosEvt,
-      "got-doc-udto-evt": GotDocUdtoEvt
+      "got-doc-udto-evt": GotDocUdtoEvt,
+      "ok-evt": OkEvt
     });
 
     this.storageSv.addStorage("local", new LocalStorage());
