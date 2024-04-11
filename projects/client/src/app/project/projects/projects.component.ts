@@ -3,6 +3,7 @@ import { ProjectUdto } from "src/app/models";
 import { ProjectService } from "../project.service";
 import { FormControl, FormGroup } from "@angular/forms";
 import { InputType, StorageService, asrt } from "@almazrpe/ngx-kit";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-projects",
@@ -19,7 +20,7 @@ export class ProjectsComponent implements OnInit
 
   public projects: ProjectUdto[] = [];
   public projectCreateForm: FormGroup;
-  private unsubs: (() => void)[];
+  private subs: Subscription[] = [];
 
   public constructor(
     private projectSv: ProjectService,
@@ -48,9 +49,9 @@ export class ProjectsComponent implements OnInit
 
   public ngOnDestroy(): void
   {
-    for (const unsub of this.unsubs)
+    for (const sub of this.subs)
     {
-      unsub();
+      sub.unsubscribe();
     }
   }
 

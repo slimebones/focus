@@ -14,6 +14,7 @@ import { Subscription } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
 import { environment } from "src/environments/environment";
 import { ProjectService } from "./project/project.service";
+import { AppViewType, ViewData } from "./models";
 
 @Component({
   selector: "app-root",
@@ -22,7 +23,29 @@ import { ProjectService } from "./project/project.service";
 })
 export class AppComponent implements OnInit, OnDestroy
 {
+  public AppView = AppViewType;
+
   public title = "client";
+  public openedViewType = AppViewType.TPI;
+  private readonly UnselectedViewCssSelectors: string[] = ["hover:underline"];
+  private readonly SelectedViewCssSelectors: string[] = ["underline"];
+  public views: ViewData[] = [
+    {
+      title: "Tasks",
+      type: AppViewType.TPI,
+      cssSelectors: this.SelectedViewCssSelectors
+    },
+    {
+      title: "Ideas",
+      type: AppViewType.Ideas,
+      cssSelectors: this.UnselectedViewCssSelectors
+    },
+    {
+      title: "Events",
+      type: AppViewType.Events,
+      cssSelectors: this.UnselectedViewCssSelectors
+    },
+  ];
   private subs: Subscription[] = [];
 
   public constructor(
@@ -68,5 +91,15 @@ export class AppComponent implements OnInit, OnDestroy
     {
       sub.unsubscribe();
     }
+  }
+
+  public selectView(view: ViewData): void
+  {
+    this.openedViewType = view.type;
+    for (let view of this.views)
+    {
+      view.cssSelectors = this.UnselectedViewCssSelectors;
+    }
+    view.cssSelectors = this.SelectedViewCssSelectors;
   }
 }

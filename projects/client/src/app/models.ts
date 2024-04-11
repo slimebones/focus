@@ -22,3 +22,17 @@ export interface ProjectUdto extends Udto
   name: string;
   task_sids: string[];
 }
+
+export enum AppViewType
+{
+  TPI = "tpi",
+  Ideas = "ideas",
+  Events = "events"
+}
+
+export interface ViewData
+{
+  title: string;
+  type: AppViewType;
+  cssSelectors: string[];
+}

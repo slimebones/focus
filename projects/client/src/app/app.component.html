@@ -2,13 +2,31 @@
     class="
       flex flex-col justify-center items-center
       w-full min-h-screen bg-c60-bg text-c60-fg text-xl">
-  <div class="
-      w-full h-full
-      overflow-x-hidden overflow-y-hidden
-      flex flex-row
-      justify-start gap-4">
+
+  <div
+      class="
+        flex flex-row justify-center items-center w-full bg-c30-bg
+        text-c30-fg p-4 text-2xl gap-8">
+    <div
+        *ngFor="let view of views">
+      <ngx-kit-button
+          [ngClass]="view.cssSelectors"
+          (clickFunc)="selectView(view)">
+        {{view.title}}
+      </ngx-kit-button>
+    </div>
+  </div>
+
+  <div
+      class="
+        w-full h-full
+        overflow-x-hidden overflow-y-hidden
+        flex flex-row
+        justify-start gap-4"
+      *ngIf="openedViewType === AppView.TPI">
     <app-projects/>
     <app-tasks class="grow"/>
   </div>
+
 </div>
 
