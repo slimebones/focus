@@ -129,11 +129,11 @@ export class TasksComponent implements OnInit, OnDestroy
             asrt.run(deld.length == 1);
             this.completedTasks.splice(0, 0, deld[0]);
 
-            const clickAudio = new Audio(
+            const audio = new Audio(
               "http://"
               + this.storageSv.getItem("local", "conn_hostport")
-              + "/share/click.wav");
-            clickAudio.play();
+              + "/share/wood4.ogg");
+            audio.play();
             return task;
           }))
       .subscribe({
@@ -150,6 +150,11 @@ export class TasksComponent implements OnInit, OnDestroy
           this.tasks, t => t.sid == task.sid);
         ArrUtils.tryFindIndexAndRemove(
           this.completedTasks, t => t.sid == task.sid);
+        const audio = new Audio(
+          "http://"
+          + this.storageSv.getItem("local", "conn_hostport")
+          + "/share/fire_hurt3.ogg");
+        audio.play();
       }});
   }
 
@@ -163,11 +168,11 @@ export class TasksComponent implements OnInit, OnDestroy
             asrt.run(deld.length == 1);
             this.tasks.splice(0, 0, deld[0]);
 
-            const clickAudio = new Audio(
+            const audio = new Audio(
               "http://"
               + this.storageSv.getItem("local", "conn_hostport")
-              + "/share/click.wav");
-            clickAudio.play();
+              + "/share/plop.ogg");
+            audio.play();
             return task;
           }))
       .subscribe({

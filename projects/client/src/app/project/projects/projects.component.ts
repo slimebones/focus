@@ -108,6 +108,11 @@ export class ProjectsComponent implements OnInit
           throw new Error();
         }
         this.projects.splice(deldIndex, 1);
+        const audio = new Audio(
+          "http://"
+          + this.storageSv.getItem("local", "conn_hostport")
+          + "/share/fire_hurt3.ogg");
+        audio.play();
       }});
   }
 }
