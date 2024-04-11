@@ -7,6 +7,7 @@ import { FormControl, FormGroup } from "@angular/forms";
 import {
   ConnService, InputType, StorageService, asrt } from "@almazrpe/ngx-kit";
 import { ProjectService } from "src/app/project/project.service";
+import { ArrUtils } from "src/app/utils";
 
 @Component({
   selector: "app-tasks",
@@ -21,6 +22,7 @@ export class TasksComponent implements OnInit, OnDestroy
 
   public InputType = InputType;
   public tasks: TaskUdto[] = [];
+  public completedTasks: TaskUdto[] = [];
   public createForm: FormGroup;
   public subs: Subscription[] = [];
 
@@ -45,7 +47,17 @@ export class TasksComponent implements OnInit, OnDestroy
       .subscribe({
         next: tasks =>
         {
-          this.tasks = tasks.filter(val => !val.is_completed);
+          this.tasks = [];
+          this.completedTasks = [];
+          for (let task of tasks)
+          {
+            if (task.is_completed === true)
+            {
+              this.completedTasks.push(task);
+              continue;
+            }
+            this.tasks.push(task);
+          }
         }
       });
     this.subs.push(sub);
@@ -112,7 +124,11 @@ export class TasksComponent implements OnInit, OnDestroy
     return this.taskSv.complete$(sid).pipe(
         map(task =>
           {
-            this.tasks.splice(this.tasks.findIndex(t => t.sid == task.sid), 1);
+            let deld = this.tasks.splice(
+              this.tasks.findIndex(t => t.sid == task.sid), 1);
+            asrt.run(deld.length == 1);
+            this.completedTasks.splice(0, 0, deld[0]);
+
             const clickAudio = new Audio(
               "http://"
               + this.storageSv.getItem("local", "conn_hostport")
@@ -130,13 +146,32 @@ export class TasksComponent implements OnInit, OnDestroy
     this.taskSv.del$(task.sid).subscribe({
       next: _ =>
       {
-        const deldTaskIndex = this.tasks.findIndex(t => t.sid == task.sid);
-        if (deldTaskIndex === undefined)
-        {
-          asrt.fail();
-          throw new Error();
-        }
-        this.tasks.splice(deldTaskIndex, 1);
+        ArrUtils.tryFindIndexAndRemove(
+          this.tasks, t => t.sid == task.sid);
+        ArrUtils.tryFindIndexAndRemove(
+          this.completedTasks, t => t.sid == task.sid);
       }});
+  }
+
+  public redo(sid: string)
+  {
+    return this.taskSv.redo$(sid).pipe(
+        map(task =>
+          {
+            let deld = this.completedTasks.splice(
+              this.completedTasks.findIndex(t => t.sid == task.sid), 1);
+            asrt.run(deld.length == 1);
+            this.tasks.splice(0, 0, deld[0]);
+
+            const clickAudio = new Audio(
+              "http://"
+              + this.storageSv.getItem("local", "conn_hostport")
+              + "/share/click.wav");
+            clickAudio.play();
+            return task;
+          }))
+      .subscribe({
+        next: task => {}
+      });
   }
 }

@@ -45,6 +45,21 @@ export class TaskService
     }));
   }
 
+  public redo$(sid: string): Observable<TaskUdto>
+  {
+    return BusUtils.pubUpdDocReq$(new UpdDocReq({
+      collection: this.Collection,
+      searchQuery: {
+        sid: sid
+      },
+      updQuery: {
+        "$set": {
+          isCompleted: false
+        }
+      }
+    }));
+  }
+
   public del$(sid: string): Observable<void>
   {
     return BusUtils.pubDelDocReq$(new DelDocReq({
