@@ -10,6 +10,7 @@ from orwynn.mongo import (
     DocField,
     Enum,
     GetDocsReq,
+    GotDocUdtoEvt,
     Query,
     UpdDocReq,
     filter_collection_factory,
@@ -82,19 +83,49 @@ class TimerGroupDoc(Doc):
                 current_timer_index=self.current_timer_index,
                 end_action=self.end_action)
 
-@code("start-timer-req")
+@code("start_timer_req")
 class StartTimerReq(Req):
     sid: str
 
-@code("stop-timer-req")
+@code("stop_timer_req")
 class StopTimerReq(Req):
     sid: str
 
-@code("finished-timer-evt")
+@code("finished_timer_evt")
 class FinishedTimerEvt(Evt):
     udto: TimerUdto
 
-class TimingSys(Sys):
+class TimerGroupSys(Sys):
+    CommonSubMsgFilters = [
+        filter_collection_factory(TimerGroupDoc.get_collection())
+    ]
+
+    async def enable(self):
+        self._timer_sid_to_tick_task: dict[str, asyncio.Task] = {}
+
+        await self._sub(GetDocsReq, self._on_get_docs)
+        await self._sub(CreateDocReq, self._on_create_doc)
+        await self._sub(UpdDocReq, self._on_upd_doc)
+        await self._sub(DelDocReq, self._on_del_doc)
+
+    async def _on_get_docs(self, req: GetDocsReq):
+        docs = list(TimerGroupDoc.get_many(req.searchQuery))
+        await self._pub(TimerGroupDoc.to_got_doc_udtos_evt(req, docs))
+
+    async def _on_create_doc(self, req: CreateDocReq):
+        doc = TimerGroupDoc(**req.createQuery).create()
+        await self._pub(doc.to_got_doc_udto_evt(req))
+
+    async def _on_upd_doc(self, req: UpdDocReq):
+        doc = TimerGroupDoc.get_and_upd(req.searchQuery, req.updQuery)
+        await self._pub(doc.to_got_doc_udto_evt(req))
+
+    async def _on_del_doc(self, req: DelDocReq):
+        TimerGroupDoc.get(req.searchQuery).delete()
+        await self._pub(OkEvt(rsid="").as_res_from_req(req))
+
+
+class TimerSys(Sys):
     CommonSubMsgFilters = [
         filter_collection_factory(TimerDoc.get_collection())
     ]
@@ -115,8 +146,8 @@ class TimingSys(Sys):
         self._timer_sid_to_tick_task[timer_doc.sid] = asyncio.create_task(
             self._tick_timer(
                 timer_doc.sid,
-                timer_doc.currentDuration,
-                timer_doc.totalDuration,
+                timer_doc.current_duration,
+                timer_doc.total_duration,
                 orig_req
             )
         )
@@ -143,7 +174,7 @@ class TimingSys(Sys):
         timer_doc = timer_doc.upd(Query.as_upd(
             set={
                 "status": "finished",
-                "currentDuration": 0.0
+                "current_duration": 0.0
             }
         ))
         finished_evt = FinishedTimerEvt(
@@ -176,12 +207,12 @@ class TimingSys(Sys):
         }
         # restart ticked duration upon starting a finished timer again
         if timer_doc.status == "finished":
-            setq["tickedDuration"] = 0.0
+            setq["current_duration"] = 0.0
 
         # it's ok here to pass not upded yet timer doc, an err may happen here,
         # so we don't want to upd the mongo doc before this point
         self._create_tick_task_for_timer(timer_doc, req)
-        setq["launchedLastTickTimestamp"] = DtUtils.get_utc_timestamp()
+        setq["last_launched_time"] = DtUtils.get_utc_timestamp()
 
         timer_doc = timer_doc.upd(Query.as_upd(set=setq))
         await self._pub(timer_doc.to_got_doc_udto_evt(req))
@@ -197,12 +228,12 @@ class TimingSys(Sys):
         now_timestamp = DtUtils.get_utc_timestamp()
         assert timer_doc.last_launch_time > 0.0
         passed_delta = now_timestamp - timer_doc.last_launch_time
-        new_current_duration = timer_doc.currentDuration + passed_delta
-        assert new_current_duration < timer_doc.totalDuration
+        new_current_duration = timer_doc.current_duration + passed_delta
+        assert new_current_duration < timer_doc.total_duration
 
         setq: dict[str, Any] = {
             "status": "paused",
-            "currentDuration": new_current_duration
+            "current_duration": new_current_duration
         }
         timer_doc = timer_doc.upd(Query.as_upd(set=setq))
         await self._pub(timer_doc.to_got_doc_udto_evt(req))
@@ -213,8 +244,8 @@ class TimingSys(Sys):
 
     async def _on_create_doc(self, req: CreateDocReq):
         q = req.createQuery.copy().disallow(
-            "currentDuration",
-            "launchedLastTickTimestamp"
+            "current_duration",
+            "last_launched_time"
             "status",
             raise_mod="warn"
         )
@@ -223,8 +254,8 @@ class TimingSys(Sys):
 
     async def _on_upd_doc(self, req: UpdDocReq):
         updq = req.updQuery.copy().disallow(
-            "currentDuration",
-            "launchedLastTickTimestamp",
+            "current_duration",
+            "last_launched_time",
             "status",
             raise_mod="warn"
         )
