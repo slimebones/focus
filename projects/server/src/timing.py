@@ -16,8 +16,10 @@ from orwynn.mongo import (
     filter_collection_factory,
 )
 from orwynn.sys import Sys
+from pykit.check import check
 from pykit.dt import DtUtils
-from pykit.err import AlreadyProcessedErr, InpErr, LockErr, ValErr
+from pykit.err import AlreadyProcessedErr, InpErr, LockErr, ValErr, ValueErr
+from pykit.log import log
 from rxcat import Evt, OkEvt, Req
 
 TimerStatus = Literal["tick", "paused", "finished"]
@@ -57,6 +59,9 @@ class TimerDoc(Doc):
             status=self.status
         )
 
+TimerEndActionType = Literal["none", "start_next"]
+TimerEndActionData = dict[
+        Literal["type"] | str, TimerEndActionType | str | int | float]
 TimerGroupEndActionType = Literal["none", "restart", "start_another"]
 TimerGroupEndActionData = dict[
         Literal["type"] | str, TimerGroupEndActionType | str | int | float]
@@ -65,7 +70,8 @@ class TimerGroupUdto(Udto):
     name: str
     timer_sids: list[str]
     current_timer_index: int
-    end_action: TimerGroupEndActionData
+    timer_end_action: TimerEndActionData
+    group_end_action: TimerGroupEndActionData
 
 class TimerGroupDoc(Doc):
     Fields = [DocField(name="name", unique=True)]
@@ -73,7 +79,8 @@ class TimerGroupDoc(Doc):
     name: str
     timer_sids: list[str] = []
     current_timer_index: int = 0
-    end_action: TimerGroupEndActionData = {"type": "none"}
+    timer_end_action: TimerEndActionData = {"type": "none"}
+    group_end_action: TimerGroupEndActionData = {"type": "none"}
 
     def to_udto(self) -> TimerGroupUdto:
         return TimerGroupUdto(
@@ -81,7 +88,8 @@ class TimerGroupDoc(Doc):
                 name=self.name,
                 timer_sids=self.timer_sids,
                 current_timer_index=self.current_timer_index,
-                end_action=self.end_action)
+                timer_end_action=self.timer_end_action,
+                group_end_action=self.group_end_action)
 
 @code("start_timer_req")
 class StartTimerReq(Req):
@@ -107,6 +115,34 @@ class TimerGroupSys(Sys):
         await self._sub(CreateDocReq, self._on_create_doc)
         await self._sub(UpdDocReq, self._on_upd_doc)
         await self._sub(DelDocReq, self._on_del_doc)
+        await self._sub(FinishedTimerEvt, self._on_finished_timer)
+
+    async def _on_finished_timer(self, evt: FinishedTimerEvt):
+        group = TimerGroupDoc.try_get(Query({
+            "timer_sids": {"$in": evt.udto.sid}}))
+        if group is None:
+            log.err(f"cannot find group for finished timer {evt.udto}")
+            return
+
+        group.current_timer_index += 1
+        if group.current_timer_index >= len(group.timer_sids):
+            group.current_timer_index = 0
+
+        if group.timer_sids[-1] == evt.udto.sid:
+            if group.group_end_action["type"] == "restart":
+                group.current_timer_index = 0
+                await self._pub(StartTimerReq(sid=group.timer_sids[0]))
+            if group.group_end_action["type"] == "start_another":
+                assert False, "noimpl"
+
+            return
+
+        if group.timer_end_action["type"] == "start_next":
+            await self._pub(StartTimerReq(
+                sid=group.timer_sids[group.current_timer_index]))
+
+        group.upd(Query.as_upd(set={
+            "current_timer_index": group.current_timer_index}))
 
     async def _on_get_docs(self, req: GetDocsReq):
         docs = list(TimerGroupDoc.get_many(req.searchQuery))
@@ -121,9 +157,15 @@ class TimerGroupSys(Sys):
         await self._pub(doc.to_got_doc_udto_evt(req))
 
     async def _on_del_doc(self, req: DelDocReq):
-        TimerGroupDoc.get(req.searchQuery).delete()
-        await self._pub(OkEvt(rsid="").as_res_from_req(req))
+        doc = TimerGroupDoc.get(req.searchQuery)
 
+        # on group deletion - delete all timers
+        for timer_sid in doc.timer_sids:
+            await self._pub(DelDocReq(collection="timerDoc",
+                                      searchQuery=Query({"sid": timer_sid})))
+
+        doc.delete()
+        await self._pub(OkEvt(rsid="").as_res_from_req(req))
 
 class TimerSys(Sys):
     CommonSubMsgFilters = [
@@ -261,14 +303,17 @@ class TimerSys(Sys):
         )
         doc = TimerDoc.get(req.searchQuery)
         if doc.status == "tick":
-            raise LockErr(f"cannot do any changes on ticking timer {doc}")
+            # reset timer on any upd
+            doc.status = "paused"
+            doc.current_duration = 0.0
+            doc.last_launch_time = 0.0
         doc = doc.upd(updq)
         await self._pub(doc.to_got_doc_udto_evt(req))
 
     async def _on_del_doc(self, req: DelDocReq):
         doc = TimerDoc.get(req.searchQuery)
         if doc.status == "tick":
-            raise LockErr(f"cannot do any changes on ticking timer {doc}")
+            await self._pub(StopTimerReq(sid=doc.sid))
         doc.delete()
         await self._pub(OkEvt(rsid="").as_res_from_req(req))
 
