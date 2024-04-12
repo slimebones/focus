@@ -37,3 +37,14 @@ export interface ViewData
   type: ViewType;
   cssSelectors: string[];
 }
+
+export interface DomainUdto extends Udto
+{
+  name: string;
+  timer_sids: string[];
+}
+
+export interface DomainCreate
+{
+  name: string;
+}

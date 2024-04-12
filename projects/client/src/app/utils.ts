@@ -1,4 +1,4 @@
-export abstract class ArrUtils
+export abstract class CustomArrUtils
 {
   public static tryFindIndexAndRemove<T>(
     arr: T[],

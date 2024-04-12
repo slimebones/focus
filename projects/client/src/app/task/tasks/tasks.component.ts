@@ -7,7 +7,7 @@ import { FormControl, FormGroup } from "@angular/forms";
 import {
   ConnService, InputType, StorageService, asrt } from "@almazrpe/ngx-kit";
 import { ProjectService } from "src/app/project/project.service";
-import { ArrUtils } from "src/app/utils";
+import { CustomArrUtils } from "src/app/utils";
 
 @Component({
   selector: "app-tasks",
@@ -146,9 +146,9 @@ export class TasksComponent implements OnInit, OnDestroy
     this.taskSv.del$(task.sid).subscribe({
       next: _ =>
       {
-        ArrUtils.tryFindIndexAndRemove(
+        CustomArrUtils.tryFindIndexAndRemove(
           this.tasks, t => t.sid == task.sid);
-        ArrUtils.tryFindIndexAndRemove(
+        CustomArrUtils.tryFindIndexAndRemove(
           this.completedTasks, t => t.sid == task.sid);
         const audio = new Audio(
           "http://"

@@ -6,6 +6,7 @@ from src.idea import *
 from src.project import *
 from src.task import *
 from src.timing import *
+from src.domain import *
 
 
 async def main():
