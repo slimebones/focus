@@ -8,6 +8,7 @@ from orwynn.mongo import (
     DelDocReq,
     Doc,
     DocField,
+    Enum,
     GetDocsReq,
     Query,
     UpdDocReq,
@@ -28,7 +29,7 @@ class TimerUdto(Udto):
     status: TimerStatus
 
 class TimerDoc(Doc):
-    currentDuration: float = 0.0
+    current_duration: float = 0.0
     """
     This is written only on status change. Clients should calc it themselves
     and verify on timer changes.
@@ -40,7 +41,7 @@ class TimerDoc(Doc):
     It's helpful to measure how long from the currentDuration the timer is
     ticking.
     """
-    totalDuration: float
+    total_duration: float
     status: TimerStatus = "paused"
 
     finish_sound_asset_sid: str | None = None
@@ -48,18 +49,22 @@ class TimerDoc(Doc):
     def to_udto(self) -> TimerUdto:
         return TimerUdto(
             sid=self.sid,
-            current_duration=self.currentDuration,
-            total_duration=self.totalDuration,
+            current_duration=self.current_duration,
+            total_duration=self.total_duration,
             last_launch_time=self.last_launch_time,
             finish_sound_asset_sid=self.finish_sound_asset_sid,
             status=self.status
         )
 
+TimerGroupEndActionType = Literal["none", "restart", "start_another"]
+TimerGroupEndActionData = dict[
+        Literal["type"] | str, TimerGroupEndActionType | str | int | float]
+
 class TimerGroupUdto(Udto):
     name: str
     timer_sids: list[str]
     current_timer_index: int
-    is_recurring: bool
+    end_action: TimerGroupEndActionData
 
 class TimerGroupDoc(Doc):
     Fields = [DocField(name="name", unique=True)]
@@ -67,7 +72,15 @@ class TimerGroupDoc(Doc):
     name: str
     timer_sids: list[str] = []
     current_timer_index: int = 0
-    is_recurring: bool = False
+    end_action: TimerGroupEndActionData = {"type": "none"}
+
+    def to_udto(self) -> TimerGroupUdto:
+        return TimerGroupUdto(
+                sid=self.sid,
+                name=self.name,
+                timer_sids=self.timer_sids,
+                current_timer_index=self.current_timer_index,
+                end_action=self.end_action)
 
 @code("start-timer-req")
 class StartTimerReq(Req):
