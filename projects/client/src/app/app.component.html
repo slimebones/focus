@@ -17,16 +17,24 @@
     </div>
   </div>
 
-  <div
-      class="
-        w-full h-full
-        overflow-x-hidden overflow-y-hidden
-        flex flex-row
-        justify-start gap-4"
-      *ngIf="openedViewType === AppView.TPI">
-    <app-projects/>
-    <app-tasks class="grow"/>
-  </div>
+  <ng-container
+      *ngIf="openedViewType$ | async as openedViewType">
+    <div
+        class="
+          w-full h-full
+          overflow-x-hidden overflow-y-hidden
+          flex flex-row
+          justify-start gap-4"
+        *ngIf="openedViewType === AppView.TPI">
+      <app-projects/>
+      <app-tasks class="grow"/>
+    </div>
+
+    <div
+        *ngIf="openedViewType === AppView.Domains">
+      <app-domain-manager/>
+    </div>
+  </ng-container>
 
 </div>
 

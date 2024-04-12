@@ -10,11 +10,11 @@ import {
   OkEvt,
   StorageService,
   log } from "@almazrpe/ngx-kit";
-import { Subscription } from "rxjs";
+import { Observable, Subscription, map } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
 import { environment } from "src/environments/environment";
 import { ProjectService } from "./project/project.service";
-import { AppViewType, ViewData } from "./models";
+import { ViewType, ViewData } from "./models";
 
 @Component({
   selector: "app-root",
@@ -23,26 +23,31 @@ import { AppViewType, ViewData } from "./models";
 })
 export class AppComponent implements OnInit, OnDestroy
 {
-  public AppView = AppViewType;
+  public AppView = ViewType;
 
   public title = "client";
-  public openedViewType = AppViewType.TPI;
+  public openedViewType$: Observable<ViewType>;
   private readonly UnselectedViewCssSelectors: string[] = ["hover:underline"];
   private readonly SelectedViewCssSelectors: string[] = ["underline"];
   public views: ViewData[] = [
     {
       title: "Tasks",
-      type: AppViewType.TPI,
-      cssSelectors: this.SelectedViewCssSelectors
+      type: ViewType.TPI,
+      cssSelectors: this.UnselectedViewCssSelectors
     },
     {
       title: "Ideas",
-      type: AppViewType.Ideas,
+      type: ViewType.Ideas,
       cssSelectors: this.UnselectedViewCssSelectors
     },
     {
       title: "Events",
-      type: AppViewType.Events,
+      type: ViewType.Events,
+      cssSelectors: this.UnselectedViewCssSelectors
+    },
+    {
+      title: "Domains",
+      type: ViewType.Domains,
       cssSelectors: this.UnselectedViewCssSelectors
     },
   ];
@@ -73,6 +78,30 @@ export class AppComponent implements OnInit, OnDestroy
       undefined,
       environment.serverHost + ":" + environment.serverPort);
     this.projectSv.init();
+    this.openedViewType$ = this.storageSv.addItem$(
+        "local", "opened_view_type")
+      .pipe(
+        map(val =>
+        {
+          return val as ViewType;
+        })
+      );
+    this.storageSv.getItem("local", "opened_view_type", "tpi");
+
+    this.subs.push(this.openedViewType$.subscribe({
+      next: val =>
+      {
+        for (let view of this.views)
+        {
+          if (view.type === val)
+          {
+            view.cssSelectors = this.SelectedViewCssSelectors;
+            continue;
+          }
+          view.cssSelectors = this.UnselectedViewCssSelectors;
+        }
+      }
+    }));
 
     this.subs.push(this.connSv.serverHostPort$.subscribe({
       next: url =>
@@ -93,13 +122,14 @@ export class AppComponent implements OnInit, OnDestroy
     }
   }
 
+  private setOpenedViewType(viewType: ViewType)
+  {
+    this.storageSv.setItemVal(
+      "local", "opened_view_type", viewType.toString());
+  }
+
   public selectView(view: ViewData): void
   {
-    this.openedViewType = view.type;
-    for (let view of this.views)
-    {
-      view.cssSelectors = this.UnselectedViewCssSelectors;
-    }
-    view.cssSelectors = this.SelectedViewCssSelectors;
+    this.setOpenedViewType(view.type);
   }
 }

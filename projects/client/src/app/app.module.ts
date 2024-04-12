@@ -9,6 +9,9 @@ import { ProjectsComponent } from "./project/projects/projects.component";
 import { TasksComponent } from "./task/tasks/tasks.component";
 import { NgxKitModule } from "@almazrpe/ngx-kit";
 import { ReactiveFormsModule } from "@angular/forms";
+import { DomainComponent } from './domain/domain.component';
+import { DomainsComponent } from './domain/domains/domains.component';
+import { DomainManagerComponent } from './domain/domain-manager/domain-manager.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,10 @@ import { ReactiveFormsModule } from "@angular/forms";
     ProjectComponent,
     TaskComponent,
     ProjectsComponent,
-    TasksComponent
+    TasksComponent,
+    DomainComponent,
+    DomainsComponent,
+    DomainManagerComponent
   ],
   imports: [
     BrowserModule,
