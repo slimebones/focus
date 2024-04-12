@@ -7,6 +7,7 @@ from orwynn.mongo import (
     CreateDocReq,
     DelDocReq,
     Doc,
+    DocField,
     GetDocsReq,
     Query,
     UpdDocReq,
@@ -17,25 +18,22 @@ from pykit.dt import DtUtils
 from pykit.err import AlreadyProcessedErr, InpErr, LockErr, ValErr
 from rxcat import Evt, OkEvt, Req
 
-TimerPurpose = Literal["work", "rest", "play"]
 TimerStatus = Literal["tick", "paused", "finished"]
 
 class TimerUdto(Udto):
-    purpose: TimerPurpose
-    currentDuration: float
-    totalDuration: float
-    launchedLastTickTimestamp: float
-    finishSoundAssetSid: str | None
+    current_duration: float
+    total_duration: float
+    last_launch_time: float
+    finish_sound_asset_sid: str | None
     status: TimerStatus
 
 class TimerDoc(Doc):
-    purpose: TimerPurpose
     currentDuration: float = 0.0
     """
     This is written only on status change. Clients should calc it themselves
     and verify on timer changes.
     """
-    launchedLastTickTimestamp: float = 0.0
+    last_launch_time: float = 0.0
     """
     When last tick status was assigned to a timer.
 
@@ -45,18 +43,31 @@ class TimerDoc(Doc):
     totalDuration: float
     status: TimerStatus = "paused"
 
-    finishSoundAssetSid: str | None = None
+    finish_sound_asset_sid: str | None = None
 
     def to_udto(self) -> TimerUdto:
         return TimerUdto(
             sid=self.sid,
-            purpose=self.purpose,
-            currentDuration=self.currentDuration,
-            totalDuration=self.totalDuration,
-            launchedLastTickTimestamp=self.launchedLastTickTimestamp,
-            finishSoundAssetSid=self.finishSoundAssetSid,
+            current_duration=self.currentDuration,
+            total_duration=self.totalDuration,
+            last_launch_time=self.last_launch_time,
+            finish_sound_asset_sid=self.finish_sound_asset_sid,
             status=self.status
         )
+
+class TimerGroupUdto(Udto):
+    name: str
+    timer_sids: list[str]
+    current_timer_index: int
+    is_recurring: bool
+
+class TimerGroupDoc(Doc):
+    Fields = [DocField(name="name", unique=True)]
+
+    name: str
+    timer_sids: list[str] = []
+    current_timer_index: int = 0
+    is_recurring: bool = False
 
 @code("start-timer-req")
 class StartTimerReq(Req):
@@ -171,8 +182,8 @@ class TimingSys(Sys):
         self._try_stop_tick_task_for_timer(timer_doc.sid)
 
         now_timestamp = DtUtils.get_utc_timestamp()
-        assert timer_doc.launchedLastTickTimestamp > 0.0
-        passed_delta = now_timestamp - timer_doc.launchedLastTickTimestamp
+        assert timer_doc.last_launch_time > 0.0
+        passed_delta = now_timestamp - timer_doc.last_launch_time
         new_current_duration = timer_doc.currentDuration + passed_delta
         assert new_current_duration < timer_doc.totalDuration
 
