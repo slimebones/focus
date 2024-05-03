@@ -1,9 +1,20 @@
 import asyncio
-from orwynn.mongo import CreateDocReq, DelDocReq, Doc, DocField, GetDocsReq, Sys, Udto, UpdDocReq, filter_collection_factory
+
+from orwynn.mongo import (
+    CreateDocReq,
+    DelDocReq,
+    Doc,
+    DocField,
+    GetDocsReq,
+    Sys,
+    Udto,
+    UpdDocReq,
+    filter_collection_factory,
+)
 from orwynn.rbac import OkEvt
-from pykit.query import Query
 
 from src.color import ColorPalette
+
 
 class FocusDomainUdto(Udto):
     name: str

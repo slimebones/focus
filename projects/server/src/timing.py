@@ -1,24 +1,21 @@
 import asyncio
 from typing import Any, Literal
 
-from pykit.fcode import code
 from orwynn.dto import Udto
 from orwynn.mongo import (
     CreateDocReq,
     DelDocReq,
     Doc,
     DocField,
-    Enum,
     GetDocsReq,
-    GotDocUdtoEvt,
     Query,
     UpdDocReq,
     filter_collection_factory,
 )
 from orwynn.sys import Sys
-from pykit.check import check
 from pykit.dt import DtUtils
-from pykit.err import AlreadyProcessedErr, InpErr, LockErr, ValErr, ValueErr
+from pykit.err import AlreadyProcessedErr, InpErr, ValErr
+from pykit.fcode import code
 from pykit.log import log
 from rxcat import Evt, OkEvt, Req
 
@@ -61,10 +58,10 @@ class TimerDoc(Doc):
 
 TimerEndActionType = Literal["none", "start_next"]
 TimerEndActionData = dict[
-        Literal["type"] | str, TimerEndActionType | str | int | float]
+        str, TimerEndActionType | str | int | float]
 TimerGroupEndActionType = Literal["none", "restart", "start_another"]
 TimerGroupEndActionData = dict[
-        Literal["type"] | str, TimerGroupEndActionType | str | int | float]
+        str, TimerGroupEndActionType | str | int | float]
 
 class TimerGroupUdto(Udto):
     name: str
@@ -133,7 +130,7 @@ class TimerGroupSys(Sys):
                 group.current_timer_index = 0
                 await self._pub(StartTimerReq(sid=group.timer_sids[0]))
             if group.group_end_action["type"] == "start_another":
-                assert False, "noimpl"
+                raise NotImplementedError
 
             return
 

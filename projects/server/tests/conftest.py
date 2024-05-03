@@ -1,12 +1,12 @@
 import os
 
 import pytest_asyncio
-from fcode import FcodeCore
 from orwynn.app import App
 from orwynn.boot import Boot
 from orwynn.mongo import CreateDocReq, GotDocUdtoEvt, MongoUtils
 from orwynn.tst import Client
 from pykit.check import check
+from pykit.fcode import FcodeCore
 from pykit.query import Query
 from rxcat import ServerBus
 
