@@ -60,3 +60,21 @@ export interface DomainCreate
   name: string;
   color_palette: ColorPalette;
 }
+
+export interface TimerGroup
+{
+  name: string;
+  timer_sids: string[];
+  current_timer_index: number;
+  timer_end_action: any;
+  group_end_action: any;
+}
+
+export interface Timer
+{
+  current_duration: number;
+  total_duration: number;
+  last_launch_time: number;
+  finish_sound_asset_sid?: string;
+  status: string;
+}

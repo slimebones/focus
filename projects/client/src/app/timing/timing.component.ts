@@ -1,5 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
+import { Timer, TimerGroup } from "../models";
+import { TimingService } from "./timing.service";
 
 @Component({
   selector: "app-timing",
@@ -7,11 +9,23 @@ import { BehaviorSubject } from "rxjs";
   styles: [
   ]
 })
-export class TimingComponent
+export class TimingComponent implements OnInit
 {
-  public isEnabled: boolean = false;
+  public isEnabled: boolean = true;
   public toggleBtnSelectors$: BehaviorSubject<string[]> =
-    new BehaviorSubject<string[]>(["filter-white"]);
+    new BehaviorSubject(["filter-white"]);
+
+  public groupToTimers: Map<TimerGroup, Timer[]> = new Map();
+
+  public constructor(
+    private timingSv: TimingService
+  )
+  {
+  }
+
+  public ngOnInit(): void
+  {
+  }
 
   public toggleTiming()
   {
