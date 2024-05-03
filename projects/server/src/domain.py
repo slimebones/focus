@@ -7,6 +7,7 @@ from src.color import ColorPalette
 
 class FocusDomainUdto(Udto):
     name: str
+    color_palette: ColorPalette
     timer_sids: list[str] = []
 
 class FocusDomainDoc(Doc):
@@ -19,7 +20,8 @@ class FocusDomainDoc(Doc):
         return FocusDomainUdto(
                 sid=self.sid,
                 name=self.name,
-                timer_sids=self.timer_sids)
+                timer_sids=self.timer_sids,
+                color_palette=self.color_palette)
 
 class FocusDomainSys(Sys):
     CommonSubMsgFilters = [
