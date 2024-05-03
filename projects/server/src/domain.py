@@ -10,7 +10,7 @@ class FocusDomainUdto(Udto):
     timer_sids: list[str] = []
 
 class FocusDomainDoc(Doc):
-    Fields = [DocField(name="name", unique=True)]
+    FIELDS = [DocField(name="name", unique=True)]
     name: str
     color_palette: ColorPalette
     timer_sids: list[str] = []

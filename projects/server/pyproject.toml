@@ -13,7 +13,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.11"
-orwynn = { path = "../orwynn", develop = true }
+orwynn = {git = "https://github.com/slimebones/orwynn.git", rev = "2.3.2"}
 pdf2image = "^1.17.0"
 transliterate = "^1.10.2"
 pandas = "^2.2.0"

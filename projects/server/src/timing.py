@@ -1,7 +1,7 @@
 import asyncio
 from typing import Any, Literal
 
-from fcode import code
+from pykit.fcode import code
 from orwynn.dto import Udto
 from orwynn.mongo import (
     CreateDocReq,
@@ -74,7 +74,7 @@ class TimerGroupUdto(Udto):
     group_end_action: TimerGroupEndActionData
 
 class TimerGroupDoc(Doc):
-    Fields = [DocField(name="name", unique=True)]
+    FIELDS = [DocField(name="name", unique=True)]
 
     name: str
     timer_sids: list[str] = []
