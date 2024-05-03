@@ -2,14 +2,15 @@
   <div class="font-bold mb-4 self-center">
     Domains
   </div>
-  <app-create-form/>
+  <app-create-form
+    (onCreate)="onCreate($event)" />
   <div
       class="self-center mt-4"
       *ngIf="domains.length == 0">
     No domains, create one!
   </div>
   <div class="flex flex-col mt-4" *ngFor="let domain of domains">
-    <ngx-kit-button (clickFunc)="_selectDomain(domain)">
+    <ngx-kit-button (clickFunc)="selectDomain(domain)">
       {{domain.name}}
     </ngx-kit-button>
   </div>

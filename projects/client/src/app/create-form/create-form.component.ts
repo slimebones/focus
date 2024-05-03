@@ -1,6 +1,7 @@
 import { InputType } from "@almazrpe/ngx-kit";
 import {
-  Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
+  Component,
+  ElementRef, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 
 @Component({
@@ -11,8 +12,8 @@ import { FormControl, FormGroup } from "@angular/forms";
 })
 export class CreateFormComponent implements OnInit
 {
-  @Input()
-  public onCreate: (val: string) => void = _ => {};
+  @Output()
+  public onCreate: EventEmitter<string> = new EventEmitter();
 
   @ViewChild("inp", {read: ElementRef})
   private inp: ElementRef;
@@ -35,7 +36,7 @@ export class CreateFormComponent implements OnInit
     {
       return;
     }
-    this.onCreate(name);
+    this.onCreate.emit(name);
   }
 
   public onKeydownEnter()

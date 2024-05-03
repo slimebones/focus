@@ -1,8 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { DomainUdto } from "src/app/models";
 import { DomainService } from "../domain.service";
 import { Observable, Subscription } from "rxjs";
-import { StorageService } from "@almazrpe/ngx-kit";
+import { StorageService, log } from "@almazrpe/ngx-kit";
 
 @Component({
   selector: "app-domains",
@@ -16,9 +16,6 @@ export class DomainsComponent implements OnInit, OnDestroy
   public subs: Subscription[] = [];
 
   private selectedDomainSid$: Observable<string>;
-
-  @Input()
-  public selectDomain?: (domain: DomainUdto) => void = undefined;
 
   public constructor(
     private domainSv: DomainService,
@@ -60,6 +57,7 @@ export class DomainsComponent implements OnInit, OnDestroy
 
   public onCreate(name: string)
   {
+    log.debug(1);
     this.domainSv.create$({name: name}).subscribe({
       next: val =>
       {
@@ -85,7 +83,7 @@ export class DomainsComponent implements OnInit, OnDestroy
     }
   }
 
-  public _selectDomain(domain: DomainUdto): void
+  public selectDomain(domain: DomainUdto): void
   {
     this.storageSv.setItemVal(
       "local",
