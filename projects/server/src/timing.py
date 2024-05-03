@@ -92,6 +92,14 @@ class TimerGroupDoc(Doc):
 class StartTimerReq(Req):
     sid: str
 
+@code("started_timer_evt")
+class StartedTimerEvt(Evt):
+    sid: str
+
+@code("stopped_timer_evt")
+class StoppedTimerEvt(Evt):
+    sid: str
+
 @code("stop_timer_req")
 class StopTimerReq(Req):
     sid: str
@@ -255,6 +263,7 @@ class TimerSys(Sys):
 
         timer_doc = timer_doc.upd(Query.as_upd(set=setq))
         await self._pub(timer_doc.to_got_doc_udto_evt(req))
+        await self._pub(StartedTimerEvt(rsid=req.sid, sid=timer_doc.sid))
 
     async def _on_stop_timer(self, req: StopTimerReq):
         timer_doc = TimerDoc.get(Query({"sid": req.sid}))
