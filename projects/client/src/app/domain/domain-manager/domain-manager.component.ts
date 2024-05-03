@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-domain-manager',
-  templateUrl: './domain-manager.component.html',
+  selector: "app-domain-manager",
+  templateUrl: "./domain-manager.component.html",
   styles: [
   ]
 })
-export class DomainManagerComponent {
+export class DomainManagerComponent 
+{
 
 }

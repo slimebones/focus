@@ -37,6 +37,7 @@ export class CreateFormComponent implements OnInit
       return;
     }
     this.onCreate.emit(name);
+    this.form.setValue({name: ""});
   }
 
   public onKeydownEnter()

@@ -41,10 +41,22 @@ export interface ViewData
 export interface DomainUdto extends Udto
 {
   name: string;
+  color_palette: ColorPalette;
   timer_sids: string[];
+}
+
+export interface ColorPalette
+{
+  c60_bg: string;
+  c30_bg: string;
+  c10_bg: string;
+  c60_fg: string;
+  c30_fg: string;
+  c10_fg: string;
 }
 
 export interface DomainCreate
 {
   name: string;
+  color_palette: ColorPalette;
 }

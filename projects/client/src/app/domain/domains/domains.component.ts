@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { DomainUdto } from "src/app/models";
 import { DomainService } from "../domain.service";
 import { Observable, Subscription } from "rxjs";
-import { StorageService, log } from "@almazrpe/ngx-kit";
+import { StorageService } from "@almazrpe/ngx-kit";
 
 @Component({
   selector: "app-domains",
@@ -30,23 +30,6 @@ export class DomainsComponent implements OnInit, OnDestroy
     this.selectedDomainSid$ = this.storageSv.initItem$(
       "local", "selected_domain_sid", this.tryGetDefaultSelectedDomainSid());
 
-    this.subs.push(this.selectedDomainSid$.subscribe({next: val =>
-    {
-      let index = this.domains.findIndex(domain => domain.sid == val);
-      if (index == -1)
-      {
-        this.storageSv.setItemVal(
-          "local",
-          "selected_domain_sid",
-          this.tryGetDefaultSelectedDomainSid());
-        return;
-      }
-      if (this.selectDomain !== undefined)
-      {
-        this.selectDomain(this.domains[index]);
-      }
-    }}));
-
     this.subs.push(this.domainSv.getMany$().subscribe({
       next: val =>
       {
@@ -57,8 +40,17 @@ export class DomainsComponent implements OnInit, OnDestroy
 
   public onCreate(name: string)
   {
-    log.debug(1);
-    this.domainSv.create$({name: name}).subscribe({
+    this.domainSv.create$({
+      name: name,
+      color_palette: {
+        c60_fg: "FFFFFF",
+        c30_fg: "FFFFFF",
+        c10_fg: "FFFFFF",
+        c60_bg: "C40C0C",
+        c30_bg: "FF8A08",
+        c10_bg: "FFC100"
+      }
+    }).subscribe({
       next: val =>
       {
         this.domains.splice(0, 0, val);
@@ -89,5 +81,14 @@ export class DomainsComponent implements OnInit, OnDestroy
       "local",
       "selected_domain_sid",
       domain.sid);
+  }
+
+  public getEntrySelectors(domain: DomainUdto): string[]
+  {
+    if (this.storageSv.getItem("local", "selected_domain_sid") === domain.sid)
+    {
+      return ["underline"];
+    }
+    return [];
   }
 }
