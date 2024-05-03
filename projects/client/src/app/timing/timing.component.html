@@ -1,0 +1,12 @@
+<div class="relative">
+  <ngx-kit-button
+      [ngClass]="toggleBtnSelectors$ | async"
+      (clickFunc)="toggleTiming()">
+    <img src="assets/alarm.svg" alt="">
+  </ngx-kit-button>
+  <div
+      class="absolute right-2 top-12 bg-c30-bg p-4"
+      *ngIf="isEnabled">
+    hello
+  </div>
+</div>

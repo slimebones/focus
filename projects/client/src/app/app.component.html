@@ -1,12 +1,11 @@
 <div
     class="
       flex flex-col justify-start items-center
-      w-full h-screen bg-c60-bg text-c60-fg text-xl">
-
+      w-full h-screen bg-c60-bg text-c60-fg text-xl relative">
   <div
       class="
         flex flex-row justify-center items-center w-full bg-c30-bg
-        text-c30-fg text-2xl gap-8">
+        text-c30-fg text-2xl gap-8 relative">
     <div
         *ngFor="let view of views">
       <ngx-kit-button
@@ -15,6 +14,9 @@
         {{view.title}}
       </ngx-kit-button>
     </div>
+
+    <!-- Timing -->
+    <app-timing class="absolute right-2 w-14"></app-timing>
   </div>
 
   <ng-container
@@ -36,6 +38,5 @@
       <app-domain-manager/>
     </div>
   </ng-container>
-
 </div>
 

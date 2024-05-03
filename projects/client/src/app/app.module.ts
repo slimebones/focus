@@ -13,6 +13,7 @@ import { DomainComponent } from './domain/domain.component';
 import { DomainsComponent } from './domain/domains/domains.component';
 import { DomainManagerComponent } from './domain/domain-manager/domain-manager.component';
 import { CreateFormComponent } from './create-form/create-form.component';
+import { TimingComponent } from './timing/timing.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { CreateFormComponent } from './create-form/create-form.component';
     DomainComponent,
     DomainsComponent,
     DomainManagerComponent,
-    CreateFormComponent
+    CreateFormComponent,
+    TimingComponent
   ],
   imports: [
     BrowserModule,
