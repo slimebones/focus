@@ -15,7 +15,7 @@ export class DomainsComponent implements OnInit, OnDestroy
   public domains: DomainUdto[] = [];
   public subs: Subscription[] = [];
 
-  private selectedDomainSid: Observable<string>;
+  private selectedDomainSid$: Observable<string>;
 
   @Input()
   public selectDomain?: (domain: DomainUdto) => void = undefined;
@@ -29,10 +29,11 @@ export class DomainsComponent implements OnInit, OnDestroy
 
   public ngOnInit()
   {
-    this.selectedDomainSid = this.storageSv.initItem$(
+    this.storageSv.addItem("local", "selected_domain_sid");
+    this.selectedDomainSid$ = this.storageSv.initItem$(
       "local", "selected_domain_sid", this.tryGetDefaultSelectedDomainSid());
 
-    this.subs.push(this.selectedDomainSid.subscribe({next: val =>
+    this.subs.push(this.selectedDomainSid$.subscribe({next: val =>
     {
       let index = this.domains.findIndex(domain => domain.sid == val);
       if (index == -1)
@@ -55,6 +56,16 @@ export class DomainsComponent implements OnInit, OnDestroy
         this.domains = val;
       }
     }));
+  }
+
+  public onCreate(name: string)
+  {
+    this.domainSv.create$({name: name}).subscribe({
+      next: val =>
+      {
+        this.domains.splice(0, 0, val);
+      }
+    });
   }
 
   private tryGetDefaultSelectedDomainSid(): string | undefined

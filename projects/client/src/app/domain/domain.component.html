@@ -1,1 +1,9 @@
-<p>domain works!</p>
+<div>
+  <div *ngIf="domain !== undefined else no_domain">
+    {{domain.name}}
+  </div>
+</div>
+
+<ng-template #no_domain>
+  No domain selected.
+</ng-template>

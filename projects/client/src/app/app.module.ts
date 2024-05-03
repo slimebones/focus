@@ -12,6 +12,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { DomainComponent } from './domain/domain.component';
 import { DomainsComponent } from './domain/domains/domains.component';
 import { DomainManagerComponent } from './domain/domain-manager/domain-manager.component';
+import { CreateFormComponent } from './create-form/create-form.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { DomainManagerComponent } from './domain/domain-manager/domain-manager.c
     TasksComponent,
     DomainComponent,
     DomainsComponent,
-    DomainManagerComponent
+    DomainManagerComponent,
+    CreateFormComponent
   ],
   imports: [
     BrowserModule,
