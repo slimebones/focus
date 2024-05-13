@@ -1,8 +1,15 @@
 import { Injectable } from "@angular/core";
 import { Observable, map, switchMap } from "rxjs";
-import { TimerGroupUdto, TimerUdto } from "./models";
 import {
-  BusUtils, CreateDocReq, GetDocsReq, UpdDocReq } from "@almazrpe/ngx-kit";
+  StartTimerReq, StopTimerReq, TimerGroupUdto, TimerUdto } from "./models";
+import {
+  BusUtils,
+  ClientBus,
+  CreateDocReq,
+  DelDocReq,
+  GetDocsReq,
+  GotDocUdtoEvt,
+  UpdDocReq } from "@almazrpe/ngx-kit";
 
 @Injectable({
   providedIn: "root"
@@ -27,6 +34,33 @@ export class TimingService
     return BusUtils.pubGetDocsReq$(new GetDocsReq({
       collection: this.TIMER_COLLECTION,
       searchQuery: searchq
+    }));
+  }
+
+  public startTimer(sid: string): Observable<TimerUdto>
+  {
+    return ClientBus.ie.pub$(new StartTimerReq({sid: sid})).pipe(map(rae =>
+    {
+      return (rae.evt as GotDocUdtoEvt<TimerUdto>).udto;
+    }));
+  }
+
+  public stopTimer(sid: string): Observable<TimerUdto>
+  {
+    return ClientBus.ie.pub$(new StopTimerReq({sid: sid})).pipe(map(rae =>
+    {
+      return (rae.evt as GotDocUdtoEvt<TimerUdto>).udto;
+    }));
+  }
+
+  public setDuration$(sid: string, duration: number): Observable<TimerUdto>
+  {
+    return BusUtils.pubUpdDocReq$(new UpdDocReq({
+      collection: this.TIMER_COLLECTION,
+      searchQuery: {sid: sid},
+      updQuery: {
+        "$set": {"duration": duration}
+      }
     }));
   }
 
@@ -61,6 +95,23 @@ export class TimingService
           }
         }
       })).pipe(map(_ => {return timer_udto;}));
+    }));
+  }
+
+  public delTimer$(sid: string): Observable<void>
+  {
+    return BusUtils.pubDelDocReq$(new DelDocReq({
+      collection: this.TIMER_COLLECTION,
+      searchQuery: {sid: sid}
+    }));
+  }
+
+  public delGroup$(sid: string): Observable<void>
+  {
+    // all timers for the group will be automatically deleted
+    return BusUtils.pubDelDocReq$(new DelDocReq({
+      collection: this.GROUP_COLLECTION,
+      searchQuery: {sid: sid}
     }));
   }
 }

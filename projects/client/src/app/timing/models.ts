@@ -4,30 +4,60 @@ import { Evt, Req, Udto, code } from "@almazrpe/ngx-kit";
 export class StartTimerReq extends Req
 {
   public sid: string;
+
+  public constructor(args: any)
+  {
+    super(args);
+    this.sid = args.sid;
+  }
 }
 
 @code("started_timer_evt")
 export class StartedTimerEvt extends Evt
 {
   public sid: string;
+
+  public constructor(args: any)
+  {
+    super(args);
+    this.sid = args.sid;
+  }
 }
 
 @code("stopped_timer_evt")
 export class StoppedTimerEvt extends Evt
 {
   public sid: string;
+
+  public constructor(args: any)
+  {
+    super(args);
+    this.sid = args.sid;
+  }
 }
 
 @code("stop_timer_req")
 export class StopTimerReq extends Req
 {
   public sid: string;
+
+  public constructor(args: any)
+  {
+    super(args);
+    this.sid = args.sid;
+  }
 }
 
 @code("finished_timer_evt")
 export class FinishedTimerEvt extends Evt
 {
   public udto: TimerUdto;
+
+  public constructor(args: any)
+  {
+    super(args);
+    this.udto = args.udto;
+  }
 }
 
 export interface TimerGroupUdto extends Udto
