@@ -29,6 +29,8 @@ class TimerUdto(Udto):
     status: TimerStatus
 
 class TimerDoc(Doc):
+    COLLECTION_NAMING = "snake_case"
+
     current_duration: float = 0.0
     """
     This is written only on status change. Clients should calc it themselves
@@ -64,6 +66,8 @@ TimerGroupEndActionData = dict[
         str, TimerGroupEndActionType | str | int | float]
 
 class TimerGroupUdto(Udto):
+    COLLECTION_NAMING = "snake_case"
+
     name: str
     timer_sids: list[str]
     current_timer_index: int
@@ -71,7 +75,10 @@ class TimerGroupUdto(Udto):
     group_end_action: TimerGroupEndActionData
 
 class TimerGroupDoc(Doc):
-    FIELDS = [DocField(name="name", unique=True)]
+    FIELDS = [
+        DocField(name="name", unique=True),
+        DocField(name="timer_sids", linked_doc="timer_doc")
+    ]
 
     name: str
     timer_sids: list[str] = []
