@@ -12,6 +12,7 @@ module.exports = {
     project: "./tsconfig.json",
   },
   rules: {
+    "indent": "off",
     "prefer-const": "off",
     "@typescript-eslint/object-curly-spacing": [
       "off"
@@ -42,7 +43,6 @@ module.exports = {
     // https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/explicit-function-return-type.md
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-member-accessibility": "error",
-    // indent: ["error", 2, {"SwitchCase": 1}],
     semi: ["error", "always"],
     "brace-style": ["error", "allman", { "allowSingleLine": true}],
     quotes: ["error", "double"],
