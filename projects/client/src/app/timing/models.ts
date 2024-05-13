@@ -35,8 +35,8 @@ export interface TimerGroupUdto extends Udto
   name: string;
   timer_sids: string[];
   current_timer_index: number;
-  timer_end_action: TimerEndActionData;
-  group_end_action: TimerGroupEndActionData;
+  timer_end_action: any;
+  group_end_action: any;
 }
 
 export interface TimerUdto extends Udto

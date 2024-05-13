@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { Timer, TimerGroup } from "../models";
 import { TimingService } from "./timing.service";
+import { TimerGroupUdto, TimerUdto } from "./models";
 
 @Component({
   selector: "app-timing",
@@ -15,7 +15,7 @@ export class TimingComponent implements OnInit
   public toggleBtnSelectors$: BehaviorSubject<string[]> =
     new BehaviorSubject(["filter-white"]);
 
-  public groupToTimers: Map<TimerGroup, Timer[]> = new Map();
+  public groupToTimers: Map<TimerGroupUdto, TimerUdto[]> = new Map();
 
   public constructor(
     private timingSv: TimingService
