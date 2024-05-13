@@ -66,8 +66,6 @@ TimerGroupEndActionData = dict[
         str, TimerGroupEndActionType | str | int | float]
 
 class TimerGroupUdto(Udto):
-    COLLECTION_NAMING = "snake_case"
-
     name: str
     timer_sids: list[str]
     current_timer_index: int
@@ -75,6 +73,7 @@ class TimerGroupUdto(Udto):
     group_end_action: TimerGroupEndActionData
 
 class TimerGroupDoc(Doc):
+    COLLECTION_NAMING = "snake_case"
     FIELDS = [
         DocField(name="name", unique=True),
         DocField(name="timer_sids", linked_doc="timer_doc")
