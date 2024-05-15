@@ -16,10 +16,37 @@ import {
 })
 export class TimingService
 {
-  private readonly TIMER_COLLECTION = "timer_udto";
-  private readonly GROUP_COLLECTION = "timer_group_udto";
+  private readonly TIMER_COLLECTION = "timer_doc";
+  private readonly GROUP_COLLECTION = "timer_group_doc";
 
   public constructor() { }
+
+  public getGroupsToTimers$(): Observable<Map<TimerGroupUdto, TimerUdto[]>>
+  {
+    return this.getGroups$().pipe(switchMap(groups =>
+    {
+      return this
+        .getTimers$({sid: {$in: groups.map(group => group.sid)}}).pipe(
+          map(timers =>
+          {
+            const _map: Map<TimerGroupUdto, TimerUdto[]> = new Map();
+            for (let group of groups)
+            {
+              let groupTimers: TimerUdto[] = [];
+              _map.set(group, groupTimers);
+              for (let timer of timers)
+              {
+                if (group.timer_sids.includes(timer.sid))
+                {
+                  groupTimers.push(timer);
+                }
+              }
+            }
+            return _map;
+          })
+        );
+    }));
+  }
 
   public getGroups$(searchq: any = {}): Observable<TimerGroupUdto[]>
   {
@@ -29,7 +56,7 @@ export class TimingService
     }));
   }
 
-  public getTimers$(searchq: any): Observable<TimerUdto[]>
+  public getTimers$(searchq: any = {}): Observable<TimerUdto[]>
   {
     return BusUtils.pubGetDocsReq$(new GetDocsReq({
       collection: this.TIMER_COLLECTION,
