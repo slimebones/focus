@@ -94,15 +94,30 @@ export class TimingComponent implements OnInit, OnDestroy
               this.togglePlayBtnImgSelectors = this.PLAY_BTN_IMG_SELECTORS;
           }
 
-          this.remainingDuration =
-            timer.total_duration - timer.current_duration;
+          const currentTime = Date.now() / 1000;
+          if (timer.last_launch_time === 0)
+          {
+            this.remainingDuration = timer.total_duration;
+          }
+          else
+          {
+            this.remainingDuration =
+              timer.total_duration
+              - timer.current_duration
+              - (
+                currentTime - timer.last_launch_time);
+          }
 
           if (timer.status === "tick" && this.timerUpdSub === null)
           {
-            this.timerUpdSub = rxjsTimer(0, 1).subscribe({
+            this.timerUpdSub = rxjsTimer(0, 1000).subscribe({
               next: _ =>
               {
                 this.remainingDuration--;
+                if (this.remainingDuration <= 0)
+                {
+                  this.remainingDuration = 0;
+                }
               }
             });
           }

@@ -209,6 +209,7 @@ class TimerSys(Sys):
         task = self._timer_sid_to_tick_task.get(sid, None)
         if not task:
             return False
+        del self._timer_sid_to_tick_task[sid]
         task.cancel()
         return True
 
@@ -265,7 +266,7 @@ class TimerSys(Sys):
         # it's ok here to pass not upded yet timer doc, an err may happen here,
         # so we don't want to upd the mongo doc before this point
         self._create_tick_task_for_timer(timer_doc, req)
-        setq["last_launched_time"] = DtUtils.get_utc_timestamp()
+        setq["last_launch_time"] = DtUtils.get_utc_timestamp()
 
         timer_doc = timer_doc.upd(Query.as_upd(set=setq))
         await self._pub(timer_doc.to_got_doc_udto_evt(req))
@@ -299,7 +300,7 @@ class TimerSys(Sys):
     async def _on_create_doc(self, req: CreateDocReq):
         q = req.createQuery.copy().disallow(
             "current_duration",
-            "last_launched_time"
+            "last_launch_time"
             "status",
             raise_mod="warn"
         )
@@ -309,7 +310,7 @@ class TimerSys(Sys):
     async def _on_upd_doc(self, req: UpdDocReq):
         updq = req.updQuery.copy().disallow(
             "current_duration",
-            "last_launched_time",
+            "last_launch_time",
             "status",
             raise_mod="warn"
         )
