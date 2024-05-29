@@ -1,8 +1,9 @@
 <div class="relative">
   <ngx-kit-button
       [ngClass]="toggleBtnSelectors$ | async"
+      [extraCssClasses]="['p-0']"
       (clickFunc)="toggleTiming()">
-    <img src="assets/alarm.svg" alt="">
+    <img class="h-10" src="assets/alarm_white.png" alt="">
   </ngx-kit-button>
   <div
       class="

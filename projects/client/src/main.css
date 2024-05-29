@@ -6,7 +6,7 @@
 
 .filter-white
 {
-    filter: brightness(0) saturate(100%) invert(99%) sepia(1%) saturate(1815%) hue-rotate(178deg) brightness(120%) contrast(100%);
+    filter: brightness(0) saturate(100%) invert(77%) sepia(47%) saturate(2574%) hue-rotate(191deg) brightness(101%) contrast(99%);
 }
 
 .filter-gray
