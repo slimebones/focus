@@ -10,10 +10,13 @@
         absolute right-2 top-16 bg-c30-bg p-4
         flex flex-col w-96 z-10 bg-header1-bg text-header1-fg rounded"
       *ngIf="isEnabled">
-    <!-- Groups selector -->
-    <div
-        class="
-          flex flex-row justify-start items-center gap-2">
-    </div>
+    <ng-container
+        *ngIf="currentTimer$ | async as timer">
+      <!-- Play/Pause -->
+      <ngx-kit-button
+          (clickFunc)="togglePlay()">
+        <img [src]="togglePlayBtnImgUrl" alt="">
+      </ngx-kit-button>
+    </ng-container>
   </div>
 </div>
