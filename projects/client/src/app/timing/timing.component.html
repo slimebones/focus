@@ -11,13 +11,14 @@
         flex flex-col w-96 z-10 bg-header1-bg text-header1-fg rounded"
       *ngIf="isEnabled">
     <div
-        class="flex flex-row justify-center items-center gap-2"
+        class="flex flex-row justify-center items-center"
         *ngIf="currentTimer$ | async as timer">
       <!-- Play/Pause -->
       <ngx-kit-button
+          class="mr-6"
           (clickFunc)="togglePlay()">
         <img
-          class="h-10 rounded"
+          class="h-12 rounded"
           [src]="togglePlayBtnImgUrl"
           alt=""
           [ngClass]="togglePlayBtnImgSelectors">
@@ -25,19 +26,32 @@
 
       <!-- Duration -->
       <div
-        class="ml-8 text-6xl font-bold">
+        class="text-6xl font-bold text-center">
         {{ remainingDuration * 1000 | date:"mm:ss" }}
       </div>
 
-      <!-- Edit -->
-      <ngx-kit-button
-          *ngIf="timer.status !== 'tick'"
-          (clickFunc)="togglePlay()">
-        <img
-          class="h-6 rounded bg-warn2-bg hover:bg-warn1-bg"
-          src="assets/pencil.png"
-          alt="">
-      </ngx-kit-button>
+      <!-- Control Buttons -->
+      <div
+          class="flex flex-col justify-center items-center"
+          *ngIf="timer.status !== 'tick'">
+        <!-- Edit -->
+        <ngx-kit-button
+            (clickFunc)="togglePlay()">
+          <img
+            class="h-6 rounded bg-warn2-bg hover:bg-warn1-bg"
+            src="assets/pencil.png"
+            alt="">
+        </ngx-kit-button>
+
+        <!-- Reset -->
+        <ngx-kit-button
+            (clickFunc)="resetTimer()">
+          <img
+            class="h-6 rounded bg-warn2-bg hover:bg-warn1-bg"
+            src="assets/undo_arrow_white.png"
+            alt="">
+        </ngx-kit-button>
+      </div>
     </div>
   </div>
 </div>

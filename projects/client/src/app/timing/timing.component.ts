@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import {
-  BehaviorSubject, Subscription, of, switchMap } from "rxjs";
+  BehaviorSubject, Observable, Subscription, of, switchMap } from "rxjs";
 import {timer as rxjsTimer} from "rxjs";
 import { TimingService } from "./timing.service";
 import { TimerUdto } from "./models";
@@ -135,20 +135,52 @@ export class TimingComponent implements OnInit, OnDestroy
 
   public togglePlay()
   {
-  }
-
-  public setDuration(duration: number)
-  {
-    const timer = this.currentTimer$.value;
-    if (timer === null)
+    const currentTimer = this.currentTimer$.value;
+    if (currentTimer === null)
     {
       return;
     }
-    this.timingSv.setDuration$(timer.sid, duration).subscribe({
+
+    let obs$: Observable<TimerUdto>;
+    if (currentTimer.status == "tick")
+    {
+      obs$ = this.timingSv.stopTimer(currentTimer.sid);
+    }
+    else
+    {
+      obs$ = this.timingSv.startTimer(currentTimer.sid);
+    }
+
+    obs$.subscribe({
       next: timer =>
       {
         this.currentTimer$.next(timer);
       }
     });
+  }
+
+  public setDuration(duration: number)
+  {
+    const currentTimer = this.currentTimer$.value;
+    if (currentTimer === null)
+    {
+      return;
+    }
+    this.timingSv.setDuration$(currentTimer.sid, duration).subscribe({
+      next: timer =>
+      {
+        this.currentTimer$.next(timer);
+      }
+    });
+  }
+
+  public resetTimer()
+  {
+    const currentTimer = this.currentTimer$.value;
+    if (currentTimer === null)
+    {
+      return;
+    }
+    this.setDuration(currentTimer.total_duration);
   }
 }
