@@ -7,12 +7,12 @@
   <div
       class="
         absolute right-2 top-16 bg-c30-bg p-4
-        flex flex-col w-96 z-10"
+        flex flex-col w-96 z-10 bg-header1-bg text-header1-fg rounded"
       *ngIf="isEnabled">
-
     <!-- Groups selector -->
     <div
-        class="flex flex-row justify-start items-center gap-2">
+        class="
+          flex flex-row justify-start items-center gap-2">
       <ngx-kit-button
           [ngClass]="kvp.key.sid === selectedGroupSid ? [] : UNSELECTED_GROUP_SELECTOR_CLASSES"
           *ngFor="let kvp of groupToTimers | keyvalue"

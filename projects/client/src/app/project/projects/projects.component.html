@@ -1,5 +1,5 @@
 <div class="
-    flex bg-c30-bg p-4 flex flex-col justify-start items-center
+    flex bg-header1-bg text-header1-fg p-4 flex flex-col justify-start items-center
     h-full overflow-y-scroll mb-12">
   <div class="font-bold mb-4">Projects</div>
 
@@ -33,7 +33,7 @@
       {{project.name}}
     </ngx-kit-button>
     <ngx-kit-button
-        [extraCssClasses]="['bg-gray-500', 'hover:bg-gray-400', 'h-8', 'p-1']"
+        [extraCssClasses]="['bg-danger2-bg', 'text-danger2-fg', 'hover:bg-danger1-bg', 'h-8', 'p-1']"
         (clickFunc)="del(project)">
       X
     </ngx-kit-button>

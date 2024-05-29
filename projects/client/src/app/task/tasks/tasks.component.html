@@ -1,9 +1,9 @@
 <div
     class="
       w-full p-4 h-full flex flex-col justify-start items-start
-      overflow-y-scroll gap-y-8 mb-12"
+      overflow-y-scroll gap-y-8 mb-12 bg-c30-bg text-c30-fg"
     *ngIf="(projectSv.currentProject$ | async) !== null; else choose_project">
-  <div class="font-bold self-center mb-4">
+  <div class="font-bold self-center">
     Tasks
   </div>
 
@@ -13,7 +13,7 @@
       (ngSubmit)="onCreateSubmit($event)">
     <ngx-kit-mat-input
         #task_create_inp
-        class="text-black w-full"
+        class="text-c30-fg w-full"
         [type]="InputType.Text"
         (keydown.enter)="onKeydownEnter($event)"
         formControlName="text" />
@@ -32,14 +32,14 @@
         flex flex-row justify-center items-center gap-x-4"
       *ngFor="let task of tasks">
     <ngx-kit-button (clickFunc)="complete(task.sid)">
-      <img class="h-6 filter-white" src="assets/circle-outline.svg" alt="0">
+      <img class="h-8 filter-green" src="assets/circle-outline.svg" alt="0">
     </ngx-kit-button>
     <span
         class="text-2xl">
       {{task.text}}
     </span>
     <ngx-kit-button
-        [extraCssClasses]="['bg-gray-500', 'hover:bg-gray-400', 'h-8', 'p-1']"
+        [extraCssClasses]="['bg-danger2-bg', 'text-danger2-fg', 'hover:bg-danger1-bg', 'h-8', 'p-1']"
         (clickFunc)="del(task)">
       X
     </ngx-kit-button>
@@ -56,12 +56,12 @@
       {{task.text}}
     </span>
     <ngx-kit-button
-        [extraCssClasses]="['bg-gray-500', 'hover:bg-gray-400', 'h-8', 'p-1']"
+        [extraCssClasses]="['bg-warn2-bg', 'text-warn2-fg', 'hover:bg-warn1-bg', 'p-0.5']"
         (clickFunc)="redo(task.sid)">
-      <img class="h-4 filter-white" src="assets/undo_arrow.svg" alt="0">
+      <img class="h-7 filter-white" src="assets/undo_arrow_white.png" alt="0">
     </ngx-kit-button>
     <ngx-kit-button
-        [extraCssClasses]="['bg-gray-500', 'hover:bg-gray-400', 'h-8', 'p-1']"
+        [extraCssClasses]="['bg-danger2-bg', 'text-danger2-fg', 'hover:bg-danger1-bg', 'h-8', 'p-1']"
         (clickFunc)="del(task)">
       X
     </ngx-kit-button>
