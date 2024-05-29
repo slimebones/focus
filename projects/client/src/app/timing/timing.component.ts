@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 import { TimingService } from "./timing.service";
-import { TimerGroupUdto, TimerUdto } from "./models";
 
 @Component({
   selector: "app-timing",
@@ -11,15 +10,9 @@ import { TimerGroupUdto, TimerUdto } from "./models";
 })
 export class TimingComponent implements OnInit, OnDestroy
 {
-  public nextGroupName: number = 1;
   public isEnabled: boolean = true;
   public toggleBtnSelectors$: BehaviorSubject<string[]> =
     new BehaviorSubject(["filter-white"]);
-
-  public groupToTimers: Map<TimerGroupUdto, TimerUdto[]> = new Map();
-
-  public selectedGroupSid?: string = undefined;
-  public selectedTimers?: TimerUdto[] = undefined;
 
   private subs: Subscription[] = [];
 
@@ -43,16 +36,6 @@ export class TimingComponent implements OnInit, OnDestroy
 
   public ngOnInit(): void
   {
-    this.subs.push(this.timingSv.getGroupsToTimers$().subscribe({
-      next: _map =>
-      {
-        this.groupToTimers = _map;
-        for (let group of this.groupToTimers.keys())
-        {
-          this.nextGroupName++;
-        }
-      }
-    }));
   }
 
   public ngOnDestroy(): void
@@ -69,19 +52,5 @@ export class TimingComponent implements OnInit, OnDestroy
     this.isEnabled
       ? this.toggleBtnSelectors$.next(["filter-gray"])
       : this.toggleBtnSelectors$.next(["filter-white"]);
-  }
-
-  public createGroup()
-  {
-    this.timingSv.createGroup$(this.nextGroupName.toString()).subscribe({
-      next: group => {this.groupToTimers.set(group, []);}
-    });
-  }
-
-  public selectGroup(group: TimerGroupUdto)
-  {
-    this.selectedGroupSid = group.sid;
-    this.selectedTimers = this.groupToTimers.get(group);
-    this.groupToTimers.set(group, this.selectedTimers ?? []);
   }
 }
