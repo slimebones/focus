@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import {
-  BehaviorSubject, Observable, Subscription, map, of, switchMap } from "rxjs";
+  BehaviorSubject, Subscription, of, switchMap } from "rxjs";
+import {timer as rxjsTimer} from "rxjs";
 import { TimingService } from "./timing.service";
 import { TimerUdto } from "./models";
 
@@ -12,10 +13,20 @@ import { TimerUdto } from "./models";
 })
 export class TimingComponent implements OnInit, OnDestroy
 {
-  public currentTimer$: Observable<TimerUdto>;
+  public currentTimer$ = new BehaviorSubject<TimerUdto | null>(null);
+  public remainingDuration: number;
 
+  private readonly PLAY_BTN_IMG_SELECTORS = [
+    "bg-c10-bg",
+    "hover:bg-c10-bg-active"
+  ];
+  private readonly PAUSE_BTN_IMG_SELECTORS = [
+    "bg-warn2-bg",
+    "hover:bg-warn1-bg"
+  ];
   private readonly PLAY_BTN_IMG_URL = "assets/play.png";
   private readonly PAUSE_BTN_IMG_URL = "assets/pause.png";
+  public togglePlayBtnImgSelectors: string[];
   public togglePlayBtnImgUrl: string;
 
   public isEnabled: boolean = true;
@@ -37,6 +48,8 @@ export class TimingComponent implements OnInit, OnDestroy
     "hover:bg-c10-bg-active"
   ];
 
+  private timerUpdSub: Subscription | null = null;
+
   public constructor(
     private timingSv: TimingService
   )
@@ -45,25 +58,61 @@ export class TimingComponent implements OnInit, OnDestroy
 
   public ngOnInit(): void
   {
-    this.currentTimer$ = this.timingSv.getTimers$().pipe(
-      switchMap(timers =>
-      {
-        if (timers.length == 0)
+    this.timingSv
+      .getTimers$()
+      .pipe(
+        switchMap(timers =>
         {
-          return this.timingSv.createTimer$(this.DEFAULT_TIMER_DURATION);
+          if (timers.length == 0)
+          {
+            return this.timingSv.createTimer$(this.DEFAULT_TIMER_DURATION);
+          }
+          return of(timers[0]);
+        }))
+      .subscribe({
+        next: timer =>
+        {
+          this.currentTimer$.next(timer);
         }
-        return of(timers[0]);
-      }),
-      map(timer =>
-      {
-        switch (timer.status)
+      });
+      this.subs.push(this.currentTimer$.subscribe({
+        next: timer =>
         {
-          case "tick":
-            this.togglePlayBtnImgUrl = this.PAUSE_BTN_IMG_URL;
-            break;
-          // for paused and finished states
-          default:
-            this.togglePlayBtnImgUrl = this.PLAY_BTN_IMG_URL;
+          if (timer === null)
+          {
+            return;
+          }
+          switch (timer.status)
+          {
+            case "tick":
+              this.togglePlayBtnImgUrl = this.PAUSE_BTN_IMG_URL;
+              this.togglePlayBtnImgSelectors = this.PAUSE_BTN_IMG_SELECTORS;
+              break;
+            // for paused and finished states
+            default:
+              this.togglePlayBtnImgUrl = this.PLAY_BTN_IMG_URL;
+              this.togglePlayBtnImgSelectors = this.PLAY_BTN_IMG_SELECTORS;
+          }
+
+          this.remainingDuration =
+            timer.total_duration - timer.current_duration;
+
+          if (timer.status === "tick" && this.timerUpdSub === null)
+          {
+            this.timerUpdSub = rxjsTimer(0, 1).subscribe({
+              next: _ =>
+              {
+                this.remainingDuration--;
+              }
+            });
+          }
+          if (timer.status !== "tick" && this.timerUpdSub !== null)
+          {
+            this.timerUpdSub.unsubscribe();
+            this.timerUpdSub = null;
+          }
+
+          return timer;
         }
       }));
   }
@@ -86,5 +135,20 @@ export class TimingComponent implements OnInit, OnDestroy
 
   public togglePlay()
   {
+  }
+
+  public setDuration(duration: number)
+  {
+    const timer = this.currentTimer$.value;
+    if (timer === null)
+    {
+      return;
+    }
+    this.timingSv.setDuration$(timer.sid, duration).subscribe({
+      next: timer =>
+      {
+        this.currentTimer$.next(timer);
+      }
+    });
   }
 }

@@ -10,13 +10,34 @@
         absolute right-2 top-16 bg-c30-bg p-4
         flex flex-col w-96 z-10 bg-header1-bg text-header1-fg rounded"
       *ngIf="isEnabled">
-    <ng-container
+    <div
+        class="flex flex-row justify-center items-center gap-2"
         *ngIf="currentTimer$ | async as timer">
       <!-- Play/Pause -->
       <ngx-kit-button
           (clickFunc)="togglePlay()">
-        <img [src]="togglePlayBtnImgUrl" alt="">
+        <img
+          class="h-10 rounded"
+          [src]="togglePlayBtnImgUrl"
+          alt=""
+          [ngClass]="togglePlayBtnImgSelectors">
       </ngx-kit-button>
-    </ng-container>
+
+      <!-- Duration -->
+      <div
+        class="ml-8 text-6xl font-bold">
+        {{ remainingDuration * 1000 | date:"mm:ss" }}
+      </div>
+
+      <!-- Edit -->
+      <ngx-kit-button
+          *ngIf="timer.status !== 'tick'"
+          (clickFunc)="togglePlay()">
+        <img
+          class="h-6 rounded bg-warn2-bg hover:bg-warn1-bg"
+          src="assets/pencil.png"
+          alt="">
+      </ngx-kit-button>
+    </div>
   </div>
 </div>
