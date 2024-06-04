@@ -14,7 +14,7 @@ from orwynn.mongo import (
 )
 from orwynn.sys import Sys
 from pykit.dt import DtUtils
-from pykit.err import AlreadyProcessedErr, InpErr, NotFoundErr, ValErr
+from pykit.err import AlreadyProcessedErr, InpErr, ValErr
 from pykit.fcode import code
 from pykit.log import log
 from rxcat import Evt, OkEvt, Req
