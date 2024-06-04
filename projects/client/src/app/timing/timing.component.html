@@ -11,7 +11,7 @@
         flex flex-col w-96 z-10 bg-header1-bg text-header1-fg rounded"
       *ngIf="isEnabled">
     <div
-        class="flex flex-row justify-center items-center"
+        class="flex flex-row justify-center items-center w-full"
         *ngIf="currentTimer$ | async as timer">
       <!-- Play/Pause -->
       <ngx-kit-button
@@ -26,8 +26,28 @@
 
       <!-- Duration -->
       <div
-        class="text-6xl font-bold text-center">
-        {{ remainingDuration * 1000 | date:"mm:ss" }}
+          class="flex text-6xl font-bold text-center">
+        <div *ngIf="!isEditingMode">
+          {{ remainingDurationMinutes }}:{{ remainingDurationSeconds }}
+        </div>
+        <form
+            class="flex flex-row justify-center items-center text-2xl"
+            [formGroup]="editingForm"
+            *ngIf="isEditingMode">
+          <ngx-kit-mat-input
+            [type]="InputType.Number"
+            class="text-black w-24"
+            min="0"
+            max="9999"
+            formControlName="totalDurationMinutes"/>
+          <span>:</span>
+          <ngx-kit-mat-input
+            [type]="InputType.Number"
+            class="text-black w-24"
+            min="0"
+            max="59"
+            formControlName="totalDurationSeconds"/>
+        </form>
       </div>
 
       <!-- Control Buttons -->
@@ -36,10 +56,10 @@
           *ngIf="timer.status !== 'tick'">
         <!-- Edit -->
         <ngx-kit-button
-            (clickFunc)="togglePlay()">
+            (clickFunc)="toggleEditingMode()">
           <img
             class="h-6 rounded bg-warn2-bg hover:bg-warn1-bg"
-            src="assets/pencil.png"
+            [src]="editingModeImg"
             alt="">
         </ngx-kit-button>
 

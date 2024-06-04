@@ -4,6 +4,8 @@ import {
 import {timer as rxjsTimer} from "rxjs";
 import { TimingService } from "./timing.service";
 import { TimerUdto } from "./models";
+import { FormControl, FormGroup } from "@angular/forms";
+import { InputType, log } from "@almazrpe/ngx-kit";
 
 @Component({
   selector: "app-timing",
@@ -13,8 +15,16 @@ import { TimerUdto } from "./models";
 })
 export class TimingComponent implements OnInit, OnDestroy
 {
+  public InputType = InputType;
   public currentTimer$ = new BehaviorSubject<TimerUdto | null>(null);
   public remainingDuration: number;
+  public remainingDurationMinutes: string;
+  public remainingDurationSeconds: string;
+  public isEditingMode: boolean = false;
+  public readonly ENABLE_EDIT_IMG: string = "assets/pencil.png";
+  public readonly APPLY_EDIT_IMG: string = "assets/apply.png";
+  public editingModeImg: string = this.ENABLE_EDIT_IMG;
+  public editingForm: FormGroup;
 
   private readonly PLAY_BTN_IMG_SELECTORS = [
     "bg-c10-bg",
@@ -58,6 +68,11 @@ export class TimingComponent implements OnInit, OnDestroy
 
   public ngOnInit(): void
   {
+    this.editingForm = new FormGroup({
+      totalDurationMinutes: new FormControl(0),
+      totalDurationSeconds: new FormControl(0)
+    });
+
     this.timingSv
       .getTimers$()
       .pipe(
@@ -75,66 +90,82 @@ export class TimingComponent implements OnInit, OnDestroy
           this.currentTimer$.next(timer);
         }
       });
-      this.subs.push(this.currentTimer$.subscribe({
-        next: timer =>
+    this.subs.push(this.currentTimer$.subscribe({
+      next: timer =>
+      {
+        if (timer === null)
         {
-          if (timer === null)
-          {
-            return;
-          }
-          switch (timer.status)
-          {
-            case "tick":
-              this.togglePlayBtnImgUrl = this.PAUSE_BTN_IMG_URL;
-              this.togglePlayBtnImgSelectors = this.PAUSE_BTN_IMG_SELECTORS;
-              break;
-            // for paused and finished states
-            default:
-              this.togglePlayBtnImgUrl = this.PLAY_BTN_IMG_URL;
-              this.togglePlayBtnImgSelectors = this.PLAY_BTN_IMG_SELECTORS;
-          }
-
-          const currentTime = Date.now() / 1000;
-          if (timer.last_launch_time === 0)
-          {
-            this.remainingDuration = timer.total_duration;
-          }
-          else if (timer.status === "tick")
-          {
-            this.remainingDuration =
-              timer.total_duration
-              - timer.current_duration
-              - (
-                currentTime - timer.last_launch_time);
-          }
-          else
-          {
-            this.remainingDuration =
-              timer.total_duration - timer.current_duration;
-          }
-
-          if (timer.status === "tick" && this.timerUpdSub === null)
-          {
-            this.timerUpdSub = rxjsTimer(0, 1000).subscribe({
-              next: _ =>
-              {
-                this.remainingDuration--;
-                if (this.remainingDuration <= 0)
-                {
-                  this.remainingDuration = 0;
-                }
-              }
-            });
-          }
-          if (timer.status !== "tick" && this.timerUpdSub !== null)
-          {
-            this.timerUpdSub.unsubscribe();
-            this.timerUpdSub = null;
-          }
-
-          return timer;
+          return;
         }
-      }));
+        switch (timer.status)
+        {
+          case "tick":
+            this.togglePlayBtnImgUrl = this.PAUSE_BTN_IMG_URL;
+            this.togglePlayBtnImgSelectors = this.PAUSE_BTN_IMG_SELECTORS;
+            break;
+          // for paused and finished states
+          default:
+            this.togglePlayBtnImgUrl = this.PLAY_BTN_IMG_URL;
+            this.togglePlayBtnImgSelectors = this.PLAY_BTN_IMG_SELECTORS;
+        }
+
+        const currentTime = Date.now() / 1000;
+        if (timer.last_launch_time === 0)
+        {
+          this.remainingDuration = timer.total_duration;
+        }
+        else if (timer.status === "tick")
+        {
+          this.remainingDuration =
+            timer.total_duration
+            - timer.current_duration
+            - (
+              currentTime - timer.last_launch_time);
+        }
+        else
+        {
+          this.remainingDuration =
+            timer.total_duration - timer.current_duration;
+        }
+
+        if (timer.status === "tick" && this.timerUpdSub === null)
+        {
+          this.timerUpdSub = rxjsTimer(1000, 1000).subscribe({
+            next: _ =>
+            {
+              this.remainingDuration--;
+              if (this.remainingDuration <= 0)
+              {
+                this.remainingDuration = 0;
+              }
+            }
+          });
+        }
+        if (timer.status !== "tick" && this.timerUpdSub !== null)
+        {
+          this.timerUpdSub.unsubscribe();
+          this.timerUpdSub = null;
+        }
+
+        const remainingDurationMinutes = Math.floor(
+          this.remainingDuration / 60);
+        this.remainingDurationMinutes = remainingDurationMinutes.toString();
+        this.remainingDurationSeconds = Math.floor(
+            this.remainingDuration - remainingDurationMinutes * 60)
+          .toString();
+
+        if (this.remainingDurationMinutes.length === 1)
+        {
+          this.remainingDurationMinutes = "0" + this.remainingDurationMinutes;
+        }
+        if (this.remainingDurationSeconds.length === 1)
+        {
+          this.remainingDurationSeconds = "0" + this.remainingDurationSeconds;
+        }
+
+        return timer;
+      }
+    }));
   }
 
   public ngOnDestroy(): void
@@ -200,6 +231,53 @@ export class TimingComponent implements OnInit, OnDestroy
     if (currentTimer === null)
     {
       return;
+    }
+    this.timingSv.resetTimer$(currentTimer.sid).subscribe({
+      next: timer =>
+      {
+        this.currentTimer$.next(timer);
+      }
+    });
+  }
+
+  public toggleEditingMode()
+  {
+    this.isEditingMode = !this.isEditingMode;
+    this.editingModeImg = this.isEditingMode
+      ? this.APPLY_EDIT_IMG
+      : this.ENABLE_EDIT_IMG;
+    const currentTimer = this.currentTimer$.value;
+    if (currentTimer === null)
+    {
+      return;
+    }
+
+    if (this.isEditingMode)
+    {
+      // on join editing mode - upd timer values
+      const minutes = Math.floor(currentTimer.total_duration / 60);
+      const seconds = Math.floor(currentTimer.total_duration - minutes * 60);
+      this.editingForm.setValue({
+        "totalDurationMinutes": minutes,
+        "totalDurationSeconds": seconds,
+      });
+    }
+    // on apply - send data to the server, but only if inputs are dirty
+    else if (this.editingForm.dirty)
+    {
+      log.warn(this.editingForm.value);
+      const newDuration =
+        this.editingForm.value.totalDurationMinutes * 60
+        + this.editingForm.value.totalDurationSeconds;
+      this.timingSv
+        .setTotalDuration$(currentTimer.sid, newDuration)
+        .subscribe({
+          next: timer =>
+          {
+            this.editingForm.markAsPristine();
+            this.currentTimer$.next(timer);
+          }
+        });
     }
   }
 }

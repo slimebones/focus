@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, map, switchMap } from "rxjs";
+import { Observable, map, switchMap, take } from "rxjs";
 import {
   ResetTimerReq,
   StartTimerReq, StopTimerReq, TimerGroupUdto, TimerUdto } from "./models";
@@ -97,7 +97,7 @@ export class TimingService
   {
     return ClientBus.ie.pub$<ResetTimerReq, GotDocUdtoEvt<TimerUdto>>(
         new ResetTimerReq(sid))
-      .pipe(map(rae => rae.evt.udto));
+      .pipe(map(rae => rae.evt.udto), take(1));
   }
 
   public createTimer$(duration: number): Observable<TimerUdto>
