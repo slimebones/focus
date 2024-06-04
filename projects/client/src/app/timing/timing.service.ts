@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, map, switchMap } from "rxjs";
 import {
+  ResetTimerReq,
   StartTimerReq, StopTimerReq, TimerGroupUdto, TimerUdto } from "./models";
 import {
   BusUtils,
@@ -80,15 +81,23 @@ export class TimingService
     }));
   }
 
-  public setDuration$(sid: string, duration: number): Observable<TimerUdto>
+  public setTotalDuration$(
+    sid: string, duration: number): Observable<TimerUdto>
   {
     return BusUtils.pubUpdDocReq$(new UpdDocReq({
       collection: this.TIMER_COLLECTION,
       searchQuery: {sid: sid},
       updQuery: {
-        "$set": {"duration": duration}
+        "$set": {"total_duration": duration}
       }
     }));
+  }
+
+  public resetTimer$(sid: string): Observable<TimerUdto>
+  {
+    return ClientBus.ie.pub$<ResetTimerReq, GotDocUdtoEvt<TimerUdto>>(
+        new ResetTimerReq(sid))
+      .pipe(map(rae => rae.evt.udto));
   }
 
   public createTimer$(duration: number): Observable<TimerUdto>

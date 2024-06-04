@@ -78,3 +78,14 @@ export interface TimerUdto extends Udto
   status: string;
 }
 
+@code("reset_timer_req")
+export class ResetTimerReq extends Req
+{
+  public sid: string;
+
+  public constructor(sid: string)
+  {
+    super();
+    this.sid = sid;
+  }
+}

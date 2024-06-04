@@ -14,7 +14,7 @@ from orwynn.mongo import (
 )
 from orwynn.sys import Sys
 from pykit.dt import DtUtils
-from pykit.err import AlreadyProcessedErr, InpErr, ValErr
+from pykit.err import AlreadyProcessedErr, InpErr, NotFoundErr, ValErr
 from pykit.fcode import code
 from pykit.log import log
 from rxcat import Evt, OkEvt, Req
@@ -93,6 +93,10 @@ class TimerGroupDoc(Doc):
                 current_timer_index=self.current_timer_index,
                 timer_end_action=self.timer_end_action,
                 group_end_action=self.group_end_action)
+
+@code("reset_timer_req")
+class ResetTimerReq(Req):
+    sid: str
 
 @code("start_timer_req")
 class StartTimerReq(Req):
@@ -192,6 +196,18 @@ class TimerSys(Sys):
         await self._sub(DelDocReq, self._on_del_doc)
         await self._sub(StartTimerReq, self._on_start_timer)
         await self._sub(StopTimerReq, self._on_stop_timer)
+        await self._sub(ResetTimerReq, self._on_reset_timer)
+
+    async def _on_reset_timer(self, req: ResetTimerReq):
+        timer = TimerDoc.get(Query.as_search_sid(req.sid))
+        if timer.status == "tick":
+            await self._pub(StopTimerReq(sid=timer.sid))
+        timer = timer.upd(Query.as_upd(set={
+            "status": "paused",
+            "current_duration": 0.0,
+            "last_launch_time": 0.0
+        }))
+        await self._pub(timer.to_got_doc_udto_evt(req))
 
     def _create_tick_task_for_timer(self, timer_doc: TimerDoc, orig_req: Req):
         if timer_doc.sid in self._timer_sid_to_tick_task:
@@ -316,10 +332,10 @@ class TimerSys(Sys):
         )
         doc = TimerDoc.get(req.searchQuery)
         if doc.status == "tick":
-            # reset timer on any upd
-            doc.status = "paused"
-            doc.current_duration = 0.0
-            doc.last_launch_time = 0.0
+            await self._pub(StopTimerReq(sid=doc.sid))
+            updq["status"] = "paused"
+            updq["current_duration"] = 0.0
+            updq["last_launch_time"] = 0.0
         doc = doc.upd(updq)
         await self._pub(doc.to_got_doc_udto_evt(req))
 

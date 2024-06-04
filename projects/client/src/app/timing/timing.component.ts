@@ -99,13 +99,18 @@ export class TimingComponent implements OnInit, OnDestroy
           {
             this.remainingDuration = timer.total_duration;
           }
-          else
+          else if (timer.status === "tick")
           {
             this.remainingDuration =
               timer.total_duration
               - timer.current_duration
               - (
                 currentTime - timer.last_launch_time);
+          }
+          else
+          {
+            this.remainingDuration =
+              timer.total_duration - timer.current_duration;
           }
 
           if (timer.status === "tick" && this.timerUpdSub === null)
@@ -174,14 +179,14 @@ export class TimingComponent implements OnInit, OnDestroy
     });
   }
 
-  public setDuration(duration: number)
+  public setTotalDuration(duration: number)
   {
     const currentTimer = this.currentTimer$.value;
     if (currentTimer === null)
     {
       return;
     }
-    this.timingSv.setDuration$(currentTimer.sid, duration).subscribe({
+    this.timingSv.setTotalDuration$(currentTimer.sid, duration).subscribe({
       next: timer =>
       {
         this.currentTimer$.next(timer);
@@ -196,6 +201,5 @@ export class TimingComponent implements OnInit, OnDestroy
     {
       return;
     }
-    this.setDuration(currentTimer.total_duration);
   }
 }
