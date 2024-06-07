@@ -3,9 +3,9 @@ import {
   BehaviorSubject, Observable, Subscription, of, switchMap } from "rxjs";
 import {timer as rxjsTimer} from "rxjs";
 import { TimingService } from "./timing.service";
-import { TimerUdto } from "./models";
+import { FinishedTimerEvt, TimerUdto } from "./models";
 import { FormControl, FormGroup } from "@angular/forms";
-import { InputType, log } from "@almazrpe/ngx-kit";
+import { ClientBus, InputType, StorageService } from "@almazrpe/ngx-kit";
 
 @Component({
   selector: "app-timing",
@@ -59,15 +59,29 @@ export class TimingComponent implements OnInit, OnDestroy
   ];
 
   private timerUpdSub: Subscription | null = null;
+  private unsubs: (() => void)[] = [];
 
   public constructor(
-    private timingSv: TimingService
+    public timingSv: TimingService,
+    private storageSv: StorageService
   )
   {
   }
 
   public ngOnInit(): void
   {
+    this.unsubs.push(ClientBus.ie.sub(
+      FinishedTimerEvt,
+      evt =>
+      {
+        const udto = (evt as FinishedTimerEvt).udto;
+        if (udto.sid === this.currentTimer$.value?.sid)
+        {
+          this.currentTimer$.next(udto);
+        }
+      }
+    ));
+
     this.editingForm = new FormGroup({
       totalDurationMinutes: new FormControl(0),
       totalDurationSeconds: new FormControl(0)
@@ -80,7 +94,11 @@ export class TimingComponent implements OnInit, OnDestroy
         {
           if (timers.length == 0)
           {
-            return this.timingSv.createTimer$(this.DEFAULT_TIMER_DURATION);
+            return this.timingSv.createTimer$(
+              this.DEFAULT_TIMER_DURATION,
+              "http://"
+                + this.storageSv.getItem("local", "conn_hostport")
+                + "/share/galaxy_theme.mp3");
           }
           return of(timers[0]);
         }))
@@ -138,6 +156,7 @@ export class TimingComponent implements OnInit, OnDestroy
               {
                 this.remainingDuration = 0;
               }
+              this.setDurationData();
             }
           });
         }
@@ -146,26 +165,30 @@ export class TimingComponent implements OnInit, OnDestroy
           this.timerUpdSub.unsubscribe();
           this.timerUpdSub = null;
         }
-
-        const remainingDurationMinutes = Math.floor(
-          this.remainingDuration / 60);
-        this.remainingDurationMinutes = remainingDurationMinutes.toString();
-        this.remainingDurationSeconds = Math.floor(
-            this.remainingDuration - remainingDurationMinutes * 60)
-          .toString();
-
-        if (this.remainingDurationMinutes.length === 1)
-        {
-          this.remainingDurationMinutes = "0" + this.remainingDurationMinutes;
-        }
-        if (this.remainingDurationSeconds.length === 1)
-        {
-          this.remainingDurationSeconds = "0" + this.remainingDurationSeconds;
-        }
-
+        this.setDurationData();
         return timer;
       }
     }));
+  }
+
+  private setDurationData()
+  {
+    const remainingDurationMinutes = Math.floor(
+      this.remainingDuration / 60);
+    this.remainingDurationMinutes = remainingDurationMinutes.toString();
+    this.remainingDurationSeconds = Math.floor(
+        this.remainingDuration - remainingDurationMinutes * 60)
+      .toString();
+
+    if (this.remainingDurationMinutes.length === 1)
+    {
+      this.remainingDurationMinutes = "0" + this.remainingDurationMinutes;
+    }
+    if (this.remainingDurationSeconds.length === 1)
+    {
+      this.remainingDurationSeconds = "0" + this.remainingDurationSeconds;
+    }
+
   }
 
   public ngOnDestroy(): void
@@ -265,10 +288,9 @@ export class TimingComponent implements OnInit, OnDestroy
     // on apply - send data to the server, but only if inputs are dirty
     else if (this.editingForm.dirty)
     {
-      log.warn(this.editingForm.value);
       const newDuration =
-        this.editingForm.value.totalDurationMinutes * 60
-        + this.editingForm.value.totalDurationSeconds;
+        Number.parseInt(this.editingForm.value.totalDurationMinutes) * 60
+        + Number.parseInt(this.editingForm.value.totalDurationSeconds);
       this.timingSv
         .setTotalDuration$(currentTimer.sid, newDuration)
         .subscribe({

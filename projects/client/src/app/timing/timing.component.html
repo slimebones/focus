@@ -65,10 +65,25 @@
 
         <!-- Reset -->
         <ngx-kit-button
-            (clickFunc)="resetTimer()">
+            (clickFunc)="resetTimer()"
+            *ngIf="!isEditingMode">
           <img
             class="h-6 rounded bg-warn2-bg hover:bg-warn1-bg"
             src="assets/undo_arrow_white.png"
+            alt="">
+        </ngx-kit-button>
+      </div>
+
+      <div
+          class="flex flex-col justify-center items-center"
+          *ngIf="timer.status !== 'tick'">
+        <!-- Sound off -->
+        <ngx-kit-button
+            (clickFunc)="timingSv.stopTimerAudio()"
+            *ngIf="timingSv.isPlayingTimerAudio">
+          <img
+            class="h-6 rounded bg-warn2-bg hover:bg-warn1-bg"
+            src="assets/volume_off.png"
             alt="">
         </ngx-kit-button>
       </div>

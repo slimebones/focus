@@ -48,18 +48,6 @@ export class StopTimerReq extends Req
   }
 }
 
-@code("finished_timer_evt")
-export class FinishedTimerEvt extends Evt
-{
-  public udto: TimerUdto;
-
-  public constructor(args: any)
-  {
-    super(args);
-    this.udto = args.udto;
-  }
-}
-
 export interface TimerGroupUdto extends Udto
 {
   name: string;
@@ -74,7 +62,7 @@ export interface TimerUdto extends Udto
   current_duration: number;
   total_duration: number;
   last_launch_time: number;
-  finish_sound_asset_sid?: string;
+  finish_sound_url?: string;
   status: string;
 }
 
@@ -83,9 +71,21 @@ export class ResetTimerReq extends Req
 {
   public sid: string;
 
-  public constructor(sid: string)
+  public constructor(args: {sid: string})
   {
     super();
-    this.sid = sid;
+    this.sid = args.sid;
+  }
+}
+
+@code("finished_timer_evt")
+export class FinishedTimerEvt extends Evt
+{
+  public udto: TimerUdto;
+
+  public constructor(args: {udto: TimerUdto})
+  {
+    super();
+    this.udto = args.udto;
   }
 }

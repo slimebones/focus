@@ -15,6 +15,7 @@ import { ActivatedRoute } from "@angular/router";
 import { environment } from "src/environments/environment";
 import { ProjectService } from "./project/project.service";
 import { ViewType, ViewData } from "./models";
+import { TimingService } from "./timing/timing.service";
 
 @Component({
   selector: "app-root",
@@ -58,7 +59,8 @@ export class AppComponent implements OnInit, OnDestroy
     private connSv: ConnService,
     private route: ActivatedRoute,
     private storageSv: StorageService,
-    private projectSv: ProjectService
+    private projectSv: ProjectService,
+    private timingSv: TimingService
   )
   {
   }
@@ -112,6 +114,7 @@ export class AppComponent implements OnInit, OnDestroy
       }
     }));
     ClientBus.ie.init(this.alertSv, this.connSv);
+    this.timingSv.init();
   }
 
   public ngOnDestroy(): void

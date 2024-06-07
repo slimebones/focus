@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, map, switchMap, take } from "rxjs";
 import {
+  FinishedTimerEvt,
   ResetTimerReq,
   StartTimerReq, StopTimerReq, TimerGroupUdto, TimerUdto } from "./models";
 import {
@@ -19,8 +20,39 @@ export class TimingService
 {
   private readonly TIMER_COLLECTION = "timer_doc";
   private readonly GROUP_COLLECTION = "timer_group_doc";
+  private timerAudio?: HTMLAudioElement = undefined;
+  public isPlayingTimerAudio: boolean = false;
 
   public constructor() { }
+
+  public init()
+  {
+    ClientBus.ie.sub(
+      FinishedTimerEvt,
+      evt =>
+      {
+        const udto = (evt as FinishedTimerEvt).udto;
+        const finishSoundUrl = udto.finish_sound_url;
+        if (finishSoundUrl !== null && finishSoundUrl !== undefined)
+        {
+          this.timerAudio = new Audio(finishSoundUrl);
+          this.timerAudio.play();
+          this.isPlayingTimerAudio = true;
+        }
+      }
+    );
+  }
+
+  public stopTimerAudio()
+  {
+    if (this.timerAudio === undefined)
+    {
+      return;
+    }
+    this.timerAudio.currentTime = 0;
+    this.timerAudio.pause();
+    this.isPlayingTimerAudio = false;
+  }
 
   public getGroupsToTimers$(): Observable<Map<TimerGroupUdto, TimerUdto[]>>
   {
@@ -96,17 +128,23 @@ export class TimingService
   public resetTimer$(sid: string): Observable<TimerUdto>
   {
     return ClientBus.ie.pub$<ResetTimerReq, GotDocUdtoEvt<TimerUdto>>(
-        new ResetTimerReq(sid))
+        new ResetTimerReq({sid: sid}))
       .pipe(map(rae => rae.evt.udto), take(1));
   }
 
-  public createTimer$(duration: number): Observable<TimerUdto>
+  public createTimer$(
+    duration: number, finishSoundUrl?: string): Observable<TimerUdto>
   {
+    const createq: any = {
+      total_duration: duration
+    };
+    if (finishSoundUrl !== undefined)
+    {
+      createq.finish_sound_url = finishSoundUrl;
+    }
     return BusUtils.pubCreateDocReq$<TimerUdto>(new CreateDocReq({
       collection: this.TIMER_COLLECTION,
-      createQuery: {
-        total_duration: duration
-      }
+      createQuery: createq
     }));
   }
 

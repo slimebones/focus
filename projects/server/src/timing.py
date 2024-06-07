@@ -25,7 +25,7 @@ class TimerUdto(Udto):
     current_duration: float
     total_duration: float
     last_launch_time: float
-    finish_sound_asset_sid: str | None
+    finish_sound_url: str | None
     status: TimerStatus
 
 class TimerDoc(Doc):
@@ -46,7 +46,7 @@ class TimerDoc(Doc):
     total_duration: float
     status: TimerStatus = "paused"
 
-    finish_sound_asset_sid: str | None = None
+    finish_sound_url: str | None = None
 
     def to_udto(self) -> TimerUdto:
         return TimerUdto(
@@ -54,7 +54,7 @@ class TimerDoc(Doc):
             current_duration=self.current_duration,
             total_duration=self.total_duration,
             last_launch_time=self.last_launch_time,
-            finish_sound_asset_sid=self.finish_sound_asset_sid,
+            finish_sound_url=self.finish_sound_url,
             status=self.status
         )
 
@@ -132,18 +132,18 @@ class TimerGroupSys(Sys):
         await self._sub(DelDocReq, self._on_del_doc)
         await self._sub(FinishedTimerEvt, self._on_finished_timer)
 
-    async def _on_finished_timer(self, evt: FinishedTimerEvt):
+    async def _upd_finished_timer_group(self, timer_sid: str):
         group = TimerGroupDoc.try_get(Query({
-            "timer_sids": {"$in": evt.udto.sid}}))
+            "timer_sids": {"$in": [timer_sid]}}))
         if group is None:
-            log.err(f"cannot find group for finished timer {evt.udto}")
+            # no group - no problem
             return
 
         group.current_timer_index += 1
         if group.current_timer_index >= len(group.timer_sids):
             group.current_timer_index = 0
 
-        if group.timer_sids[-1] == evt.udto.sid:
+        if group.timer_sids[-1] == timer_sid:
             if group.group_end_action["type"] == "restart":
                 group.current_timer_index = 0
                 await self._pub(StartTimerReq(sid=group.timer_sids[0]))
@@ -158,6 +158,9 @@ class TimerGroupSys(Sys):
 
         group.upd(Query.as_upd(set={
             "current_timer_index": group.current_timer_index}))
+
+    async def _on_finished_timer(self, evt: FinishedTimerEvt):
+        await self._upd_finished_timer_group(evt.udto.sid)
 
     async def _on_get_docs(self, req: GetDocsReq):
         docs = list(TimerGroupDoc.get_many(req.searchQuery))
@@ -253,6 +256,11 @@ class TimerSys(Sys):
         )
         if orig_req:
             finished_evt = finished_evt.as_res_from_req(orig_req)
+        if sid in self._timer_sid_to_tick_task:
+            del self._timer_sid_to_tick_task[sid]
+        else:
+            log.err(f"timer {sid} does not have tick task on finishing")
+        log.info(f"finish timer {timer_doc.sid}")
         await self._pub(finished_evt)
 
     async def _tick_timer(
