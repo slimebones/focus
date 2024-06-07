@@ -39,7 +39,7 @@ export class TimingComponent implements OnInit, OnDestroy
   public togglePlayBtnImgSelectors: string[];
   public togglePlayBtnImgUrl: string;
 
-  public isEnabled: boolean = true;
+  public isEnabled: boolean = false;
   public toggleBtnSelectors$: BehaviorSubject<string[]> =
     new BehaviorSubject(["filter-white"]);
 

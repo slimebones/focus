@@ -8,11 +8,6 @@ RUN apt update
 RUN apt install --no-install-recommends -yq poppler-utils
 RUN pip install poetry
 
-COPY projects/orwynn projects/orwynn 
-COPY projects/pyfcode projects/pyfcode
-COPY projects/uvicorn projects/uvicorn
-COPY projects/pyrxcat projects/pyrxcat
-COPY projects/pykit projects/pykit
 COPY projects/server projects/server
 
 WORKDIR /solution/projects/server

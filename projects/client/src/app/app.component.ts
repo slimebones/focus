@@ -46,11 +46,11 @@ export class AppComponent implements OnInit, OnDestroy
       type: ViewType.Events,
       cssSelectors: this.UnselectedViewCssSelectors
     },
-    {
-      title: "Domains",
-      type: ViewType.Domains,
-      cssSelectors: this.UnselectedViewCssSelectors
-    },
+    // {
+    //   title: "Domains",
+    //   type: ViewType.Domains,
+    //   cssSelectors: this.UnselectedViewCssSelectors
+    // },
   ];
   private subs: Subscription[] = [];
 
