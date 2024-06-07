@@ -3,6 +3,7 @@ from orwynn.mongo import (
     CreateDocReq,
     DelDocReq,
     Doc,
+    DocField,
     GetDocsReq,
     UpdDocReq,
     filter_collection_factory,
@@ -16,6 +17,12 @@ class ProjectUdto(Udto):
     task_sids: list[str] = []
 
 class ProjectDoc(Doc):
+    FIELDS = [
+        DocField(
+            name="taskSids",
+            linked_doc="TaskDoc")
+    ]
+
     name: str
     taskSids: list[str] = []
 

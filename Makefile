@@ -1,12 +1,12 @@
-server.docker.build:
+docker.build:
 	docker-compose up -d --build --remove-orphans
 
-server.docker.up:
+docker.up:
 	docker-compose up -d
 
-server.docker.down:
+docker.down:
 	docker-compose down
 
-server.docker.reup: server.docker.down server.docker.up
+docker.reup: docker.down docker.up
 
-server.docker.rebuild: server.docker.down server.docker.build
+docker.rebuild: docker.down docker.build
