@@ -288,9 +288,13 @@ export class TimingComponent implements OnInit, OnDestroy
     // on apply - send data to the server, but only if inputs are dirty
     else if (this.editingForm.dirty)
     {
-      const newDuration =
+      let newDuration =
         Number.parseInt(this.editingForm.value.totalDurationMinutes) * 60
         + Number.parseInt(this.editingForm.value.totalDurationSeconds);
+      if (newDuration <= 0)
+      {
+        newDuration = 1;
+      }
       this.timingSv
         .setTotalDuration$(currentTimer.sid, newDuration)
         .subscribe({
