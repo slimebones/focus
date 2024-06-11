@@ -13,17 +13,20 @@ from rxcat import OkEvt
 
 class IdeaUdto(Udto):
     text: str
-    isProcessed: bool
+    is_processed: bool
+    last_process_time: float
 
 class IdeaDoc(Doc):
     text: str
-    isProcessed: bool = False
+    is_processed: bool = False
+    last_process_time: float = 0.0
 
     def to_udto(self) -> IdeaUdto:
         return IdeaUdto(
             sid=self.sid,
             text=self.text,
-            isProcessed=self.isProcessed
+            is_processed=self.is_processed,
+            last_process_time=self.last_process_time
         )
 
 class IdeaSys(Sys):
