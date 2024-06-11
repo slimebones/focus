@@ -20,7 +20,7 @@ class ProjectDoc(Doc):
     FIELDS = [
         DocField(
             name="taskSids",
-            linked_doc="TaskDoc")
+            linked_doc="taskDoc")
     ]
 
     name: str

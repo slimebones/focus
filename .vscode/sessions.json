@@ -1,0 +1,56 @@
+{
+    "$schema": "https://cdn.statically.io/gh/nguyenngoclongdev/cdn/main/schema/v10/terminal-keeper.json",
+    "theme": "tribe",
+    "active": "default",
+    "activateOnStartup": false,
+    "keepExistingTerminals": false,
+    "sessions": {
+        "default": [
+            {
+                "name": "root",
+                "autoExecuteCommands": true,
+                "icon": "home",
+                "color": "terminal.ansiWhite",
+                "commands": [
+                    "cd /cygdrive/e/focus"
+                ]
+            },
+            {
+                "name": "server",
+                "autoExecuteCommands": true,
+                "icon": "server",
+                "color": "terminal.ansiRed",
+                "commands": [
+                    "cd /cygdrive/e/focus/projects/server"
+                ]
+            },
+            {
+                "name": "server",
+                "autoExecuteCommands": true,
+                "icon": "terminal",
+                "color": "terminal.ansiWhite",
+                "commands": [
+                    "cd /cygdrive/e/focus/projects/server"
+                ]
+            },
+            {
+                "name": "client",
+                "autoExecuteCommands": true,
+                "icon": "server",
+                "color": "terminal.ansiRed",
+                "commands": [
+                    "cd /cygdrive/e/focus/projects/client"
+                ]
+            },
+            {
+                "name": "client",
+                "autoExecuteCommands": true,
+                "icon": "terminal",
+                "color": "terminal.ansiWhite",
+                "commands": [
+                    "cd /cygdrive/e/focus/projects/client"
+                ]
+            }
+        ]
+    }
+}
