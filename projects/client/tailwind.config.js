@@ -24,8 +24,8 @@ module.exports = {
         "c10-bg-active": "#a2fa07",
         "c10-fg-active": "#FFFFFF",
 
-        "c-fg-disabled": "#FFFFFF",
-        "c-bg-disabled": colors.gray["300"],
+        "fg-disabled": "#FFFFFF",
+        "bg-disabled": colors.gray["300"],
 
         "header1-bg": "#a1b5fe",
         "header1-fg": "#ffffff",

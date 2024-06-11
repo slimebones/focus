@@ -14,6 +14,8 @@ import { DomainsComponent } from './domain/domains/domains.component';
 import { DomainManagerComponent } from './domain/domain-manager/domain-manager.component';
 import { CreateFormComponent } from './create-form/create-form.component';
 import { TimingComponent } from './timing/timing.component';
+import { IdeaComponent } from './idea/idea.component';
+import { IdeasComponent } from './idea/ideas/ideas.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { TimingComponent } from './timing/timing.component';
     DomainsComponent,
     DomainManagerComponent,
     CreateFormComponent,
-    TimingComponent
+    TimingComponent,
+    IdeaComponent,
+    IdeasComponent
   ],
   imports: [
     BrowserModule,

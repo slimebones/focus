@@ -21,9 +21,9 @@
         type="submit"
         [extraCssClasses]="[
           'bg-c10-bg', 'text-c10-fg', 'hover:bg-c10-bg-active',
-          'hover:text-c10-fg-active', 'rounded', 'h-8'
+          'hover:text-c10-fg-active', 'rounded'
         ]">
-      +
+      <img class="h-8" src="assets/plus.png" alt="0">
     </ngx-kit-button>
   </form>
 
@@ -31,11 +31,13 @@
       class="
         flex flex-row justify-center items-center gap-x-4"
       *ngFor="let task of tasks">
-    <ngx-kit-button (clickFunc)="complete(task.sid)">
-      <img class="h-8 filter-green" src="assets/circle-outline.svg" alt="0">
+    <ngx-kit-button
+        class="w-16"
+        (clickFunc)="complete(task.sid)">
+      <img class="filter-green h-8" src="assets/check_circle.png" alt="0">
     </ngx-kit-button>
     <span
-        class="text-2xl">
+        class="text-2xl pb-2">
       {{task.text}}
     </span>
     <ngx-kit-button
@@ -52,7 +54,7 @@
         flex flex-row justify-center items-center gap-x-4 opacity-50"
       *ngFor="let task of completedTasks">
     <span
-        class="text-2xl">
+        class="text-2xl pb-2">
       {{task.text}}
     </span>
     <ngx-kit-button

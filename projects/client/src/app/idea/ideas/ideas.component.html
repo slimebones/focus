@@ -1,0 +1,53 @@
+<div class="
+    flex bg-header1-bg text-header1-fg p-4 flex flex-col justify-start items-center
+    h-full overflow-y-scroll mb-12 w-full">
+  <div class="text-4xl font-bold mb-4">Ideas</div>
+  <form
+      class="flex flex-row gap-4 justify-center items-center w-full"
+      [formGroup]="createForm"
+      (ngSubmit)="onCreateSubmit()">
+    <ngx-kit-mat-input
+        #create_inp
+        class="text-black w-full"
+        [type]="InputType.Text"
+        (keydown.enter)="onKeydownEnter()"
+        formControlName="text" />
+    <ngx-kit-button
+        type="submit"
+        [extraCssClasses]="[
+          'bg-c10-bg', 'text-c10-fg', 'hover:bg-c10-bg-active',
+          'hover:text-c10-fg-active', 'rounded'
+        ]">
+      <img class="h-8" src="assets/plus.png" alt="0">
+    </ngx-kit-button>
+  </form>
+
+  <div class="flex flex-col justify-start items-start mt-8">
+    <div
+        class="flex flex-row justify-center items-center gap-4"
+        *ngFor="let idea of ideas">
+      <ngx-kit-button
+          class="w-16"
+          (clickFunc)="process(idea)">
+        <img class="h-8" src="assets/check_circle.png" alt="0">
+      </ngx-kit-button>
+      <ngx-kit-button>
+        <div class="text-2xl pb-2">
+          {{idea.text}}
+        </div>
+      </ngx-kit-button>
+    </div>
+
+    <ngx-kit-hr class="w-full mt-8 mb-8"/>
+
+    <div
+        class="flex flex-row justify-center items-center gap-4"
+        *ngFor="let idea of processedIdeas">
+      <ngx-kit-button>
+        <div class="text-2xl text-bg-disabled">
+          {{idea.text}}
+        </div>
+      </ngx-kit-button>
+    </div>
+  </div>
+</div>

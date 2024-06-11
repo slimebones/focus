@@ -1,10 +1,10 @@
 <div class="
-    flex bg-header1-bg text-header1-fg p-4 flex flex-col justify-start items-center
-    h-full overflow-y-scroll mb-12">
+    flex bg-header1-bg text-header1-fg p-4 flex flex-col justify-center
+    items-center h-full overflow-y-scroll mb-12 w-full">
   <div class="font-bold mb-4">Projects</div>
 
   <form
-      class="flex flex-row gap-4 justify-center items-center"
+      class="flex flex-row gap-4 justify-center items-center w-full"
       [formGroup]="projectCreateForm"
       (ngSubmit)="onProjectCreateSubmit()">
     <ngx-kit-mat-input
@@ -17,9 +17,9 @@
         type="submit"
         [extraCssClasses]="[
           'bg-c10-bg', 'text-c10-fg', 'hover:bg-c10-bg-active',
-          'hover:text-c10-fg-active', 'rounded', 'h-8'
+          'hover:text-c10-fg-active', 'rounded'
         ]">
-      +
+      <img class="h-8" src="assets/plus.png" alt="0">
     </ngx-kit-button>
   </form>
 

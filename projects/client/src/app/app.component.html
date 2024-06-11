@@ -37,6 +37,12 @@
         *ngIf="openedViewType === AppView.Domains">
       <app-domain-manager/>
     </div>
+
+    <div
+        class="w-full h-full"
+        *ngIf="openedViewType === AppView.Ideas">
+      <app-ideas class="w-full"/>
+    </div>
   </ng-container>
 </div>
 
