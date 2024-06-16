@@ -9,46 +9,55 @@
             {
                 "name": "root",
                 "autoExecuteCommands": true,
+                "joinOperator": "&&",
                 "icon": "home",
                 "color": "terminal.ansiWhite",
                 "commands": [
-                    "cd /cygdrive/e/focus"
+                    "nu"
                 ]
             },
             {
                 "name": "server",
                 "autoExecuteCommands": true,
+                "joinOperator": "&&",
                 "icon": "server",
                 "color": "terminal.ansiRed",
                 "commands": [
-                    "cd /cygdrive/e/focus/projects/server"
+                    "cd projects/server",
+                    "nu"
                 ]
             },
             {
                 "name": "server",
                 "autoExecuteCommands": true,
+                "joinOperator": "&&",
                 "icon": "terminal",
                 "color": "terminal.ansiWhite",
                 "commands": [
-                    "cd /cygdrive/e/focus/projects/server"
+                    "cd projects/server",
+                    "nu"
                 ]
             },
             {
                 "name": "client",
                 "autoExecuteCommands": true,
+                "joinOperator": "&&",
                 "icon": "server",
                 "color": "terminal.ansiRed",
                 "commands": [
-                    "cd /cygdrive/e/focus/projects/client"
+                    "cd projects/client",
+                    "nu"
                 ]
             },
             {
                 "name": "client",
                 "autoExecuteCommands": true,
+                "joinOperator": "&&",
                 "icon": "terminal",
                 "color": "terminal.ansiWhite",
                 "commands": [
-                    "cd /cygdrive/e/focus/projects/client"
+                    "cd projects/client",
+                    "nu"
                 ]
             }
         ]
