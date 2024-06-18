@@ -1,0 +1,7 @@
+set shell := ["nu", "-c"]
+
+run host="localhost" port="9050":
+	ng serve --host {{host}} --port {{port}}
+
+lint target="" *flags="":
+	npx eslint --fix {{flags}} src/app/{{target}}

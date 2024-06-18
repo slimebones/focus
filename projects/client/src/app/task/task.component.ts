@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-task',
-  templateUrl: './task.component.html',
+  selector: "app-task",
+  templateUrl: "./task.component.html",
   styles: [
   ]
 })
-export class TaskComponent {
+export class TaskComponent 
+{
 
 }

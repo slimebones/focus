@@ -1,12 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DomainManagerComponent } from './domain-manager.component';
+import { DomainManagerComponent } from "./domain-manager.component";
 
-describe('DomainManagerComponent', () => {
+describe("DomainManagerComponent", () => 
+{
   let component: DomainManagerComponent;
   let fixture: ComponentFixture<DomainManagerComponent>;
 
-  beforeEach(async () => {
+  beforeEach(async () => 
+{
     await TestBed.configureTestingModule({
       declarations: [ DomainManagerComponent ]
     })
@@ -17,7 +19,8 @@ describe('DomainManagerComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => 
+{
     expect(component).toBeTruthy();
   });
 });

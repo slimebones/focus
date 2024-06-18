@@ -1,12 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DomainsComponent } from './domains.component';
+import { DomainsComponent } from "./domains.component";
 
-describe('DomainsComponent', () => {
+describe("DomainsComponent", () => 
+{
   let component: DomainsComponent;
   let fixture: ComponentFixture<DomainsComponent>;
 
-  beforeEach(async () => {
+  beforeEach(async () => 
+{
     await TestBed.configureTestingModule({
       declarations: [ DomainsComponent ]
     })
@@ -17,7 +19,8 @@ describe('DomainsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => 
+{
     expect(component).toBeTruthy();
   });
 });

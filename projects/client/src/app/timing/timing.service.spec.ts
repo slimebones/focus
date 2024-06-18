@@ -1,16 +1,19 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { TimingService } from './timing.service';
+import { TimingService } from "./timing.service";
 
-describe('TimingService', () => {
+describe("TimingService", () => 
+{
   let service: TimingService;
 
-  beforeEach(() => {
+  beforeEach(() => 
+{
     TestBed.configureTestingModule({});
     service = TestBed.inject(TimingService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => 
+{
     expect(service).toBeTruthy();
   });
 });

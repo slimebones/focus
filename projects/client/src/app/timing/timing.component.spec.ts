@@ -1,12 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { TimingComponent } from './timing.component';
+import { TimingComponent } from "./timing.component";
 
-describe('TimingComponent', () => {
+describe("TimingComponent", () => 
+{
   let component: TimingComponent;
   let fixture: ComponentFixture<TimingComponent>;
 
-  beforeEach(async () => {
+  beforeEach(async () => 
+{
     await TestBed.configureTestingModule({
       declarations: [ TimingComponent ]
     })
@@ -17,7 +19,8 @@ describe('TimingComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => 
+{
     expect(component).toBeTruthy();
   });
 });

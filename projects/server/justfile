@@ -1,0 +1,18 @@
+set shell := ["nu", "-c"]
+
+test target="*" show="all" *flags="":
+    ORWYNN_MODE="test" ORWYNN_DEBUG=1 ORWYNN_ALLOW_CLEAN=1 poetry run coverage run -m pytest -m "not off" -x --ignore=src/legacy -p no:warnings --show-capture={{show}} --failed-first {{flags}} tests/{{target}}
+
+lint:
+    poetry run ruff .
+
+check: lint test
+
+coverage:
+    poetry run coverage report -m
+
+coverage_html:
+    poetry run coverage html --show-contexts && python -m http.server -d htmlcov 8000
+
+run $ORWYNN_MODE="dev" host="localhost" port="9051":
+    poetry run python -m src {{host}} {{port}}

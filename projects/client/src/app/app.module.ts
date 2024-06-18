@@ -9,13 +9,15 @@ import { ProjectsComponent } from "./project/projects/projects.component";
 import { TasksComponent } from "./task/tasks/tasks.component";
 import { NgxKitModule } from "@almazrpe/ngx-kit";
 import { ReactiveFormsModule } from "@angular/forms";
-import { DomainComponent } from './domain/domain.component';
-import { DomainsComponent } from './domain/domains/domains.component';
-import { DomainManagerComponent } from './domain/domain-manager/domain-manager.component';
-import { CreateFormComponent } from './create-form/create-form.component';
-import { TimingComponent } from './timing/timing.component';
-import { IdeaComponent } from './idea/idea.component';
-import { IdeasComponent } from './idea/ideas/ideas.component';
+import { DomainComponent } from "./domain/domain.component";
+import { DomainsComponent } from "./domain/domains/domains.component";
+import {
+  DomainManagerComponent
+} from "./domain/domain-manager/domain-manager.component";
+import { CreateFormComponent } from "./create-form/create-form.component";
+import { TimingComponent } from "./timing/timing.component";
+import { IdeaComponent } from "./idea/idea.component";
+import { IdeasComponent } from "./idea/ideas/ideas.component";
 
 @NgModule({
   declarations: [
