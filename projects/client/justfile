@@ -1,7 +1,10 @@
 set shell := ["nu", "-c"]
 
+ng := if os_family() == "windows" { "ng.cmd" } else { "ng" }
+npx := if os_family() == "windows" { "npx.cmd" } else { "npx" }
+
 run host="localhost" port="9050":
-	ng serve --host {{host}} --port {{port}}
+	{{ng}} serve --host {{host}} --port {{port}}
 
 lint target="" *flags="":
-	npx eslint --fix {{flags}} src/app/{{target}}
+	{{npx}} eslint --fix {{flags}} src/app/{{target}}
