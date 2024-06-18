@@ -14,7 +14,6 @@
                 "icon": "home",
                 "color": "terminal.ansiWhite",
                 "commands": [
-                    "nu"
                 ]
             },
             {
@@ -24,8 +23,7 @@
                 "icon": "server",
                 "color": "terminal.ansiRed",
                 "commands": [
-                    "cd projects/server",
-                    "nu"
+                    "cd projects/server"
                 ]
             },
             {
@@ -35,8 +33,7 @@
                 "icon": "terminal",
                 "color": "terminal.ansiWhite",
                 "commands": [
-                    "cd projects/server",
-                    "nu"
+                    "cd projects/server"
                 ]
             },
             {
@@ -46,8 +43,7 @@
                 "icon": "server",
                 "color": "terminal.ansiRed",
                 "commands": [
-                    "cd projects/client",
-                    "nu"
+                    "cd projects/client"
                 ]
             },
             {
@@ -57,8 +53,7 @@
                 "icon": "terminal",
                 "color": "terminal.ansiWhite",
                 "commands": [
-                    "cd projects/client",
-                    "nu"
+                    "cd projects/client"
                 ]
             }
         ]
