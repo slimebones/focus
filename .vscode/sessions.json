@@ -10,16 +10,15 @@
             {
                 "name": "root",
                 "autoExecuteCommands": true,
-                "joinOperator": "&&",
+                "joinOperator": "and",
                 "icon": "home",
                 "color": "terminal.ansiWhite",
-                "commands": [
-                ]
+                "commands": []
             },
             {
                 "name": "server",
                 "autoExecuteCommands": true,
-                "joinOperator": "&&",
+                "joinOperator": "and",
                 "icon": "server",
                 "color": "terminal.ansiRed",
                 "commands": [
@@ -29,7 +28,7 @@
             {
                 "name": "server",
                 "autoExecuteCommands": true,
-                "joinOperator": "&&",
+                "joinOperator": "and",
                 "icon": "terminal",
                 "color": "terminal.ansiWhite",
                 "commands": [
@@ -39,7 +38,7 @@
             {
                 "name": "client",
                 "autoExecuteCommands": true,
-                "joinOperator": "&&",
+                "joinOperator": "and",
                 "icon": "server",
                 "color": "terminal.ansiRed",
                 "commands": [
@@ -49,7 +48,7 @@
             {
                 "name": "client",
                 "autoExecuteCommands": true,
-                "joinOperator": "&&",
+                "joinOperator": "and",
                 "icon": "terminal",
                 "color": "terminal.ansiWhite",
                 "commands": [
