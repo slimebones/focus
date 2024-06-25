@@ -31,7 +31,7 @@ class IdeaDoc(Doc):
 
 class IdeaSys(Sys):
     CommonSubMsgFilters = [
-        filter_collection_factory(IdeaDoc.get_collection())
+        filter_collection_factory(IdeaDoc)
     ]
 
     async def enable(self):
