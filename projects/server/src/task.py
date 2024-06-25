@@ -18,6 +18,7 @@ class TaskUdto(Udto):
     completion_time: float
 
 class TaskDoc(Doc):
+    COLLECTION_NAMING = "camel_case"
     text: str
     isCompleted: bool = False
     completionTimestamp: float = 0.0
@@ -32,7 +33,7 @@ class TaskDoc(Doc):
 
 class TaskSys(Sys):
     CommonSubMsgFilters = [
-        filter_collection_factory(TaskDoc.get_collection())
+        filter_collection_factory(TaskDoc)
     ]
 
     async def enable(self):

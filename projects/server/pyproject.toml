@@ -13,7 +13,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.11"
-orwynn = {git = "https://github.com/slimebones/orwynn.git", rev = "2.3.4"}
+orwynn = {git = "https://github.com/slimebones/orwynn.git", rev = "2.4.5"}
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.15"

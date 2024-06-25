@@ -17,6 +17,7 @@ class ProjectUdto(Udto):
     task_sids: list[str] = []
 
 class ProjectDoc(Doc):
+    COLLECTION_NAMING = "camel_case"
     FIELDS = [
         DocField(
             name="taskSids",
@@ -35,7 +36,7 @@ class ProjectDoc(Doc):
 
 class ProjectSys(Sys):
     CommonSubMsgFilters = [
-        filter_collection_factory(ProjectDoc.get_collection())
+        filter_collection_factory(ProjectDoc)
     ]
 
     async def enable(self):

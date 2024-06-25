@@ -36,7 +36,7 @@ class FocusDomainDoc(Doc):
 
 class FocusDomainSys(Sys):
     CommonSubMsgFilters = [
-        filter_collection_factory(FocusDomainDoc.get_collection())
+        filter_collection_factory(FocusDomainDoc)
     ]
 
     async def enable(self):

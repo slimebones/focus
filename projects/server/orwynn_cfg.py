@@ -74,7 +74,9 @@ default = {
         MongoCfg(
             url="mongodb://localhost:9006",
             database_name="focusTestDb",
-            must_clean_db_on_destroy=True
+            must_clean_db_on_destroy=True,
+            default__collection_naming="snake_case",
+            default__is_archivable=False
         ),
         PreloadCfg(
             must_clean_preloads_on_destroy=True

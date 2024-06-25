@@ -29,8 +29,6 @@ class TimerUdto(Udto):
     status: TimerStatus
 
 class TimerDoc(Doc):
-    COLLECTION_NAMING = "snake_case"
-
     current_duration: float = 0.0
     """
     This is written only on status change. Clients should calc it themselves
@@ -73,7 +71,6 @@ class TimerGroupUdto(Udto):
     group_end_action: TimerGroupEndActionData
 
 class TimerGroupDoc(Doc):
-    COLLECTION_NAMING = "snake_case"
     FIELDS = [
         DocField(name="name", unique=True),
         DocField(name="timer_sids", linked_doc="timer_doc")
@@ -120,7 +117,7 @@ class FinishedTimerEvt(Evt):
 
 class TimerGroupSys(Sys):
     CommonSubMsgFilters = [
-        filter_collection_factory(TimerGroupDoc.get_collection())
+        filter_collection_factory(TimerGroupDoc)
     ]
 
     async def enable(self):
@@ -187,7 +184,7 @@ class TimerGroupSys(Sys):
 
 class TimerSys(Sys):
     CommonSubMsgFilters = [
-        filter_collection_factory(TimerDoc.get_collection())
+        filter_collection_factory(TimerDoc)
     ]
 
     async def enable(self):
