@@ -59,10 +59,13 @@
     <ClInclude Include="..\lib\imgui\backends\imgui_impl_vulkan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="res.h">
+    <ClInclude Include="ckit\res.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rxcat\rxcat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ckit\uuid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

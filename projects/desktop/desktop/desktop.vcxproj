@@ -180,8 +180,9 @@
     <ClInclude Include="..\lib\imgui\imgui_internal.h" />
     <ClInclude Include="..\lib\imgui\backends\imgui_impl_glfw.h" />
     <ClInclude Include="..\lib\imgui\backends\imgui_impl_vulkan.h" />
-    <ClInclude Include="res.h" />
+    <ClInclude Include="ckit\res.h" />
     <ClInclude Include="rxcat\rxcat.h" />
+    <ClInclude Include="ckit\uuid.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\lib\imgui\misc\debuggers\imgui.natstepfilter" />
