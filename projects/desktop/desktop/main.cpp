@@ -22,12 +22,14 @@
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#include <typeinfo>
 
 // Volk headers
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
 #define VOLK_IMPLEMENTATION
 #include <volk.h>
 #endif
+#include "rxcat/rxcat.h"
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -544,7 +546,10 @@ int main(int, char**)
         if (show_another_window)
         {
             ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
+            Rxcat::ClientBus b;
+            Rxcat::ClientBus b2;
+            const std::type_info& t = typeid(b);
+            ImGui::Text("%s ;; %s", typeid(b).name(), typeid(b2).name());
             if (ImGui::Button("Close Me"))
                 show_another_window = false;
             ImGui::End();

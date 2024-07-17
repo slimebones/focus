@@ -171,6 +171,7 @@
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\lib\imgui\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="..\lib\imgui\backends\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="rxcat\rxcat.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +181,7 @@
     <ClInclude Include="..\lib\imgui\backends\imgui_impl_glfw.h" />
     <ClInclude Include="..\lib\imgui\backends\imgui_impl_vulkan.h" />
     <ClInclude Include="res.h" />
+    <ClInclude Include="rxcat\rxcat.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\lib\imgui\misc\debuggers\imgui.natstepfilter" />
