@@ -10,15 +10,28 @@ namespace Rxcat
 		std::string msid = Ckit::make_uuid4();
 	};
 
-	class Evt: public Msg
+	class Evt : public Msg
 	{
 	public:
 		std::string rsid;
 		bool* is_thrown_by_pubfn = nullptr;
 	};
 
-	class Req: public Msg
+	class Req : public Msg
 	{
+	};
+
+	class OkEvt : public Evt
+	{
+	};
+
+	class ErrEvt : public Evt
+	{
+	public:
+		std::exception inner__err;
+		std::string errmsg;
+		std::string errtype;
+		std::string stacktrace;
 	};
 
 	class ClientBus

@@ -1,0 +1,3 @@
+[submodule "projects/desktop/lib/ws"]
+	path = projects/desktop/lib/ws
+	url = git@github.com:dhbaird/easywsclient.git
