@@ -109,6 +109,7 @@
       <AdditionalIncludeDirectories>..\vendor\imgui;..\vendor\imgui\backends;%VULKAN_SDK%\include;..\vendor\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ImTextureID=ImU64;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -178,11 +179,11 @@
     <ClInclude Include="..\vendor\imgui\imgui_internal.h" />
     <ClInclude Include="..\vendor\imgui\backends\imgui_impl_glfw.h" />
     <ClInclude Include="..\vendor\imgui\backends\imgui_impl_vulkan.h" />
+    <ClInclude Include="res.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\vendor\imgui\misc\debuggers\imgui.natstepfilter" />
     <None Include="..\vendor\imgui\misc\debuggers\imgui.natvis" />
-    <None Include="..\README.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
