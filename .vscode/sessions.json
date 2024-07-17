@@ -36,23 +36,23 @@
                 ]
             },
             {
-                "name": "client",
+                "name": "browser",
                 "autoExecuteCommands": true,
                 "joinOperator": "and",
                 "icon": "server",
                 "color": "terminal.ansiRed",
                 "commands": [
-                    "cd projects/client"
+                    "cd projects/browser"
                 ]
             },
             {
-                "name": "client",
+                "name": "browser",
                 "autoExecuteCommands": true,
                 "joinOperator": "and",
                 "icon": "terminal",
                 "color": "terminal.ansiWhite",
                 "commands": [
-                    "cd projects/client"
+                    "cd projects/browser"
                 ]
             }
         ]
